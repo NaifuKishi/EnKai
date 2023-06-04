@@ -421,15 +421,17 @@ local function _uiMap(name, parent)
 	function ui:AddElement (newElement)
 
 		-- der check auf duplicates funktioniert ist aber nicht ideal. Er versteckt nur statt überhaupt nicht zu bauen. Immerhin ...
-
+		
 		local debugId  
 		if nkDebug then debugId = nkDebug.traceStart (oFuncs.oInspectAddonCurrent(), "EnKai _uiMap:AddElement") end
-
+				
 		if mapData.mapElements[newElement.type] == nil then
 			if nkDebug then print ("unknown map element type: " .. newElement.type) end 
 			if nkDebug then nkDebug.traceEnd (oFuncs.oInspectAddonCurrent(), "EnKai _uiMap:AddElement", debugId) end
 			return 
 		end
+		
+		--if nkDebug then nkDebug.logEntry (addonInfo.identifier, "AddElement", "new element", newElement) end
 
 		if elements[newElement.id] ~= nil then return end
 
@@ -450,11 +452,14 @@ local function _uiMap(name, parent)
 
 		local thisElement
 		local mapInfo = mapData.mapElements[newElement.type]
+		
+		--if nkDebug then nkDebug.logEntry (addonInfo.identifier, "AddElement", "new element", mapInfo) end
 
 		if mapInfo.anim ~= nil then
 			thisElement = EnKai.uiCreateFrame("nkMapElementCanvas", newElement.type .. "." .. EnKai.tools.uuid(), mask)
 		elseif mapInfo.gfxType == nil or string.lower(mapInfo.gfxType) == 'texture' then
 			thisElement = EnKai.uiCreateFrame("nkMapElementTexture", newElement.type .. "." .. EnKai.tools.uuid(), mask)
+			if mapInfo.layer ~= nil then thisElement:SetLayer(mapInfo.layer) end
 		elseif string.lower(mapInfo.gfxType) == "canvas" then
 			thisElement = EnKai.uiCreateFrame("nkMapElementCanvas", newElement.type .. "." .. EnKai.tools.uuid(), mask)
 		end
