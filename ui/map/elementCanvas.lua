@@ -57,7 +57,7 @@ local function _uiMapElementCanvas(name, parent)
 	function mapElement:SetType(elementType)
 
 		thisMapData = mapData.mapElements[elementType]
-
+		
 		if radius ~= nil then
 			thisMapData.width = radius * 3
 			thisMapData.height = radius * 3
