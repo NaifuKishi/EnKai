@@ -31,6 +31,7 @@ local function _uiMapElementCanvas(name, parent)
 	local visibleState = false
 	local animationSpeed = 0
 	local lastX, lastY = 0, 0
+	local lastAngle = 0
 	local thisId
 
 	local path = {{xProportional = 0, yProportional = 0}, {xProportional = 0, yProportional = 1}, {xProportional = 1, yProportional = 1},  {xProportional = 1, yProportional = 0}, {xProportional = 0, yProportional = 0}}
@@ -166,6 +167,12 @@ local function _uiMapElementCanvas(name, parent)
 
 	function mapElement:SetAngle(angle) 
 
+		if lastAngle == nil then lastAngle = 0 end
+
+		local diff = math.abs(angle - lastAngle)
+
+		if diff < 15 then return end
+		
 		local newRadian
 
 		if thisMapData.angleCorr ~= nil then
@@ -178,6 +185,8 @@ local function _uiMapElementCanvas(name, parent)
 			radian = newRadian
 			mapElement:ReDraw()
 		end
+
+		lastAngle = angle
 
 	end
 
