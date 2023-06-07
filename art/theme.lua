@@ -23,7 +23,21 @@ local _themes = { default = { logo              = {'EnKai', 'gfx/EnKaiLogo.png'}
                               elementSubColor   = {r = 0.153, g = 0.314, b = 0.490, a = 1},
                               elementSubColor2  = { r = 0.078, g = 0.188, b = 0.306, a = 1},
                               highlightColor    = { r = 1, g = 1, b = 1, a = 1}
-  }
+  },
+                bw              = { logo              = {'EnKai', 'gfx/EnKaiLogo.png'},
+                                    labelColor        = {r = 1, g = 1, b = 1, a = 1},
+                                    windowColor       = { { r = 0, g = 0, b = 0, a = .6}, { r = 0, g = 0, b = 0, a = .6}, 
+                                                          { r = 1, g = 1, b = 1, a = 1}},
+                                    tabPaneColor      = { { r = 0, g = 0, b = 0, a = .8}, { r = 0, g = 0, b = 0, a = .8}, 
+                                                          { r = 1, g = 1, b = 1, a = 1}, {r = 1, g = 1, b = 1, a = 1}, {r = 1, g = 1, b = 1, a = 1}},
+                                    gridColor         = { { r = 0.078, g = 0.188, b = 0.306, a = 1}, {r = 0.153, g = 0.314, b = 0.490, a = 1}, 
+                                                          { r = 1, g = 1, b = 1, a = 1}, { r = 1, g = 1, b = 1, a = 1}, { r = 0, g = 0, b = 0, a = 1},
+                                                          { r = 1, g = 1, b = 1, a = 1}, { r = 1, g = 1, b = 1, a = 1}, { r = 0.051, g = 0.118, b = 0.192, a = 1}},
+                                    elementMainColor  = {r = .6, g = 0.6, b = 0.6, a = 1},
+                                    elementSubColor   = {r = 0, g = 0, b = 0, a = 1}, -- buttons
+                                    elementSubColor2  = { r = 0, g = 0, b = 0, a = 1}, -- checkboxes inner part
+                                    highlightColor    = { r = 1, g = 1, b = 1, a = 1}
+                  },
 }
 
 ---------- addon public function block ---------
