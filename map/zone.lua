@@ -208,6 +208,7 @@ local _zoneList= {
 local _zoneMapPOI = {
   z1E81B494CFA05AD0 = {	["z1E81B494CFA05AD0poi1"] = { coordX = 4022, coordZ = 2064, DE = "Der Turm des Magiers", EN = "The Magician's Tower", type = "POI.PORTAL" },
                         ["z1E81B494CFA05AD0poi2"] = { coordX = 4032, coordZ = 3420, DE = "Uttila-Ost", EN = "Uttila East", type = "POI.PORTAL" },
+                        ["z1E81B494CFA05AD0poi3"] = { coordX = 3082, coordZ = 2229, DE = "Kilcual", EN = "Kilcual", type = "POI.PORTAL" },
                      },
 	z6FEC49CAE466B014 = {	["z6FEC49CAE466B014poi1"] = { coordX = 4068, coordZ = 6297, DE = "Alittu", EN = "Alittu", type = "POI.PORTAL" } },
 	z7B2B0BB6E3EA1BEC = {	["z7B2B0BB6E3EA1BECpoi1"] = { coordX = 4866, coordZ = 5795, DE = "Feilbocan", EN = "Feilbocan", type = "POI.PORTAL" },
