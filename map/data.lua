@@ -66,7 +66,8 @@ mapData.mapData = {
   dungeon_exodusofthestormqueen = { addon="EnKai", path = "gfx/map/dungeon_exodusofthestormqueen.png", width = 359, height = 401, x1 = 540, x2 = 899, y1 = 405, y2 = 805},
   dungeon_caduceusrise          = { addon="EnKai", path = "gfx/map/dungeon_caduceusrise.png", width = 422, height = 500, x1 = 594, x2 = 1210, y1 = 857, y2 = 1586},
   dungeon_rhazadecanyons        = { addon="EnKai", path = "gfx/map/dungeon_rhazade_canyons.png", width = 565, height = 962, x1 = 653, x2 = 1781, y1 = 556, y2 = 2475},
-  dungeon_witchcircle			= { addon="EnKai", path = "gfx/map/dungeon_witchcircle.png", width = 578, height = 502, x1 = 464, x2 = 1622, y1 = 802, y2 = 1797},
+  dungeon_witchcircle			      = { addon="EnKai", path = "gfx/map/dungeon_witchcircle.png", width = 578, height = 502, x1 = 464, x2 = 1622, y1 = 802, y2 = 1797},
+  dungeon_themazeofsteel        = { addon="EnKai", path = "gfx/map/dungeon_themazeofsteel.png", width = 1133, height = 1090, x1 = 435, x2 = 855, y1 = 648, y2 = 1055},
   
   shoresofterror                = { addon="EnKai", path = "gfx/map/shoresofterror.png", width = 500, height = 443, x1 = 35, x2 = 750, y1 = 105, y2 = 740},
   mindofmadness					= { addon="EnKai", path = "gfx/map/mindofmadness.png", width = 4480, height = 1779, x1 = 30, x2 = 7652, y1 = 37, y2 = 3085},

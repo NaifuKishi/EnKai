@@ -47,7 +47,8 @@ local _zoneMapping= {
   dimension_hallsofshaping        = {"z23D81F35A786EF05"},
   dimension_anywhere              = {"z7ABF85D9EE126B32"},
   dimension_kestrelscryravine     = {"z67D30B0E23D4E71D"},
-  dimension_sanguine_shores		  = {"z35AF15C83AF5D79A"},
+  dimension_sanguine_shores		    = {"z35AF15C83AF5D79A"},
+  
   
   wf_codex                = {"z3E4D09700894552E"},
   wf_theblackgarden       = {"z05F5E1003F3825C9"},
@@ -57,7 +58,7 @@ local _zoneMapping= {
   wf_battleforportscion   = {"z3C5A92DE2A358F7F"},
   wf_gharstationeyn       = {"z19694FE4BDEDFFF4"},
   wf_libraryofrunemasters = {"z60A9C9C1C7D80AD0"},
-  wf_bronzetomb			  = {"z194F291D5548958D"},
+  wf_bronzetomb			      = {"z194F291D5548958D"},
   
   chronicle_herorises     = {"z0141CAE86D63845B"},
   chronicle_infernaldawn  = {"z5E4806E8B6029FA2"},
@@ -90,8 +91,9 @@ local _zoneMapping= {
   dungeon_citadelofinsanity    = {"z4141A2F7CF2BE5E7"},
   dungeon_exodusofthestormqueen= {"z3C1E5A27FCE87788"},
   dungeon_caduceusrise         = {"z75D546BB111B83A7"},
-  dungeon_rhazadecanyons	   = {"z5D5EC5F61912F9EA"},
-  dungeon_witchcircle			= {"z7D01D8B1EE3AF5FA"},
+  dungeon_rhazadecanyons	     = {"z5D5EC5F61912F9EA"},
+  dungeon_witchcircle			     = {"z7D01D8B1EE3AF5FA"},
+  dungeon_themazeofsteel       = {"z56567A3CAF3F3794"},
   
   shoresofterror               = {"z00000071F6B45F38"},
   
@@ -203,6 +205,7 @@ local _zoneList= {
 ,["z29C62C17C8FFBE46"]={DE="Chronik: Aschenfall", EN='Chronicle: Ashenfall', FR='Chronique: Chutecendres', type='instance', map="chronicle_ashenfall"}
 ,["z798505F47158EF64"]={DE="Wrack der Esperanza", EN='Wreck of the Endeavor', FR="L'épave du Novia", type='world', map="world1"}
 ,["z1E81B494CFA05AD0"]={DE="Vostigar-Gipfel", EN='Vostigar Peaks', FR="Pics de Vostigar", type='world', map="world4"}
+,["z56567A3CAF3F3794"]={DE="Das Stählerne Labyrinth", EN='The Maze of Steel', FR="Le labyrinthe d'acier", type='instance', map="dungeon_themazeofsteel"}
 }
 
 local _zoneMapPOI = {
