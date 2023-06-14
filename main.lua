@@ -41,8 +41,8 @@ local function _fctSettingsHandler(_, addon)
 	if EnKai.internal.checkEvents ("EnKai.internal", true) == false then return nil end
 	
 	local settings = {
-		mmButtonX = - 231,
-		mmButtonY = 37,
+		mmButtonX = -750,
+		mmButtonY = 500,
 		locked = true
 	}
 	

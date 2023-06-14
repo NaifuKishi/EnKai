@@ -23,8 +23,11 @@ local _startY = nil
 
 local function _uiAddonButton()
 
+  --print ("EnKai: UI Addon Button")
+  --print (EnKaiSetup.mmButtonX, EnKaiSetup.mmButtonY)
+  
   local button = EnKai.uiCreateFrame ('nkTexture', 'nkButton', _context)
-    
+
   button:SetTextureAsync('EnKai', 'gfx/nkButton.png')
   button:SetWidth(35)
   button:SetHeight(34)
