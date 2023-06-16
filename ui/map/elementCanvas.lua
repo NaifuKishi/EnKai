@@ -126,10 +126,15 @@ local function _uiMapElementCanvas(name, parent)
 		thisX = (parentMap:GetMap():GetWidth() * xP) - (mapElement:GetWidth() / 2)
 		thisY = (parentMap:GetMap():GetHeight() * yP) - (mapElement:GetWidth() / 2)
 
-		lastX = math.floor(thisX)
-		lastY = math.floor(thisY)
+		--print (math.floor(thisX), math.floor(thisY), lastX, lastY)
 
-		mapElement:SetPoint("TOPLEFT", parentMap:GetMap(), "TOPLEFT", thisX, thisY)
+		if math.floor(thisX) ~= lastX or math.floor(thisY) ~= lastY then
+
+			lastX = math.floor(thisX)
+			lastY = math.floor(thisY)
+
+			mapElement:SetPoint("TOPLEFT", parentMap:GetMap(), "TOPLEFT", thisX, thisY)
+		end
 
 	end
 
