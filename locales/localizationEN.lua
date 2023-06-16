@@ -328,8 +328,8 @@ if Inspect.System.Language() == "English" then
     { pattern = "Artifact Pinata", type = "EVENT.CARNIVAL", name = "DESC1"},
 	{ pattern = "Faerie Ring", type = "EVENT.AUTUMN", name = "DESC1"},
 	
-    {pattern = "Body of (%.+)", type = "UNIT.BODY",  regExCompute = {pattern = "name"} },	
-	{pattern = "(%.+) Corpse", type = "UNIT.BODY",  regExCompute = {pattern = "name"} },
+    {pattern = "Body of (.+)", type = "UNIT.BODY",  regExCompute = {pattern = "name"} },	
+	{pattern = "(.+) Corpse", type = "UNIT.BODY",  regExCompute = {pattern = "name"} },
   }
   
   lang.mapIdentifiersGeneric = {

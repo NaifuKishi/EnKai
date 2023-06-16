@@ -101,13 +101,10 @@ local function _fctCheckPattern (value)
 		local pattern = details.pattern
 
 		if details.regExCompute ~= nil then
-			local value1, _ = _sMatch(checkValue, pattern)
-			--print (value1, checkValue, pattern)      
+			local value1, _ = _sMatch(checkValue, pattern)			
 			if value1 ~= nil then return idx, details, details.type end             
 		elseif details.regExValues ~= nil then
 			local subValue = _sMatch(checkValue, pattern)
-
-			--print (subValue, checkValue, pattern)
 			
 			if subValue ~= nil then
 				--if string.find(value, "Bolidium") ~= nil then print (subValue, checkValue, pattern) end
@@ -214,7 +211,6 @@ local function _fctIdentify(values)
 
 	end
 	
-	
 	if titleIndex == 0 and descIndex == 0 then
 		if nkDebug then
 			EnKai.tools.error.display ("EnKai", "Could not identify map entry", 2)
@@ -243,6 +239,7 @@ local function _fctIdentify(values)
 	if mapIdentifier.regExCompute ~= nil and values.descList ~= nil then
 		for idx = 1, #values.descList, 1 do
 			local value1, value2, value3 = string.match(values.descList[idx], mapIdentifier.pattern)
+
 			if value1 ~= nil then
 				if  #mapIdentifier.regExCompute >= 1 then values[mapIdentifier.regExCompute[1]] = value1 end
 				if  #mapIdentifier.regExCompute >= 2 then values[mapIdentifier.regExCompute[2]] = value2 end
@@ -321,6 +318,7 @@ local function _fctMapEventChange (_, info)
   end
   
   local thisMapData = _InspectMapDetail(info)
+  
   local changeList, removeList = {}, {}
   local descTitleChange, hasChange = false, false
   addList = {}
@@ -452,7 +450,7 @@ local function _fctMapEventUnitAvailable (_, info)
 end
 
 local function _fctMapEventCombatDeath (_, info)
-  
+
   if data.playerDetails == nil or data.playerDetails.id == nil then return end
   
   if info.target == data.playerDetails.id then
@@ -637,7 +635,7 @@ end
 function internal.mapEvent.add (_, info)
 
   local thisMapData = _InspectMapDetail(info)
-  
+
   local changeList = {}
   local addList = {}
   local hasAdds, hasChanges = false, false
@@ -645,7 +643,7 @@ function internal.mapEvent.add (_, info)
   for key, values in pairs(thisMapData) do
   
     local identifiedValues = _fctIdentify(values)
-    
+
     if _mapPoints[key] ~= nil then
       changeList[key] = identifiedValues
       hasChanges = true

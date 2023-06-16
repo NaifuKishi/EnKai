@@ -342,7 +342,7 @@ if ( Inspect.System.Language() == "German"  ) then
 	{pattern = "Sommersonnenpflanze", type = "EVENT.SUMMER", name = "DESC1"},
     {pattern = "Artefaktpinata", type = "EVENT.CARNIVAL", name = "DESC1"},
 	{pattern = "Feenring", type = "EVENT.AUTUMN", name = "DESC1"},
-	
+	    
     --{pattern = "Leiche von (.+)", type = "UNIT.BODY",  regExCompute = {pattern = "name"} }, 
 	
   }
