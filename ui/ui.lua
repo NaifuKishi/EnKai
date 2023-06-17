@@ -223,7 +223,9 @@ function EnKai.uiCreateFrame (frameType, name, parent)
 	local checkFrameType = string.upper(frameType) 
 
 	if _freeElements[checkFrameType] ~= nil and #_freeElements[checkFrameType] > 0 then
+
 		if EnKai.internal.checkEvents (name, true) == false then return nil end
+
 		uiObject = _freeElements[checkFrameType][1]    
 		uiObject:SetParent(parent)
 
