@@ -341,7 +341,8 @@ if Inspect.System.Language() == "English" then
   lang.mapIdentifiersExcludeLevel = "Level "
   
   lang.mapIdentifiersVendors = {
-    "Bartender", "[Dd]ealer", "Goods", "Drinks", "Merchant", "Vendor", "Dimension Engineer", "Weapons", "Planar Vouchers", "Clothier", "Synergy Crystals", "Notoriety Dispensary", "Reagents", "Rift Lures", "Reagents", "Planar Recipes"
+    "Bartender", "[Dd]ealer", "Goods", "Drinks", "Merchant", "Vendor", "Dimension Engineer", "Weapons", "Planar Vouchers", "Clothier", "Synergy Crystals", "Notoriety Dispensary", "Reagents", "Rift Lures", 
+    "Reagents", "Planar Recipes", "Visionary Recipes", "Battle Pass Merchant", "Artifact Collector"
   }
   
   privateVars.langTexts = lang

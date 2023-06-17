@@ -357,7 +357,8 @@ if ( Inspect.System.Language() == "German"  ) then
   
   lang.mapIdentifiersVendors = {
     "Albtraumrisshändler", "[Tt]ränke&gt;$", "Ebenenwaren", "Gebrauchswaren", "(.+)[-]?[Hh]ändler[i]?[n]?&gt;$", "Laden der (%a+)", "Rüstung", "PvP Güter", "Nahkampfwaffen", "Fischhändlerin",
-    "Fernkampfwaffen", "Gastwirt[i]?[n]?", "Quartiermeister", "Seltene Waren", "Rissköder", "Reagenzien", "Ebenenanleitungen", "(.+)[Aa]usrüstung", "Schankwirt[i]?[n]?"
+    "Fernkampfwaffen", "Gastwirt[i]?[n]?", "Quartiermeister", "Seltene Waren", "Rissköder", "Reagenzien", "Ebenenanleitungen", "(.+)[Aa]usrüstung", "Schankwirt[i]?[n]?", "Visionäre Anleitungen",
+    "Battle Pass Merchant", "Artefaktsammlerin"
   }
   
   privateVars.langTexts = lang
