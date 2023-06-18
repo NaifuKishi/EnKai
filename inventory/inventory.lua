@@ -264,11 +264,14 @@ function EnKai.inventory.updateDB ()
 
 end
 
-
 function EnKai.inventory.getAllItems ()
 
 	return EnKaiInv[EnKai.unit.getPlayerDetails().name].itemCache
 	
+end
+
+function EnKai.inventory.GetItemByKey (key)
+	return EnKaiInv[EnKai.unit.getPlayerDetails().name].itemCache[key]
 end
 
 function EnKai.inventory.querySlotById (id)
@@ -350,7 +353,7 @@ function EnKai.inventory.queryByCategory (category)
 	local itemCache = EnKaiInv[EnKai.unit.getPlayerDetails().name].itemCache
 	
 	for id, details in pairs(itemCache) do
-		if details.category == category then			
+		if details.category == category then
 			local err, details = pcall(oFuncs.oInspectItemDetail, id)
 			if err and details then
 				retValues[id] = details
