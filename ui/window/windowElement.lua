@@ -328,7 +328,7 @@ local function _uiWindowElement(name, parent)
   end
   
   function window:SetTitleColor (r, g, b, a)
-	title:SetFontColor(r, g, b, a)
+	  title:SetFontColor(r, g, b, a)
   end
   
   function window:ShowContent(flag)

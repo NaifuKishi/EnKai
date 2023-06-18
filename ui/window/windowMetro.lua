@@ -30,7 +30,7 @@ local function _uiWindowMetro(name, parent)
   function window:destroy()
     internal.uiAddToGarbageCollector ('nkCanvas', window)
     internal.uiAddToGarbageCollector ('nkFrame', body)
-	internal.uiAddToGarbageCollector ('nkFrame', header)
+	  internal.uiAddToGarbageCollector ('nkFrame', header)
     internal.uiAddToGarbageCollector ('nkText', title)
     internal.uiAddToGarbageCollector ('nkTexture', closeIcon)
 	
