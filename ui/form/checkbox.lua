@@ -17,7 +17,7 @@ local function _uiCheckbox(name, parent)
 
 	local elementColor =  EnKai.art.GetThemeColor("elementMainColor")
 	local innerColor =  EnKai.art.GetThemeColor("elementSubColor2")
-  local labelColor = EnKai.art.GetThemeColor("labelColor")
+  	local labelColor = EnKai.art.GetThemeColor("labelColor")
 
 	local checkBox = EnKai.uiCreateFrame ('nkFrame', name, parent)
 	
@@ -31,23 +31,23 @@ local function _uiCheckbox(name, parent)
 	
 	-- GARBAGE COLLECTOR ROUTINES
   
-  function checkBox:destroy()
-    internal.uiAddToGarbageCollector ('nkFrame', checkBox)
-    internal.uiAddToGarbageCollector ('nkFrame', boxOuter)
-    internal.uiAddToGarbageCollector ('nkFrame', boxInner)
-    internal.uiAddToGarbageCollector ('nkFrame', boxMark)
-    internal.uiAddToGarbageCollector ('nkText', label)
-    
-    if roundOuter ~= nil then
-      internal.uiAddToGarbageCollector ('nkCanvas', roundOuter)
-    end
-    
-    if roundInner ~= nil then
-      internal.uiAddToGarbageCollector ('nkCanvas', roundInner)
-    end
-  end 
+	function checkBox:destroy()
+		internal.uiAddToGarbageCollector ('nkFrame', checkBox)
+		internal.uiAddToGarbageCollector ('nkFrame', boxOuter)
+		internal.uiAddToGarbageCollector ('nkFrame', boxInner)
+		internal.uiAddToGarbageCollector ('nkFrame', boxMark)
+		internal.uiAddToGarbageCollector ('nkText', label)
+
+		if roundOuter ~= nil then
+			internal.uiAddToGarbageCollector ('nkCanvas', roundOuter)
+		end
+
+		if roundInner ~= nil then
+			internal.uiAddToGarbageCollector ('nkCanvas', roundInner)
+		end
+	end 
   
-  -- SPECIFIC FUNCTIONS	
+	-- SPECIFIC FUNCTIONS	
 	
 	local properties = {}
 
