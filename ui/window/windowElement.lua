@@ -8,8 +8,14 @@ if not privateVars.uiFunctions then privateVars.uiFunctions = {} end
 
 local uiFunctions   = privateVars.uiFunctions
 local internal      = privateVars.internal
-local data       = privateVars.data
-local oFuncs	  = privateVars.oFuncs
+local data          = privateVars.data
+local oFuncs	      = privateVars.oFuncs
+
+---------- init local variables ---------
+
+local arrowTextureRight = "gfx/windowModernArrowRight.png"
+local arrowTextureDown = "gfx/windowModernArrowDown.png"
+local arrowTextureAddon =  "EnKai"
 
 ---------- addon internal function block ---------
 
@@ -120,7 +126,7 @@ local function _uiWindowElement(name, parent)
   arrow:SetWidth(14)
   arrow:SetHeight(14)
   arrow:SetPoint("CENTERLEFT", header, "CENTERLEFT", 5, 0)
-  arrow:SetTextureAsync("EnKai", "gfx/windowModernArrowRight.png")
+  arrow:SetTextureAsync(arrowTextureAddon, arrowTextureRight)
   
   arrow:EventAttach( Event.UI.Input.Mouse.Left.Down, function (self, _, x, y)
   
@@ -285,7 +291,17 @@ local function _uiWindowElement(name, parent)
   
   function window:GetContent() return body end
   function window:GetHeader() return header end
+  function window:GetArrow() return arrow end
+  function window:GetMoveCheckbox() return moveCheckbox end
   
+  function window:SetArrowTextures(addon, arrowRight, arrowDown)
+    arrowTextureAddon = addon
+    arrowTextureRight =  arrowRight
+    arrowTextureDown = arrowDown
+
+    arrow:SetTextureAsync(arrowTextureAddon, arrowTextureDown)
+  end
+
   function window:SetTitle(newTitle)
     title:ClearAll()
     title:SetText(newTitle)
@@ -329,6 +345,8 @@ local function _uiWindowElement(name, parent)
     body:SetBackgroundColor(r,g,b,a)
   end
   
+  -- ***** WINDOW SIZING *****
+
   local oSetWidth, oSetHeight, oSetPoint = window.SetWidth, window.SetHeight, window.SetPoint
     
   function window:SetWidth(newWidth)
@@ -377,11 +395,13 @@ local function _uiWindowElement(name, parent)
   function window:Collapse(flag)
     
     if flag == true then
-      arrow:SetTextureAsync("EnKai", "gfx/windowModernArrowRight.png")
+      --arrow:SetTextureAsync("EnKai", "gfx/windowModernArrowRight.png")
+      arrow:SetTextureAsync(arrowTextureAddon, arrowTextureRight)
       body:SetVisible(false)
       EnKai.eventHandlers[name]["Collapsed"](true)
     else
-      arrow:SetTextureAsync("EnKai", "gfx/windowModernArrowDown.png")
+      --arrow:SetTextureAsync("EnKai", "gfx/windowModernArrowDown.png")
+      arrow:SetTextureAsync(arrowTextureAddon, arrowTextureDown)
       body:SetVisible(true)
       EnKai.eventHandlers[name]["Collapsed"](false)
     end        
@@ -391,7 +411,8 @@ local function _uiWindowElement(name, parent)
     collapseable = flag
     if flag == true or autoHide == true then
       arrow:SetVisible(true)
-      arrow:SetTextureAsync("EnKai", "gfx/windowModernArrowDown.png")
+      --arrow:SetTextureAsync("EnKai", "gfx/windowModernArrowDown.png")
+      arrow:SetTextureAsync(arrowTextureAddon, arrowTextureDown)
       body:SetVisible(true)
     else
       arrow:SetVisible(false)
@@ -408,34 +429,36 @@ local function _uiWindowElement(name, parent)
     
     if collapseable == true then
       if body:GetVisible() == true then       
-        arrow:SetTextureAsync("EnKai", "gfx/windowModernArrowRight.png")
+        --arrow:SetTextureAsync("EnKai", "gfx/windowModernArrowRight.png")
+        arrow:SetTextureAsync(arrowTextureAddon, arrowTextureRight)
         body:SetVisible(false)
         --if autoHideHeader == true then window:SetAutoHideHeader(true, autoHideHeaderDuration, autoHideHeaderDelay) end
         EnKai.eventHandlers[name]["Collapsed"](true)        
       else
-        arrow:SetTextureAsync("EnKai", "gfx/windowModernArrowDown.png")
+        --arrow:SetTextureAsync("EnKai", "gfx/windowModernArrowDown.png")
+        arrow:SetTextureAsync(arrowTextureAddon, arrowTextureDown)
         body:SetVisible(true)
         EnKai.eventHandlers[name]["Collapsed"](false)
         --EnKai.fx.cancel (name .. '.autoHideHeader' )
       end
     elseif autoHide == true then
       window:SetAutoHide(false, 5)
-      arrow:SetTextureAsync("EnKai", "gfx/windowModernArrowDown.png")
+      --arrow:SetTextureAsync("EnKai", "gfx/windowModernArrowDown.png")
+      arrow:SetTextureAsync(arrowTextureAddon, arrowTextureDown)
       EnKai.eventHandlers[name]["Collapsed"](true)
     else
       window:SetAutoHide(true, 5)
-      arrow:SetTextureAsync("EnKai", "gfx/windowModernArrowRight.png")
+      --arrow:SetTextureAsync("EnKai", "gfx/windowModernArrowRight.png")
+      arrow:SetTextureAsync(arrowTextureAddon, arrowTextureRight)
       EnKai.eventHandlers[name]["Collapsed"](false)
     end
   end
   
   local oSetSecureMode = window.SetSecureMode
   
-  function window:SetSecureMode(newMode)
-  
-	oSetSecureMode(self, newMode)
-	body:SetSecureMode(newMode)
-  
+  function window:SetSecureMode(newMode)  
+    oSetSecureMode(self, newMode)
+    body:SetSecureMode(newMode)  
   end
   
   EnKai.eventHandlers[name]["Moved"], EnKai.events[name]["Moved"] = Utility.Event.Create(addonInfo.identifier, name .. "Moved") 

@@ -8,7 +8,7 @@ if not privateVars.uiFunctions then privateVars.uiFunctions = {} end
 
 local uiFunctions   = privateVars.uiFunctions
 local internal      = privateVars.internal
-local data       = privateVars.data
+local data       	= privateVars.data
 
 ---------- addon internal function block ---------
 
@@ -34,6 +34,8 @@ local function _uiWindow(name, parent)
 
 	window:SetValue("name", name)
 	window:SetValue("parent", parent)
+
+	-- ***** WINDOW DRAGGING *****
 	
 	dragFrame:SetPoint ("TOPLEFT", window, "TOPLEFT", 0, 0)
 	dragFrame:SetHeight(60)
@@ -76,6 +78,8 @@ local function _uiWindow(name, parent)
 	    self.leftDown = false
 	    EnKai.eventHandlers[name]["Moved"](window:GetLeft(), window:GetTop())
 	end, name .. "dragFrame.Left.Upoutside")
+
+	-- ***** CLOSE BUTTON *****
 	
 	btClose:SetSkin("close")
 	btClose:SetPoint("TOPRIGHT", window, "TOPRIGHT", -8, 15)
@@ -83,6 +87,8 @@ local function _uiWindow(name, parent)
 	btClose:EventAttach(Event.UI.Input.Mouse.Left.Click, function ()
 		if oFuncs.oInspectSystemSecure() == false or allowSecureClose == true then window:SetVisible(false) end
 	end, name .. "btClose.Left.Click")
+
+	-- ***** WINDOW FUNCTIONS *****
 
 	function window:SetDragable (flag)
 		dragFrame:SetVisible(flag)
@@ -96,6 +102,8 @@ local function _uiWindow(name, parent)
 		if flag == true then allowSecureClose = false else allowSecureClose = true end
 	end
 		
+	-- ***** WINDOW SIZING *****
+
 	local oSetWidth, oSetHeight, oSetPoint = window.SetWidth, window.SetHeight, window.SetPoint
 	
 	function window:SetWidth(width)
@@ -122,6 +130,8 @@ local function _uiWindow(name, parent)
 		end
 		
 	end
+
+	-- ***** EVENT HANDLERS *****
 	
 	EnKai.eventHandlers[name]["Moved"], EnKai.events[name]["Moved"] = Utility.Event.Create(addonInfo.identifier, name .. "Moved")
 		

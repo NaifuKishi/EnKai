@@ -37,10 +37,10 @@ local function _uiActionButtonMetro(name, parent)
 	
 	local path = {{xProportional = 0, yProportional = 0}, {xProportional = 0, yProportional = 1}, {xProportional = 1, yProportional = 1}, 
                 {xProportional = 1, yProportional = 0}, {xProportional = 0, yProportional = 0}}
-	local stroke = EnKai.art.GetThemeColor('elementMainColor')
+	local stroke = EnKai.tools.table.copy (EnKai.art.GetThemeColor('elementMainColor'))
 	stroke.thickness = 1
 	
-	local fill = EnKai.art.GetThemeColor("elementSubColor2")
+	local fill = EnKai.tools.table.copy (EnKai.art.GetThemeColor("elementSubColor2"))	
 	fill.type = "solid"
 
 	button:SetShape(path, fill, stroke)
@@ -97,7 +97,15 @@ local function _uiActionButtonMetro(name, parent)
 	function button:SetActiveState(flag)
 		if flag == true then tint:SetVisible(false) else tint:SetVisible(true) end
 	end
-	
+
+	function button:SetColor(r, g, b, a)
+		fill.r = r
+		fill.g = g
+		fill.b = b
+		fill.a = a
+		button:SetShape(path, fill, stroke)
+	end	
+
 	function button:SetBackgroundColor(r, g, b, a)
 		stroke.r = r
 		stroke.g = g
