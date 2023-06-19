@@ -74,26 +74,26 @@ local function _uiActionButtonMetro(name, parent)
 		texture:SetHeight(42 * newScale)
 	end
 	
-  function button:ClearTexture() texture:SetVisible(false) end
+  	function button:ClearTexture() texture:SetVisible(false) end
   
-  function button:SetTexture(addonName, path)
+	function button:SetTexture(addonName, path)
 		texture:SetTextureAsync (addonName, path)
 		texture:SetVisible(true)
 	end
-	
+
 	function button:GetTexture()
 		return texture:GetTexture()
 	end
-	
+
 	function button:SetDragable(flag)
 		dragable = flag
 	end
-	
+
 	function button:SetMacro(newMacro)
 		button:SetSecureMode('restricted')
 		button:EventMacroSet(Event.UI.Input.Mouse.Left.Click, newMacro)
 	end
-	
+
 	function button:SetActiveState(flag)
 		if flag == true then tint:SetVisible(false) else tint:SetVisible(true) end
 	end
@@ -113,21 +113,21 @@ local function _uiActionButtonMetro(name, parent)
 		stroke.a = a
 		button:SetShape(path, fill, stroke)
 	end
-	
+
 	function button:SetTintColor(r, g, b, a) tint:SetBackgroundColor(r, g, b, a) end
 	function button:ShowTint(flag) tint:SetVisible(flag) end
-	
+
 	local oSetPoint = button.SetPoint
-	
+
 	function button:SetPoint(from, object, to, x, y)
-	
+
 		if x ~= nil and y ~= nil then			
 			oSetPoint(self, from, object, to, x, y)
 		else
 			oSetPoint(self, from, object, to)
 		end
 	end	
-	
+
 	button:EventAttach(Event.UI.Input.Mouse.Right.Down, function (self)
 		
 		if dragable == false then
@@ -149,28 +149,28 @@ local function _uiActionButtonMetro(name, parent)
 		button:SetPoint("TOPLEFT", UIParent, "TOPLEFT", left, top)
 		button:SetWidth(right-left)
 		button:SetHeight(bottom-top)
-	
+
 	end, name .. "button.Right.Down")
-	
+
 	button:EventAttach( Event.UI.Input.Mouse.Cursor.Move, function (self, _, x, y)	
 		if self.rightDown ~= true then return end
 		button:SetPoint("TOPLEFT", UIParent, "TOPLEFT", x - self.originalXDiff, y - self.originalYDiff)
 	end, name .. "button.Cursor.Move")
-	
+
 	button:EventAttach( Event.UI.Input.Mouse.Right.Up, function (self)	
-	    self.rightDown = false
+		self.rightDown = false
 		EnKai.eventHandlers[name]["Moved"](button:GetLeft(), button:GetTop())
 	end, name .. "button.Right.Up")
-	
+
 	button:EventAttach(Event.UI.Input.Mouse.Left.Click, function ()
 		if dragable == true then return end
 		EnKai.eventHandlers[name]["Clicked"]()
 	end, name .. ".UI.Input.Mouse.Left.Click")
-	
+
 	button:EventAttach( Event.UI.Input.Mouse.Cursor.In, function ()	
 		EnKai.eventHandlers[name]["MouseIn"]()
 	end, name .. "button.Cursor.In")
-	
+
 	button:EventAttach( Event.UI.Input.Mouse.Cursor.Out, function ()	
 		EnKai.eventHandlers[name]["MouseOut"]()
 	end, name .. "button.Cursor.Out")

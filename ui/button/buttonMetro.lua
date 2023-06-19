@@ -128,8 +128,9 @@ local function _uiButtonMetro(name, parent)
 		button:Redraw()
 	end
 
-	function button:SetBorderColor(r, g, b)
+	function button:SetBorderColor(r, g, b, a)
 		stroke.r, stroke.g, stroke.b = r, g, b
+		if a ~= nil then stroke.a = a end
 		--fillHighlight.r, fillHighlight.g, fillHighlight.b = r * .8, g * .8, b * .8
 		button:Redraw()
 	end

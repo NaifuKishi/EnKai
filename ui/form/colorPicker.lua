@@ -180,9 +180,10 @@ local function _uiColorPicker(name, parent)
 	
 	local colorPicker = EnKai.uiCreateFrame ('nkFrame', name, parent)	
 	local label = EnKai.uiCreateFrame ('nkText', name .. '.label', colorPicker)
+	local labelColor = EnKai.art.GetThemeColor("labelColor")
 	
 	label:SetPoint("CENTERLEFT", colorPicker, "CENTERLEFT")
-	label:SetFontColor (1, 1, 1, 1)
+	label:SetFontColor(labelColor.r, labelColor.g, labelColor.b, labelColor.a)	
 	label:SetWordwrap(false)
 	label:SetHeight(18)
 	label:SetFontSize(13)
