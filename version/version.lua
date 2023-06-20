@@ -13,9 +13,13 @@ local oFuncs	  = privateVars.oFuncs
 local _playerStore = {}
 local _playerUnit = nil
 
+local blacklist = {"5.03v01.R"}
+
 ---------- local function block ---------
 
 local function fctCheckVersion (myVersion, reportedVersion)
+
+  if EnKai.tools.table.isMember(blacklist, reportedVersion) then return false end
 
 	-- returns false if the myVersion is smaller than reportedVersion
 
