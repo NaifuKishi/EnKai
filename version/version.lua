@@ -19,7 +19,7 @@ local blacklist = {"5.03v01.R"}
 
 local function fctCheckVersion (myVersion, reportedVersion)
 
-  if EnKai.tools.table.isMember(blacklist, reportedVersion) then return false end
+  if EnKai.tools.table.isMember(blacklist, reportedVersion) then return true end
 
 	-- returns false if the myVersion is smaller than reportedVersion
 
