@@ -94,6 +94,7 @@ local _zoneMapping= {
   dungeon_rhazadecanyons	     = {"z5D5EC5F61912F9EA"},
   dungeon_witchcircle			     = {"z7D01D8B1EE3AF5FA"},
   dungeon_themazeofsteel       = {"z56567A3CAF3F3794"},
+  dungeon_templeofananke       = {"z6D32679BF5BCB74D"},
   
   shoresofterror               = {"z00000071F6B45F38"},
   
@@ -206,6 +207,7 @@ local _zoneList= {
 ,["z798505F47158EF64"]={DE="Wrack der Esperanza", EN='Wreck of the Endeavor', FR="L'épave du Novia", type='world', map="world1"}
 ,["z1E81B494CFA05AD0"]={DE="Vostigar-Gipfel", EN='Vostigar Peaks', FR="Pics de Vostigar", type='world', map="world4"}
 ,["z56567A3CAF3F3794"]={DE="Das Stählerne Labyrinth", EN='The Maze of Steel', FR="Le labyrinthe d'acier", type='instance', map="dungeon_themazeofsteel"}
+,["z6D32679BF5BCB74D"]={DE="Tempel von Ananke", EN='Temple of Ananke', FR="Temple d'Ananke", type='instance', map="dungeon_templeofananke"}
 }
 
 local _zoneMapPOI = {
@@ -213,18 +215,27 @@ local _zoneMapPOI = {
                         ["z1E81B494CFA05AD0poi2"] = { coordX = 4032, coordZ = 3420, DE = "Uttila-Ost", EN = "Uttila East", type = "POI.PORTAL" },
                         ["z1E81B494CFA05AD0poi3"] = { coordX = 3082, coordZ = 2229, DE = "Kilcual", EN = "Kilcual", type = "POI.PORTAL" },
                         ["z1E81B494CFA05AD0poi4"] = { coordX = 3815, coordZ = 3857, DE = "Treppe von Vostigar", EN = "Vostigar Stairs", type = "POI.PORTAL" },
+                        ["z1E81B494CFA05AD0poi5"] = { coordX = 4024, coordZ = 1685, DE = "Die stählerne Bastion", EN = "The Bastion of Steel", type = "POI.DUNGEON" },
                      },
-	z6FEC49CAE466B014 = {	["z6FEC49CAE466B014poi1"] = { coordX = 4068, coordZ = 6297, DE = "Alittu", EN = "Alittu", type = "POI.PORTAL" } },
+	z6FEC49CAE466B014 = {	["z6FEC49CAE466B014poi1"] = { coordX = 4068, coordZ = 6297, DE = "Alittu", EN = "Alittu", type = "POI.PORTAL" },
+                        ["z6FEC49CAE466B014poi2"] = { coordX = 4054, coordZ = 6055, DE = "Enclave of Ahnket", EN = "Enclave of Ahnket", type = "POI.DUNGEON" },
+                        ["z6FEC49CAE466B014poi3"] = { coordX = 4024, coordZ = 6267, DE = "Intrepid Darkening Deeps", EN = "Intrepid Darkening Deeps", type = "POI.DUNGEON" },
+                     },
 	z7B2B0BB6E3EA1BEC = {	["z7B2B0BB6E3EA1BECpoi1"] = { coordX = 4866, coordZ = 5795, DE = "Feilbocan", EN = "Feilbocan", type = "POI.PORTAL" },
-							["z7B2B0BB6E3EA1BECpoi2"] = { coordX = 6221, coordZ = 5618, DE = "Schwarzdornfälle", EN = "Blackthorn Fall", type = "POI.PORTAL" },
-							["z7B2B0BB6E3EA1BECpoi3"] = { coordX = 5247, coordZ = 5019, DE = "Schattenmarkt", EN = "Shadow Market", type = "POI.PORTAL" }},
+                        ["z7B2B0BB6E3EA1BECpoi2"] = { coordX = 6221, coordZ = 5618, DE = "Schwarzdornfälle", EN = "Blackthorn Fall", type = "POI.PORTAL" },
+                        ["z7B2B0BB6E3EA1BECpoi3"] = { coordX = 5247, coordZ = 5019, DE = "Schattenmarkt", EN = "Shadow Market", type = "POI.PORTAL" },
+                        ["z7B2B0BB6E3EA1BECpoi4"] = { coordX = 5519, coordZ = 4884, DE = "Tuath’de Coven", EN = "Tuath’de Coven", type = "POI.DUNGEON" }},
 	z480CCFE1F3A277E9 = {	["z480CCFE1F3A277E9poi1"] = { coordX = 4175, coordZ = 3897, DE = "Bailghol", EN = "Bailghol", type = "POI.PORTAL" },
-							["z480CCFE1F3A277E9poi2"] = { coordX = 4036, coordZ = 4285, DE = "Lager Morast", EN = "Camp Mire", type = "POI.PORTAL" }},
+						          	["z480CCFE1F3A277E9poi2"] = { coordX = 4036, coordZ = 4285, DE = "Lager Morast", EN = "Camp Mire", type = "POI.PORTAL" }},
 	z5AA06689CCBB9285 = {	 },
 	z77AC247EDB5F0186 = {	["z77AC247EDB5F0186poi1"] = { coordX = 3133, coordZ = 5291, DE = "Lager Veist", EN = "Camp Veist", type = "POI.PORTAL" },
-							["z77AC247EDB5F0186poi2"] = { coordX = 2615, coordZ = 4300, DE = "Thedeors Speer", EN = "Thedeor’s Spear", type = "POI.PORTAL" }},
+							          ["z77AC247EDB5F0186poi2"] = { coordX = 2615, coordZ = 4300, DE = "Thedeors Speer", EN = "Thedeor’s Spear", type = "POI.PORTAL" },
+                        ["z77AC247EDB5F0186poi3"] = { coordX = 2176, coordZ = 4601, DE = "Tartarische Tiefen", EN = "Tartaric Depths", type = "POI.DUNGEON" },
+                        ["z77AC247EDB5F0186poi4"] = { coordX = 2650, coordZ = 4428, DE = "Temple von Ananke", EN = "Temple of Ananke", type = "POI.DUNGEON" },
+                        ["z77AC247EDB5F0186poi5"] = { coordX = 3490, coordZ = 4717, DE = "Intrepid Gyel Fortress", EN = "Intrepid Gyel Fortress", type = "POI.DUNGEON" },
+                      },
 	z2EF8C4A4103B159A = {	["z2EF8C4A4103B159Apoi1"] = { coordX = 3601, coordZ = 6493, DE = "Sankt Tanaris", EN = "Saint Tanaris", type = "POI.PORTAL" },
-							["z2EF8C4A4103B159Apoi2"] = { coordX = 2015, coordZ = 6836, DE = "Valley of the Morning Start", EN = "Valley of the Morning Start", type = "POI.PORTAL" }},
+							          ["z2EF8C4A4103B159Apoi2"] = { coordX = 2015, coordZ = 6836, DE = "Tal des Morgensterns", EN = "Valley of the Morning Start", type = "POI.PORTAL" }},
   z000000069C1F0227 = { ["z000000069C1F0227poi1"] = { coordX = 5626, coordZ = 6646, DE = "Scheuerschwallhafen", EN = "Gritsquall Haven", type = "POI.QUESTHUB" },
                         ["z000000069C1F0227poi2"] = { coordX = 6086, coordZ = 7309, DE = "Wurmfluchspitze", EN = "Wyrmbane Spire", type = "POI.QUESTHUB" },
                         ["z000000069C1F0227poi3"] = { coordX = 6530, coordZ = 7425, DE = "Windzorn-Außenposten", EN = "Windfury Post", type = "POI.QUESTHUB" },
@@ -621,7 +632,7 @@ local _zoneMapPOI = {
                         ["z39095BA75AD7DC03poi18"] = { coordX = 12980, coordZ = 6485, DE = "Senviva-Anwesen", EN = "Senviva Estate", type = "POI.OTHER" },
                         ["z39095BA75AD7DC03poi19"] = { coordX = 13525, coordZ = 6385, DE = "Totenpass", EN = "Dead Pass", type = "POI.OTHER" },
                         ["z39095BA75AD7DC03poi20"] = { coordX = 15235, coordZ = 5490, DE = "Ewige Sonnenfinsternis", EN = "Endless Eclipse", type = "POI.DUNGEON" },
-						["z39095BA75AD7DC03poi21"] = { coordX = 13201, coordZ = 7410, DE = "Schwarze Gestade", EN = "Black Strand", type = "POI.PORTAL" },
+						            ["z39095BA75AD7DC03poi21"] = { coordX = 13201, coordZ = 7410, DE = "Schwarze Gestade", EN = "Black Strand", type = "POI.PORTAL" },
   },
   
   z59124F7DD7F15825 = { ["z59124F7DD7F15825poi1"] = { coordX = 11625, coordZ = 6080, DE = "Das Eitermoor", EN = "The Pus Swamp", type = "POI.OTHER" },

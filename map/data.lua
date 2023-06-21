@@ -68,12 +68,13 @@ mapData.mapData = {
   dungeon_rhazadecanyons        = { addon="EnKai", path = "gfx/map/dungeon_rhazade_canyons.png", width = 565, height = 962, x1 = 653, x2 = 1781, y1 = 556, y2 = 2475},
   dungeon_witchcircle			      = { addon="EnKai", path = "gfx/map/dungeon_witchcircle.png", width = 578, height = 502, x1 = 464, x2 = 1622, y1 = 802, y2 = 1797},
   dungeon_themazeofsteel        = { addon="EnKai", path = "gfx/map/dungeon_themazeofsteel.png", width = 1133, height = 1090, x1 = 435, x2 = 855, y1 = 648, y2 = 1055},
+  dungeon_templeofananke        = { addon="EnKai", path = "gfx/map/dungeon_templeofananke.png", width = 818, height = 1147, x1 = 887, x2 = 2015, y1 = 657, y2 = 2238},
   
   shoresofterror                = { addon="EnKai", path = "gfx/map/shoresofterror.png", width = 500, height = 443, x1 = 35, x2 = 750, y1 = 105, y2 = 740},
-  mindofmadness					= { addon="EnKai", path = "gfx/map/mindofmadness.png", width = 4480, height = 1779, x1 = 30, x2 = 7652, y1 = 37, y2 = 3085},
+  mindofmadness					        = { addon="EnKai", path = "gfx/map/mindofmadness.png", width = 4480, height = 1779, x1 = 30, x2 = 7652, y1 = 37, y2 = 3085},
   
   raid_frozentempest            = { addon="EnKai", path = "gfx/map/raid_frozentempest.png", width = 250, height = 500, x1 = 679, x2 = 1207, y1 = 251, y2 = 1322},
-  raid_cometofahnket			= { addon="EnKai", path = "gfx/map/raid_cometofahnket.png", width = 1632, height = 1420, x1 = 469, x2 = 1565, y1 = 356, y2 = 1308},
+  raid_cometofahnket			      = { addon="EnKai", path = "gfx/map/raid_cometofahnket.png", width = 1632, height = 1420, x1 = 469, x2 = 1565, y1 = 356, y2 = 1308},
   
   hammerknell                   = { addon="EnKai", path = "gfx/map/hammerknell.png", width = 1925, height = 1039, x1 = 112, x2 = 2037, y1 = 22, y2 = 1060},
   greenscale                    = { addon="EnKai", path = "gfx/map/greenscaleslair.png", width = 356, height = 493, x1 = 388, x2 = 743, y1 = 245, y2 = 737},  
