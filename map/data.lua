@@ -199,7 +199,7 @@ mapData.mapElements = {
   
   ["QUEST.RETURN"] = { path = "NPCDialogIcon_questcomplete.png.dds", width = 32, height = 32, minZoom = 1, layer = 99},
   ["QUEST.PROGRESS"] = { path = "NPCDialogIcon_questprogress.png.dds", width = 32, height = 32, minZoom = 1, layer = 98},
-  ["QUEST.START"] = { path = "indicator_quest_new.png.dds", width = 32, height = 64, layer = 99, minZoom = 1, layer = 97},
+  ["QUEST.START"] = { path = "indicator_quest_new.png.dds", width = 32, height = 32, layer = 99, minZoom = 1, layer = 97},
   ["QUEST.PVPDAILY"] = { path = "NPCDialogIcon_questrepeat_pvpD.png.dds", width = 32, height = 32, layer = 99, minZoom = 1, layer = 97},
   ["QUEST.DAILY"] = { path = "indicator_quest_repeatable.png.dds", width = 32, height = 32, layer = 99, minZoom = 1, layer = 97},
   ["QUEST.MISSING"] = { path = "indicator_quest_highlevel.png.dds", width = 32, height = 32, layer = 98, minZoom = 1, layer = 97},
