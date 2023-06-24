@@ -53,9 +53,6 @@ local function _removeItem (slot)
 	local inventory = EnKaiInv[EnKai.unit.getPlayerDetails().name].inventory
 	local itemCache = EnKaiInv[EnKai.unit.getPlayerDetails().name].itemCache
 	
-	--print ('removing item in slot: ' .. slot)
-	--dump (inventory.bySlot[slot])
-	
 	local slotDetails = inventory.bySlot[slot]
 	local cacheDetails = itemCache[slotDetails.id]
 	
@@ -150,14 +147,13 @@ local function _fctProcessUpdate (_, updates)
 					dump(inventory.bySlot[slot])
 				else
 					if key ~= inventory.bySlot[slot].id then -- not just more of the same
-					if updatedKeys[inventory.bySlot[slot].id] == nil then updatedKeys[inventory.bySlot[slot].id] = 0 end
+						if updatedKeys[inventory.bySlot[slot].id] == nil then updatedKeys[inventory.bySlot[slot].id] = 0 end
 						
 						--print ("remove qty " .. inventory.bySlot[slot].id .. ": " .. inventory.bySlot[slot].stack)
 						
 						updatedKeys[inventory.bySlot[slot].id] = updatedKeys[inventory.bySlot[slot].id] - inventory.bySlot[slot].stack
 						_removeItem (slot)
-						
-						
+												
 					end
 				end
 			end
@@ -166,6 +162,7 @@ local function _fctProcessUpdate (_, updates)
 				local updateDetails = oFuncs.oInspectItemDetail(key)
 				
 				if updateDetails ~= nil then
+					--print (updateDetails.category)
 				
 					if updateDetails.stack == nil then updateDetails.stack = 1 end
 					local qty = 0
@@ -212,27 +209,6 @@ end
 
 ---------- library public function block ---------
 
-function EnKai.inventory.findFreeBagSlot(bag)
-
-	local startBag, endBag = 1, 8
-	if bag then startBag, endBag = bag, bag end
-
-	for idx = startBag, endBag, 1 do
-		local bagSlot = _iUtilityItemSlotInventory(idx)
-		
-		if bagSlot then
-			local bagInfo = _iInspectItemList(bagSlot)
-
-			for slot, details in pairs (bagInfo) do
-				if details == false then return slot end    
-			end
-		end
-	end
-	
-	return nil
-
-end
-
 function EnKai.inventory.init (updateFlag)
 
 	if not _invManager then
@@ -261,6 +237,27 @@ function EnKai.inventory.updateDB ()
 	else
 		_fctGetInventory()
 	end
+
+end
+
+function EnKai.inventory.findFreeBagSlot(bag)
+
+	local startBag, endBag = 1, 8
+	if bag then startBag, endBag = bag, bag end
+
+	for idx = startBag, endBag, 1 do
+		local bagSlot = _iUtilityItemSlotInventory(idx)
+		
+		if bagSlot then
+			local bagInfo = _iInspectItemList(bagSlot)
+
+			for slot, details in pairs (bagInfo) do
+				if details == false then return slot end    
+			end
+		end
+	end
+	
+	return nil
 
 end
 
