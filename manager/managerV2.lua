@@ -30,7 +30,7 @@ local _buttons = {}
 local _buttonIcons = {}
 local _frame = nil
 
-local function _fctSecureEnter() _frame:CloseAllMenus () end
+--local function _fctSecureEnter() _frame:CloseAllMenus () end
 
 --[[
    _createFrame
@@ -94,7 +94,7 @@ local function _updateFrame()
 
     if not _frame then
         _createFrame()
-        Command.Event.Attach(Event.System.Secure.Enter, _fctSecureEnter, "nkManagerv2.System.Secure.Enter")
+        --Command.Event.Attach(Event.System.Secure.Enter, _fctSecureEnter, "nkManagerv2.System.Secure.Enter")
     end
 
     -- Clear existing buttons
