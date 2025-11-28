@@ -17,13 +17,21 @@ local internal   		= privateVars.internal
 local uiFunctions		= privateVars.uiFunctions
 local uiNames    		= privateVars.uiNames
 local uiElements		= privateVars.uiElements
-local oFuncs	  		= privateVars.oFuncs
 
 local uiContext   		= privateVars.uiContext
 local uiTooltipContext	= nil
 
 if not uiElements.messageDialog then uiElements.messageDialog = {} end
 if not uiElements.confirmDialog then uiElements.confirmDialog = {} end
+
+local InspectSystemSecure 		= Inspect.System.Secure
+local InspectAddonCurrent 		= Inspect.Addon.Current
+local InspectAbilityNewDetail	= Inspect.Ability.New.Detail
+local InspectAbilityDetail		= Inspect.Ability.Detail
+local stringUpper				= string.upper
+local stringFormat				= string.format
+local stringLower				= string.lower
+local stringGSub				= string.gsub
 
 ---------- init variables --------- 
 
@@ -38,9 +46,41 @@ data.uiBoundLeft, data.uiBoundTop, data.uiBoundRight, data.uiBoundBottom = UIPar
 local _gc = {}
 local _freeElements = {}
 --local tooltipCheckTime
+local _fonts = {}
 
 ---------- local function block ---------
 
+--[[
+    _recycleElement
+
+    Description:
+        This function prepares a UI element for reuse by resetting its properties and clearing its state.
+        It's typically used when recycling elements from the garbage collector to the free elements pool.
+
+    Parameters:
+        element (object): The UI element to be recycled
+        elementType (string): The type of the UI element (e.g., 'nkFrame', 'nkCanvas', etc.)
+
+    Returns:
+        None
+
+    Process:
+        1. Hides the element by setting its visibility to false
+        2. Clears all positioning and layout information
+        3. Resets the background color to transparent
+        4. Sets the element to the default strata and layer
+        5. Sets mouse masking to full (blocks all mouse interactions)
+        6. Resets the element's dimensions to 0x0
+        7. Clears any mouseover unit that might be set
+        8. Detaches all event handlers from the element
+        9. Calls the element's internal _recycle method to complete the recycling process
+
+    Notes:
+        - This function is typically called when moving elements from the garbage collector to the free elements pool
+        - The function ensures the element is in a clean state before being reused
+        - The _recycle method is called to complete the recycling process
+        - Event handlers are detached to prevent memory leaks
+]]
 local function _recycleElement (element, elementType)
 
 	element:SetVisible(false)
@@ -64,6 +104,27 @@ local function _recycleElement (element, elementType)
 	
 end
 
+--[[
+    _setInsecure
+
+    Description:
+        This function sets a UI element to insecure mode, allowing it to be modified by insecure code.
+        This is typically used when converting restricted elements to normal elements in the garbage collector.
+
+    Parameters:
+        element (object): The UI element to be set to insecure mode
+
+    Returns:
+        None
+
+    Process:
+        1. Sets the element's secure mode to "normal" (insecure)
+
+    Notes:
+        - This function is typically called when converting restricted elements to normal elements
+        - The function is used in the garbage collector to make elements available for reuse
+        - The conversion might fail if the element has secure dependencies
+]]
 local function _setInsecure (element)
 
   element:SetSecureMode("normal")
@@ -75,27 +136,88 @@ end
 -- the below is a prototype to frame resuing
 -- missing SetName() on frames to fully build this
 
+--[[
+    internal.uiAddToGarbageCollector
+
+    Description:
+        This function adds a UI element to the garbage collector (_gc) table for later recycling.
+        It categorizes elements based on their secure mode (normal or restricted) and triggers
+        a garbage collection changed event.
+
+    Parameters:
+        frameType (string): The type of frame being added to the garbage collector
+        element (object): The UI element to be added to the garbage collector
+
+    Returns:
+        None
+
+    Process:
+        1. Converts the frame type to uppercase for consistent comparison
+        2. Initializes the garbage collector table for the frame type if it doesn't exist
+        3. Initializes the normal and restricted element tables for the frame type if they don't exist
+        4. Adds the element to the appropriate secure mode table in the garbage collector
+        5. Hides the element if the system is not in secure mode or the element is normal
+        6. Triggers a garbage collection changed event
+
+    Notes:
+        - The function maintains separate tables for normal and restricted elements
+        - Elements are hidden when added to the garbage collector if appropriate
+        - The function triggers an event to notify other systems of the garbage collection change
+        - The function ensures proper initialization of the garbage collector tables
+]]
 function internal.uiAddToGarbageCollector (frameType, element)
 
-  local checkFrameType = string.upper(frameType) 
+  local checkFrameType = stringUpper(frameType) 
 
   if _gc[checkFrameType] == nil then _gc[checkFrameType] = {} end
   if _gc[checkFrameType].normal == nil then _gc[checkFrameType].normal = {} end
   if _gc[checkFrameType].restricted == nil then _gc[checkFrameType].restricted = {} end
   
   table.insert(_gc[checkFrameType][element:GetSecureMode()], element) 
-  if oFuncs.oInspectSystemSecure() == false or element:GetSecureMode() == 'normal' then element:SetVisible(false) end
+  if InspectSystemSecure() == false or element:GetSecureMode() == 'normal' then element:SetVisible(false) end
   
   EnKai.eventHandlers["EnKai.internal"]["gcChanged"]()
   
 end  
 
+--[[
+    internal.uiGarbageCollector
+
+    Description:
+        This function processes elements in the garbage collector (_gc) table, recycling them for reuse.
+        It handles both secure and insecure elements, moving them to the free elements pool (_freeElements).
+        The function also triggers an event when the garbage collection changes.
+
+    Parameters:
+        None
+
+    Returns:
+        None
+
+    Process:
+        1. Checks if the system is in secure mode
+        2. Processes restricted elements first if not in secure mode:
+           - Attempts to make restricted elements insecure
+           - Recycles successful conversions
+           - Handles failed conversions
+        3. Processes normal elements:
+           - Recycles all normal elements
+           - Moves them to the free elements pool
+        4. Clears processed elements from the garbage collector
+        5. Triggers a garbage collection changed event if any elements were processed
+        6. Includes debug tracing if nkDebug is available
+
+    Notes:
+        - The function handles both secure and insecure elements differently
+        - Restricted elements are only processed when not in secure mode
+        - The function maintains separate pools for different element types
+        - Debug tracing is included for performance monitoring
+]]
 function internal.uiGarbageCollector ()
-
 	local debugId  
-    if nkDebug then debugId = nkDebug.traceStart (oFuncs.oInspectAddonCurrent(), "EnKai internal.uiGarbageCollector") end
+    if nkDebug then debugId = nkDebug.traceStart (InspectAddonCurrent(), "EnKai internal.uiGarbageCollector") end
 
-	local secure = oFuncs.oInspectSystemSecure()
+	local secure = InspectSystemSecure()
 	local flag = false
 	local restrictedFailed = false
 
@@ -142,10 +264,36 @@ function internal.uiGarbageCollector ()
 
 	if flag == true then EnKai.eventHandlers["EnKai.internal"]["gcChanged"]() end
 
-	if nkDebug then nkDebug.traceEnd (oFuncs.oInspectAddonCurrent(), "EnKai internal.uiGarbageCollector", debugId) end	
-	
+	if nkDebug then nkDebug.traceEnd (InspectAddonCurrent(), "EnKai internal.uiGarbageCollector", debugId) end	
 end
 
+--[[
+    internal.uiCheckTooltips
+
+    Description:
+        This function checks the visibility of various tooltips and hides them if their target elements are no longer visible.
+        It ensures that tooltips are properly hidden when their associated UI elements are hidden or removed.
+
+    Parameters:
+        None
+
+    Returns:
+        None
+
+    Process:
+        1. Checks if the ability tooltip exists and is visible
+           - If its target element is no longer visible, hides the tooltip
+        2. Checks if the generic tooltip exists and is visible
+           - If its target element is no longer visible, hides the tooltip
+        3. Checks if the item tooltip exists and is visible
+           - If its target element is no longer visible, hides the tooltip
+
+    Notes:
+        - This function is typically called periodically to maintain tooltip visibility consistency
+        - It prevents tooltips from remaining visible when their target elements are hidden
+        - The function handles three different types of tooltips (ability, generic, and item)
+        - The commented-out time check suggests this function might have been intended to run periodically
+]]
 function internal.uiCheckTooltips ()
 
 	-- local now = oFuncs.oInspectTimeFrame()
@@ -167,6 +315,36 @@ function internal.uiCheckTooltips ()
 
 end
 
+
+--[[
+    internal.uiSetupBoundCheck
+
+    Description:
+        This function sets up horizontal and vertical test frames to monitor UI boundary changes.
+        These frames are positioned at the edges of the UIParent and trigger updates to the
+        stored boundary values whenever their size changes.
+
+    Parameters:
+        None
+
+    Returns:
+        None
+
+    Process:
+        1. Creates a horizontal test frame (testFrameH) that spans the top edge of UIParent
+        2. Sets the frame to be transparent and positioned at the top of UIParent
+        3. Attaches an event handler to update boundary values when the frame's size changes
+        4. Creates a vertical test frame (testFrameV) that spans the left edge of UIParent
+        5. Sets the frame to be transparent and positioned at the left of UIParent
+        6. Attaches an event handler to update boundary values when the frame's size changes
+
+    Notes:
+        - The horizontal frame is positioned with a small offset (1 pixel) to ensure it triggers size changes
+        - The vertical frame is positioned with a small offset (1 pixel) to ensure it triggers size changes
+        - Both frames are transparent to avoid visual impact
+        - The event handlers update the stored boundary values when the frames' sizes change
+        - This function is typically called once during initialization to set up boundary monitoring
+]]
 function internal.uiSetupBoundCheck()
 
 	local testFrameH = EnKai.uiCreateFrame ('nkFrame', "EnKai.ui.boundTestFrameH", uiContext)
@@ -210,17 +388,51 @@ function EnKai.uiAddToGarbageCollector(frameType, element)
 
 end
 
+--[[
+    EnKai.uiCreateFrame
 
+    Description:
+        Creates a new UI frame of the specified type, either by reusing an existing frame from the free elements pool
+        or by creating a new one if no suitable frame is available. This function ensures proper naming and event handling
+        for the created frame.
+
+    Parameters:
+        frameType (string): The type of frame to create (e.g., 'nkFrame', 'nkCanvas', etc.)
+        name (string): The name to assign to the frame
+        parent (object): The parent UI element to which the frame will be attached
+
+    Returns:
+        object: The created or reused UI frame object, or nil if creation fails
+
+    Process:
+        1. Validates input parameters and displays an error if invalid
+        2. Checks if there's an available frame of the requested type in the free elements pool
+        3. If available:
+           - Verifies that the frame name is unique and not already in use
+           - Reuses the frame by setting its parent and updating its name
+           - Removes the frame from the free elements pool
+           - Triggers a garbage collection changed event
+        4. If not available:
+           - Looks up the appropriate creation function for the frame type
+           - Creates a new frame using the appropriate function
+        5. Returns the created or reused frame object
+
+    Notes:
+        - The function handles both frame reuse and new frame creation
+        - It maintains proper naming and event handling for the frames
+        - The function triggers garbage collection events when frames are reused
+        - Error handling is included for invalid parameters and unknown frame types
+]]
 function EnKai.uiCreateFrame (frameType, name, parent)
 
 	if frameType == nil or name == nil or parent == nil then
-		EnKai.tools.error.display (addonInfo.identifier, string.format("EnKai.uiCreateFrame - invalid number of parameters\nexpecting: type of frame (string), name of frame (string), parent of frame (object)\nreceived: %s, %s, %s", frameType, name, parent))
+		EnKai.tools.error.display (addonInfo.identifier, stringFormat("EnKai.uiCreateFrame - invalid number of parameters\nexpecting: type of frame (string), name of frame (string), parent of frame (object)\nreceived: %s, %s, %s", frameType, name, parent))
 		return
 	end
 
 	local uiObject = nil
 
-	local checkFrameType = string.upper(frameType) 
+	local checkFrameType = stringUpper(frameType) 
 
 	if _freeElements[checkFrameType] ~= nil and #_freeElements[checkFrameType] > 0 then
 
@@ -242,7 +454,7 @@ function EnKai.uiCreateFrame (frameType, name, parent)
 	else
 		local func = uiFunctions[checkFrameType]
 		if func == nil then
-			EnKai.tools.error.display (addonInfo.identifier, string.format("EnKai.uiCreateFrame - unknown frame type [%s]", frameType))
+			EnKai.tools.error.display (addonInfo.identifier, stringFormat("EnKai.uiCreateFrame - unknown frame type [%s]", frameType))
 		else
 			uiObject = func(name, parent)
 		end
@@ -252,8 +464,33 @@ function EnKai.uiCreateFrame (frameType, name, parent)
 
 end
 
-function EnKai.getGcCount()
+--[[
+    EnKai.getGcCount
 	
+    Description:
+        This function calculates and returns the count of UI elements in the garbage collector (_gc) table.
+        It separates the count into normal and restricted elements.
+
+    Parameters:
+        None
+
+    Returns:
+        number: Count of normal elements in garbage collector
+        number: Count of restricted elements in garbage collector
+
+    Process:
+        1. Initializes counters for normal and restricted elements
+        2. Iterates through all element types in the garbage collector
+        3. For each element type, adds the count of normal elements to the normal counter
+        4. For each element type, adds the count of restricted elements to the restricted counter
+        5. Returns the total counts for both normal and restricted elements
+
+    Notes:
+        - The function handles both normal and restricted elements separately
+        - It maintains separate counts for different element types
+        - The function returns two values representing the counts
+]]
+function EnKai.getGcCount()
 	local normal, restricted = 0, 0
 
 	for k, v in pairs(_gc) do
@@ -262,11 +499,33 @@ function EnKai.getGcCount()
 	end
 	
 	return normal, restricted
-	
 end
 
-function EnKai.getFreeCount()
+--[[
+    EnKai.getFreeCount
 
+    Description:
+        This function calculates and returns the total count of free UI elements available for reuse.
+        It sums up all elements in the free elements pool (_freeElements).
+
+    Parameters:
+        None
+
+    Returns:
+        number: Total count of free elements available for reuse
+
+    Process:
+        1. Initializes a counter for free elements
+        2. Iterates through all element types in the free elements pool
+        3. For each element type, adds the count of available elements to the free counter
+        4. Returns the total count of free elements
+
+    Notes:
+        - The function sums up all available elements regardless of type
+        - It provides a single value representing the total available elements
+        - The function is useful for monitoring the reuse pool
+]]
+function EnKai.getFreeCount()
 	local free = 0
 
 	for k, v in pairs(_freeElements) do
@@ -274,7 +533,6 @@ function EnKai.getFreeCount()
 	end
 
 	return free
-	
 end
 
 -- deprecated functions
@@ -386,9 +644,9 @@ function EnKai.ui.attachAbilityTooltip (target, abilityId)
 		target:EventAttach(Event.UI.Input.Mouse.Cursor.In, function (self)
 			uiElements.abilityTooltip:ClearAll()
 			
-			local err, abilityDetails = pcall (Inspect.Ability.New.Detail, abilityId)
+			local err, abilityDetails = pcall (InspectAbilityNewDetail, abilityId)
 			if err == false or abilityDetails == nil then
-				err, abilityDetails = pcall (Inspect.Ability.Detail, abilityId)
+				err, abilityDetails = pcall (InspectAbilityDetail, abilityId)
 				if err == false or abilityDetails == nil then
 					EnKai.tools.error.display (addonInfo.identifier, "EnKai.ui.attachAbilityTooltip: unable to get details of ability with id " .. abilityId)	
 					EnKai.ui.attachAbilityTooltip (target, nil)
@@ -397,7 +655,7 @@ function EnKai.ui.attachAbilityTooltip (target, abilityId)
 			end
 			
 			uiElements.abilityTooltip:SetWidth(200)
-			uiElements.abilityTooltip:SetTitle(string.gsub(abilityDetails.name, "\n", ""))
+			uiElements.abilityTooltip:SetTitle(stringGSub(abilityDetails.name, "\n", ""))
 			uiElements.abilityTooltip:SetLines({{ text = abilityDetails.description, wordwrap = true, minWidth = 200  }})
 						
 			uiElements.abilityTooltip:SetPoint("TOPLEFT", target, "BOTTOMRIGHT", 5, 5)
@@ -434,7 +692,7 @@ function EnKai.ui.attachGenericTooltip (target, title, text)
 			
 			uiElements.genericTooltip:SetWidth(200)
 			if title ~= nil then 
-				uiElements.genericTooltip:SetTitle(string.gsub(title, "\n", ""))
+				uiElements.genericTooltip:SetTitle(stringGSub(title, "\n", ""))
 			else
 				uiElements.genericTooltip:SetTitle("")
 			end
@@ -452,6 +710,13 @@ function EnKai.ui.attachGenericTooltip (target, title, text)
 		end, target:GetName() .. ".Mouse.Cursor.Out") 
 	end
 
+end
+
+function EnKai.ui.genericTooltipSetFont (addonId, fontName)
+	if privateVars.uiTooltipContext == nil then return end
+	if uiElements.genericTooltip == nil then return end
+
+	uiElements.genericTooltip:SetFont (addonId, fontName)
 end
 
 function EnKai.ui.confirmDialog (message, yesFunc, noFunc)
@@ -596,7 +861,7 @@ function EnKai.ui.reloadDialog (title)
 	uiElements.reloadDialog:SetWidth(400)
 	uiElements.reloadDialog:SetHeight(125)
 	uiElements.reloadDialog:SetCloseable(false)
-	uiElements.reloadDialog:SetPoint("CENTERTOP", UIParent, "CENTERTOP", 0, 50)
+	uiElements.reloadDialog:SetPoifontNament("CENTERTOP", UIParent, "CENTERTOP", 0, 50)
 	
 	local msg = EnKai.uiCreateFrame("nkText", name .. ".msg", uiElements.reloadDialog:GetContent())
 	msg:SetText(privateVars.langTexts.msgReload)
@@ -610,3 +875,27 @@ function EnKai.ui.reloadDialog (title)
 	button:SetMacro("/reloadui")
 	
 end
+
+function EnKai.ui.registerFont (addonId, name, path)
+
+	if _fonts[addonId] == nil then _fonts[addonId] = {} end
+
+	_fonts[addonId][name] = path
+
+end
+
+
+function EnKai.ui.getFont (addonId, name, path)
+
+	if _fonts[addonId] == nil then return nil end
+
+	return _fonts[addonId][name]
+
+end
+
+function EnKai.ui.setFont (uiElement, addonId, name)
+
+	uiElement:SetFont(addonId, _fonts[addonId][name])
+
+end
+

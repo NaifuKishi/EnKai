@@ -41,6 +41,7 @@ local function _uiGrid(name, parent)
 	
 	-- default values --
 	
+	local font = nil
 	local fontSize = 13
 	local headerFontSize = 13
 	local fontSizeMod = 6
@@ -83,6 +84,9 @@ local function _uiGrid(name, parent)
 	progressBar:SetPoint("CENTER", grid, "CENTER")
 	progressBar:SetVisible(false)
 	
+	function grid:SetFont (addonId, fontName)
+		font = { addonId = addonId, fontName = fontName}
+	end
 	
 	function grid:SetHeaderHeight(newHeight)
 		headerHeight = newHeight
@@ -151,7 +155,7 @@ local function _uiGrid(name, parent)
 	
 	function grid:SetLabelHighlightColor (r, g, b, a)
 	  if type(r) == 'table' then -- V2.1.0 compatability check
-	    labelHighlightColor = r
+	    labelHighlightColor = r	label:SetFont(addonId, fontName)
 	  else
 	    labelHighlightColor = { r = r, g = g, b = b, a = a}
 	  end
@@ -195,7 +199,7 @@ local function _uiGrid(name, parent)
 		grid:SetHeight(height)
 		grid:SetWidth(width)
 		
-		LayoutHeaders = {} -- would prefer to delete existing frames but not yet implemented in API
+		LayoutHeaders = {}	-- would prefer to delete existing frames but not yet implemented in API
 		LayoutRows = {}   -- would prefer to delete existing frames but not yet implemented in API
 			
 		local from, object, to, x = "TOPLEFT", grid, "TOPLEFT", 0
@@ -213,6 +217,10 @@ local function _uiGrid(name, parent)
 			thisHeader:SetLabelColor (headerLabelColor)
 			thisHeader:SetAlign(cols[idx].align)
 			thisHeader:SetFontSize(headerFontSize)
+
+			if font ~= nil then
+				thisHeader:SetFont(font.addonId, font.fontName)
+			end
 			
 			if cols[idx].header ~= nil then thisHeader:SetText(cols[idx].header) end
 			thisHeader:SetPoint(from, object, to, x, 0)
@@ -259,6 +267,10 @@ local function _uiGrid(name, parent)
 						thisCell:SetFontSize(fontSize)
 						thisCell:SetWidth(cols[idx2].width)
 						thisCell:SetAlign(cols[idx2].align)
+
+						if font ~= nil then
+							thisCell:SetFont(font.addonId, font.fontName)
+						end
 						
 						if cols[idx2].texture == true then
 							thisCell:SetTexture(cols[idx2].textureType, cols[idx2].texturePath)

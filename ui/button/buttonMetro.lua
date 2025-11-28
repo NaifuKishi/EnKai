@@ -11,6 +11,63 @@ local internal      = privateVars.internal
 
 ---------- addon internal function block ---------
 
+--[[
+   _uiButtonMetro
+
+    Description:
+        Creates and configures a customizable metro-style button element with rounded corners,
+        icon support, and text label. This function provides a framework for creating interactive
+        buttons with customizable appearance and behavior.
+
+    Parameters:
+        name (string): Unique identifier for the button element
+        parent (frame): Parent frame to which this button will be attached
+
+    Returns:
+        button (frame): The configured button frame with all child elements and functionality
+
+    Process:
+        1. Creates the main button canvas and its components (icon, label)
+        2. Sets up default styling and positioning
+        3. Configures event handlers for mouse interactions (click, hover, etc.)
+        4. Implements various button behaviors (icon animation, text display, etc.)
+        5. Provides getter and setter methods for button properties
+        6. Sets up event system for button interactions
+
+    Notes:
+        - The button has rounded corners created through a custom shape
+        - Supports icon display with animation capabilities
+        - Provides customization options for appearance (colors, textures, fonts)
+        - Implements secure mode support for restricted environments
+        - Includes event system for tracking button interactions
+        - Supports dynamic resizing and scaling
+
+    Available Methods:
+
+    **Button Behavior Methods:**
+        - SetIcon(addon, texture): Sets the button icon from a specified addon and texture
+        - SetText(newText): Sets the button text label
+        - SetColor(r, g, b): Sets the button fill color
+        - SetBorderColor(r, g, b, a): Sets the button border color
+        - SetFontColor(r, g, b, a): Sets the text font color
+        - SetScale(newScale): Sets the button scale factor
+        - SetWidth(newWidth): Sets the width of the button
+        - SetHeight(newHeight): Sets the height of the button
+        - SetMacro(newMacro): Sets a macro to execute when the button is clicked
+        - AnimateIcon(flag): Enables or disables icon animation
+
+    **Button Appearance Methods:**
+        - SetFont(addonInfo, fontName): Sets custom font for the button text
+        - Redraw(): Redraws the button with current settings
+
+    **UI Element Accessor Methods:**
+        - GetValue(property): Gets a specific property value
+        - SetValue(property, value): Sets a specific property value
+
+    **Cleanup Method:**
+        - destroy(): Cleans up all button elements and prepares them for garbage collection
+]]
+
 local function _uiButtonMetro(name, parent) 
 
 	--if EnKai.internal.checkEvents (name, true) == false then return nil end
@@ -121,6 +178,8 @@ local function _uiButtonMetro(name, parent)
 			label:SetPoint("CENTER", button, "CENTER")
 		end
 	end
+
+	function button:SetFont(addonInfo, fontName) EnKai.ui.setFont(label, addonInfo, fontName) end
 
 	function button:SetColor(r, g, b)
 		fill.r, fill.g, fill.b = r, g, b

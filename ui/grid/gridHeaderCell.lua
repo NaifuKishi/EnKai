@@ -36,8 +36,8 @@ local function _uiGridHeaderCell(name, parent)
 	-- default values --
 	
 	local borderColor = EnKai.art.GetThemeColor('borderColor')
-  local bodyColor = EnKai.art.GetThemeColor('backgroundColor')
-  local labelColor = EnKai.art.GetThemeColor('labelColor')
+	local bodyColor = EnKai.art.GetThemeColor('backgroundColor')
+	local labelColor = EnKai.art.GetThemeColor('labelColor')
 	local fontSize = 13
 	local fontSizeMod = 6
 	local height = fontSize + fontSizeMod
@@ -95,6 +95,10 @@ local function _uiGridHeaderCell(name, parent)
 		label:ClearAll()
 		label:SetPoint (orientation, headerCell, orientation)
 		if headerCell:GetWidth()-2 < label:GetWidth() then label:SetWidth(headerCell:GetWidth()-2) end
+	end
+
+	function headerCell:SetFont (addonId, fontName)
+		EnKai.ui.setFont(label, addonId, fontName)
 	end
 	
 	function headerCell:SetFontSize(newFontSize)

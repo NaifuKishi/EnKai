@@ -70,6 +70,8 @@ local function _uiMenuEntry(name, parent)
 
 		return nil		
 	end
+
+	function menuEntry:SetFont(addonInfo, fontName) label:SetTextFont(addonInfo, fontName) end
 	
 	local oSetWidth = menuEntry.SetWidth
 	

@@ -5,14 +5,15 @@ local addonInfo, privateVars = ...
 if not EnKai then EnKai = {} end
 if not EnKai.manager then EnKai.manager = {} end
 
-local oFuncs	  = privateVars.oFuncs
+local InspectMouse        = Inspect.Mouse
+local InspectSystemSecure = Inspect.System.Secure
 
 ---------- init local variables ---------
 				
 local _context = UI.CreateContext("nkManager")
 _context:SetSecureMode('restricted')
 
-local _InspectMouse = Inspect.Mouse
+
 
 local _button = nil
 local _rightDown = nil
@@ -50,7 +51,7 @@ local function _uiAddonButton()
   EnKai.ui.attachGenericTooltip (button, "Naifu's Addons", privateVars.langTexts.tooltips.managerButton)
   
   button:EventAttach(Event.UI.Input.Mouse.Left.Click, function (self)
-    if oFuncs.oInspectSystemSecure() == false then
+    if InspectSystemSecure() == false then
       if menu:GetVisible() == true then 
         menu:SetVisible(false) 
         button:CloseAllMenus()
@@ -135,9 +136,9 @@ local function _uiAddonButton()
   
 	if EnKaiSetup.locked then return end
   
-    if oFuncs.oInspectSystemSecure() == true then return end
+    if InspectSystemSecure() == true then return end
     _rightDown = true
-    local mouseData = _InspectMouse()
+    local mouseData = InspectMouse()
     _startX, _startY = mouseData.x, mouseData.y
     
   end, "EnKai.manager.Right.Down")  
@@ -158,7 +159,7 @@ local function _uiAddonButton()
     
     if _startX == nil or _startY == nil then return end
         
-    local mouseData = _InspectMouse()
+    local mouseData = InspectMouse()
     local curdivX = mouseData.x - _startX
     local curdivY = mouseData.y - _startY  
       
@@ -173,7 +174,7 @@ local function _uiAddonButton()
     
     _rightDown = false
     
-    local mouseData = _InspectMouse()
+    local mouseData = InspectMouse()
     local curdivX = mouseData.x - _startX
     local curdivY = mouseData.y - _startY  
       
@@ -195,7 +196,7 @@ function EnKai.manager.init(addonName, subMenuItems, mainFunc)
 
 	if _button == nil then 
 		_button = _uiAddonButton() 
-		Command.Event.Attach(Event.System.Secure.Enter, _fctSecureEnter, "nkManager.Ssytem.Secure.Enter")
+		Command.Event.Attach(Event.System.Secure.Enter, _fctSecureEnter, "nkManager.System.Secure.Enter")
 	end	
 	
 	if addonName ~= nil then _button:AddAddon (addonName, subMenuItems, mainFunc) end

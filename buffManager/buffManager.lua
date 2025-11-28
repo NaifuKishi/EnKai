@@ -7,7 +7,6 @@ if not EnKai.BuffManager then EnKai.BuffManager = {} end
 
 local internal    = privateVars.internal
 local data        = privateVars.data
-local oFuncs	  = privateVars.oFuncs
 
 ---------- init local variables ---------
 
@@ -22,8 +21,14 @@ local _bdByType			= {}
 local _combatCheck		= {}
 local _combatUnits		= {}
 
-local oInspectBuffList	= Inspect.Buff.List
-local oInspectBuffDetail= Inspect.Buff.Detail
+local InspectBuffList		= Inspect.Buff.List
+local InspectBuffDetail		= Inspect.Buff.Detail
+local InspectTimeReal		= Inspect.Time.Real
+local InspectAddonCurrent	= Inspect.Addon.Current
+
+local stringFind	= string.find
+local stringUpper	= string.upper
+local stringFormat	= string.format
 
 ---------- local function block ---------
 
@@ -37,9 +42,12 @@ local function _fctIsSubscribed(unit, buffDetails, combatLogFlag)
 	
 	local addonSubscriptions = {}
 	local hasSubscribed = false
-	
+
 	for addon, sDetails in pairs(_subscriptions) do
-	
+
+		--print ("_fctIsSubscribed")
+		--dump(sDetails[thisType])
+
 		if sDetails[thisType] ~= nil then
 		
 			if sDetails[thisType]["*"] ~= nil then
@@ -52,14 +60,19 @@ local function _fctIsSubscribed(unit, buffDetails, combatLogFlag)
 				local subscription = sDetails[thisType][buffDetails.id]
 				if subscription == nil then subscription = sDetails[thisType][buffDetails.type] end
 				if subscription == nil then subscription = sDetails[thisType][buffDetails.name] end
-			
+
+				--if subscription ~= nil then
+				--	dump (subscription)
+				--	print (buffDetails.caster )
+				--end
+
 				if subscription ~= nil and subscription.caster == buffDetails.caster then
-				
+
 					if EnKai.tools.table.isMember(EnKai.unit.getUnitTypes(unit), subscription.target) then
 						addonSubscriptions[addon] = { buffType = thisTypeR, subscription = subscription }
 						hasSubscribed = true
 					else
-						if string.find(subscription.target, 'addonType') ~= nil then
+						if stringFind(subscription.target, 'addonType') ~= nil then
 							local unitDetails = EnKai.unit.GetUnitDetail (unit)
 							
 							if subscription.target == 'addonType' .. unitDetails.type then
@@ -94,11 +107,11 @@ local function _fctBuffAdd (_, unit, buffs)
 
 	local adds, hasAdds = {}, false
 	
-	local buffInfo = oInspectBuffDetail(unit, buffs)
+	local buffInfo = InspectBuffDetail(unit, buffs)
 	
 	for buffId, buffDetails in pairs(buffInfo) do
 
-		buffDetails.start = oFuncs.oInspectTimeReal()
+		buffDetails.start = InspectTimeReal()
 		buffDetails.lastChange = buffDetails.start
 	
 		if _bdList[unit] == nil then _bdList[unit] = {} end
@@ -118,7 +131,9 @@ local function _fctBuffAdd (_, unit, buffs)
 		end
 		
 		local sFlag, subscriptionList = _fctIsSubscribed(unit, buffDetails)
-		
+
+		--print (unit, buffDetails.name, sFlag)
+
 		if sFlag then
 		
 			if _processBDList[unit] == nil then _processBDList[unit] = {} end
@@ -132,6 +147,10 @@ local function _fctBuffAdd (_, unit, buffs)
 			hasAdds = true
 		end
 	end
+
+	--print ("_fctBuffAdd")
+	--dump(_bdList)
+	--print "-----------------"
 	
 	if hasAdds then 
 		for addon, addList in pairs(adds) do
@@ -203,6 +222,8 @@ end
 
 local function _fctBuffChange (_, unit, buffs, combatLogFlag)
 
+	--print ("_fctBuffChange")
+
 	local debugId  
 	if nkDebug then debugId = nkDebug.traceStart (addonInfo.identifier, "_fctBuffChange") end
 
@@ -218,7 +239,7 @@ local function _fctBuffChange (_, unit, buffs, combatLogFlag)
 	
 	local changes, hasChanges = {}, false
 
-	local buffInfo = oInspectBuffDetail(unit, buffs)
+	local buffInfo = InspectBuffDetail(unit, buffs)
 	  
 	for buffId, buffDetails in pairs(buffInfo) do
 	
@@ -248,7 +269,7 @@ local function _fctBuffChange (_, unit, buffs, combatLogFlag)
 				buffDetails.start = _buffCache1st[unit][buffDetails.id].start
 				
 				_buffCache1st[unit][buffDetails.id] = buffDetails
-				_buffCache1st[unit][buffDetails.id].lastChange = oFuncs.oInspectTimeReal()
+				_buffCache1st[unit][buffDetails.id].lastChange = InspectTimeReal()
 				
 				_buffCache2nd[unit][buffDetails.id] = buffDetails
 				
@@ -338,14 +359,14 @@ local function _checkCombatUnit(unitId)
 	local debugId  
 	if nkDebug then debugId = nkDebug.traceStart (addonInfo.identifier, "_checkCombatUnit") end
 
-	if _combatCheck[unitId] == nil or oFuncs.oInspectTimeReal() - _combatCheck[unitId] >= 1 then
-		_combatCheck[unitId] = oFuncs.oInspectTimeReal()
+	if _combatCheck[unitId] == nil or InspectTimeReal() - _combatCheck[unitId] >= 1 then
+		_combatCheck[unitId] = InspectTimeReal()
 	else
 		if nkDebug then debugId = nkDebug.traceEnd (addonInfo.identifier, "_checkCombatUnit", debugId) end
 		return
 	end
 	
-	local buffList = oInspectBuffList(unitId)
+	local buffList = InspectBuffList(unitId)
 	
 	if buffList == nil then return end
 	
@@ -411,16 +432,22 @@ end
 
 local function _fctProcessBuffDebuffList()
 
+	--print ("_fctProcessBuffDebuffList #1")
+
 	local debugId  
-	if nkDebug then debugId = nkDebug.traceStart (oFuncs.oInspectAddonCurrent(), "_fctProcessBuffDebuffList") end
+	if nkDebug then debugId = nkDebug.traceStart (InspectAddonCurrent(), "_fctProcessBuffDebuffList") end
 	
-	local _curTime = oFuncs.oInspectTimeReal()
+	local _curTime = InspectTimeReal()
 
 	local updateList = {}
 	local updatesFound = false
+
+	--dump(_processBDList)
 	
 	for unit, buffList in pairs(_processBDList) do
-		
+
+		--print ("_fctProcessBuffDebuffList #2")
+
 		for buffId, _ in pairs(buffList) do
 		
 			if _buffCache1st[unit][buffId].remaining ~= nil then
@@ -429,7 +456,7 @@ local function _fctProcessBuffDebuffList()
 
 					-- if _buffCache1st[unit][buffId].lastChange == nil then -- we do one reinitialization do better sync the remaining time
 						
-						-- local flag, buffDetails = pcall (oInspectBuffDetail, unit, buffId)
+						-- local flag, buffDetails = pcall (InspectBuffDetail, unit, buffId)
 						-- if flag and buffDetails ~= nil then
 							-- _buffCache1st[unit][buffId] = buffDetails
 							-- _buffCache1st[unit][buffId].lastChange = _curTime
@@ -466,7 +493,7 @@ local function _fctProcessBuffDebuffList()
 		end
 	end
 	
-	if nkDebug then nkDebug.traceEnd (oFuncs.oInspectAddonCurrent(), "_fctProcessBuffDebuffList", debugId) end
+	if nkDebug then nkDebug.traceEnd (InspectAddonCurrent(), "_fctProcessBuffDebuffList", debugId) end
 	
 	return updatesFound, updateList
 
@@ -475,7 +502,7 @@ end
 local function _fctProcessBuffDebuffUpdates (updateList)
 
 	local debugId  
-	if nkDebug then debugId = nkDebug.traceStart (oFuncs.oInspectAddonCurrent(), "_fctProcessBuffDebuffUpdates") end
+	if nkDebug then debugId = nkDebug.traceStart (InspectAddonCurrent(), "_fctProcessBuffDebuffUpdates") end
 	
 	local updates, hasUpdates = {}, false
 	local stop, hasStop = {}, false
@@ -523,7 +550,7 @@ local function _fctProcessBuffDebuffUpdates (updateList)
 	
 	end
 	
-	if nkDebug then nkDebug.traceEnd (oFuncs.oInspectAddonCurrent(), "_fctProcessBuffDebuffUpdates", debugId) end
+	if nkDebug then nkDebug.traceEnd (InspectAddonCurrent(), "_fctProcessBuffDebuffUpdates", debugId) end
 	
 	return hasUpdates, updates, hasStop, stop
 
@@ -536,7 +563,7 @@ function EnKai.BuffManager.init()
 	local debugId  
 	if nkDebug then debugId = nkDebug.traceStart (addonInfo.identifier, "EnKai.BuffManager.init") end
 
-	_subscriptions[oFuncs.oInspectAddonCurrent()] = { buffs = {}, debuffs = {} }
+	_subscriptions[InspectAddonCurrent()] = { buffs = {}, debuffs = {} }
 
 	if _bdManager == true then return end
 
@@ -562,36 +589,38 @@ end
 
 function EnKai.BuffManager.subscribe(sType, sId, castBy, sTarget, sStack)
 
+	--print ("subscribe", sType, sId)
+
 	local debugId  
 	if nkDebug then debugId = nkDebug.traceStart (addonInfo.identifier, "EnKai.BuffManager.subscribe") end
 
-	sType = string.upper(sType)
+	sType = stringUpper(sType)
 
 	if sType == 'BUFF' then sType = 'BUFFS' end
 	if sType == 'DEBUFF' then sType = 'DEBUFFS' end
 
-	if _subscriptions[oFuncs.oInspectAddonCurrent()] == nil then
-		_subscriptions[oFuncs.oInspectAddonCurrent()] = { BUFFS = {}, DEBUFFS = {} }
+	if _subscriptions[InspectAddonCurrent()] == nil then
+		_subscriptions[InspectAddonCurrent()] = { BUFFS = {}, DEBUFFS = {} }
 	end
 
-	if _subscriptions[oFuncs.oInspectAddonCurrent()][sType] == nil then
-		_subscriptions[oFuncs.oInspectAddonCurrent()][sType] = {}
+	if _subscriptions[InspectAddonCurrent()][sType] == nil then
+		_subscriptions[InspectAddonCurrent()][sType] = {}
 	end
 	
-	_subscriptions[oFuncs.oInspectAddonCurrent()][sType][sId] = { caster = castBy, target = sTarget, stack = sStack }
-	
+	_subscriptions[InspectAddonCurrent()][sType][sId] = { caster = castBy, target = sTarget, stack = sStack }
+
 	local list, runEvent = {}, false
 	
-	if string.find(sTarget, "addonType") ~= nil then
+	if stringFind(sTarget, "addonType") ~= nil then
 		sTarget = EnKai.strings.right (sTarget, "addonType", 1, true)
 		if _combatUnits[sTarget] == nil then _combatUnits[sTarget] = {} end
-		table.insert(_combatUnits[sTarget], string.format("%s-%s", sType, sId))
+		table.insert(_combatUnits[sTarget], stringFormat("%s-%s", sType, sId))
 	end
 
 	if sTarget == "*" then
 	
 		if _combatUnits["*"] == nil then _combatUnits[sTarget] = {} end
-		table.insert(_combatUnits["*"], string.format("%s-%s", sType, sId))
+		table.insert(_combatUnits["*"], stringFormat("%s-%s", sType, sId))
 	
 		for unitId, thisList in pairs(_buffCache1st) do
 		
@@ -608,7 +637,6 @@ function EnKai.BuffManager.subscribe(sType, sId, castBy, sTarget, sStack)
 		end
 	else
 		local unitIdList = EnKai.unit.getUnitIDByType(sTarget)
-		
 		if unitIdList ~= nil then
 		
 			for _, unitId in pairs(unitIdList) do
@@ -644,26 +672,26 @@ function EnKai.BuffManager.unsubscribe(sType, sId)
 	local debugId  
 	if nkDebug then debugId = nkDebug.traceStart (addonInfo.identifier, "EnKai.BuffManager.unsubscribe") end
 
-	if _subscriptions[oFuncs.oInspectAddonCurrent()] ~= nil and _subscriptions[oFuncs.oInspectAddonCurrent()][sType] ~= nil and _subscriptions[oFuncs.oInspectAddonCurrent()][sType][sId] ~= nil then
+	if _subscriptions[InspectAddonCurrent()] ~= nil and _subscriptions[InspectAddonCurrent()][sType] ~= nil and _subscriptions[InspectAddonCurrent()][sType][sId] ~= nil then
 	
-		local thisSubscription = _subscriptions[oFuncs.oInspectAddonCurrent()][sType][sId]
-		if string.find(thisSubscription.target, "addonType") ~= nil then
+		local thisSubscription = _subscriptions[InspectAddonCurrent()][sType][sId]
+		if stringFind(thisSubscription.target, "addonType") ~= nil then
 			local sTarget = EnKai.strings.right (thisSubscription.target, "addonType", 1, true)
 			
 			if _combatUnits[sTarget] ~= nil then 
-				_combatUnits[sTarget] = EnKai.tools.table.removeValue(_combatUnits[sTarget], string.format("%s-%s", sType, sId))
+				_combatUnits[sTarget] = EnKai.tools.table.removeValue(_combatUnits[sTarget], stringFormat("%s-%s", sType, sId))
 				if #_combatUnits[sTarget] == 0 then _combatUnits[sTarget] = nil end
 			end
 		elseif thisSubscription.target == "*" then
 			
 			if _combatUnits["*"] ~= nil then 
-				_combatUnits["*"] = EnKai.tools.table.removeValue(_combatUnits["*"], string.format("%s-%s", sType, sId))
+				_combatUnits["*"] = EnKai.tools.table.removeValue(_combatUnits["*"], stringFormat("%s-%s", sType, sId))
 				if #_combatUnits["*"] == 0 then _combatUnits["*"] = nil end
 			end
 			
 		end
 	
-		_subscriptions[oFuncs.oInspectAddonCurrent()][sType][sId] = nil
+		_subscriptions[InspectAddonCurrent()][sType][sId] = nil
 	end
 	
 	if nkDebug then debugId = nkDebug.traceEnd (addonInfo.identifier, "EnKai.BuffManager.unsubscribe", debugId) end
@@ -753,7 +781,7 @@ function EnKai.BuffManager.initUnitBuffs(unit)
 
 	local newBuffList, hasNewBuffs = {}, false
 	
-	local buffList = oInspectBuffList(unit)
+	local buffList = InspectBuffList(unit)
 	
 	if buffList == nil then return end
 	
@@ -798,11 +826,11 @@ function EnKai.BuffManager.isBuffActive(unit, id)
 
 	if _buffCache1st[unit] == nil then 
 	
-		local flag, buffList = pcall (oInspectBuffList, unit)
+		local flag, buffList = pcall (InspectBuffList, unit)
 		
 		if flag and buffList ~= nil then
 			
-			local flag, buffDetails = pcall(oInspectBuffDetail, unit, buffList)
+			local flag, buffDetails = pcall(InspectBuffDetail, unit, buffList)
 			if flag and buffDetails ~= nil then
 			
 				_buffCache1st[unit] = {}
@@ -853,21 +881,25 @@ end
 function internal.processBuffs ()
 
 	local debugId  
-	if nkDebug then debugId = nkDebug.traceStart (oFuncs.oInspectAddonCurrent(), "EnKai internal.processBuffs") end
+	if nkDebug then debugId = nkDebug.traceStart (InspectAddonCurrent(), "EnKai internal.processBuffs") end
 
 	if _bdManager == false then
-		if nkDebug then nkDebug.traceEnd (oFuncs.oInspectAddonCurrent(), "EnKai internal.processBuffs", debugId) end
+		if nkDebug then nkDebug.traceEnd (InspectAddonCurrent(), "EnKai internal.processBuffs", debugId) end
 		return
 	end
 	
 	local updatesFound, updateList = _fctProcessBuffDebuffList()
 	
 	if not updatesFound then
-		if nkDebug then nkDebug.traceEnd (oFuncs.oInspectAddonCurrent(), "EnKai internal.processBuffs", debugId) end
+		if nkDebug then nkDebug.traceEnd (InspectAddonCurrent(), "EnKai internal.processBuffs", debugId) end
 		return
 	end
-		
+
+	--dump(updateList)
+
 	local hasUpdates, updates, hasStop, stop = _fctProcessBuffDebuffUpdates (updateList)
+
+	--print (hasUpdates)
 		
 	if hasUpdates == true then 
 		for addon, unitList in pairs(updates) do
@@ -885,6 +917,6 @@ function internal.processBuffs ()
 		end
 	end
 
-	if nkDebug then nkDebug.traceEnd (oFuncs.oInspectAddonCurrent(), "EnKai internal.processBuffs", debugId) end
+	if nkDebug then nkDebug.traceEnd (InspectAddonCurrent(), "EnKai internal.processBuffs", debugId) end
 
 end

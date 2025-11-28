@@ -31,6 +31,7 @@ local function _uiTooltip(name, parent)
 	local lines = {}
 	local target = nil
 	local properties = {}
+	local font = nil
 
 	function tooltip:SetValue(property, value)
 		properties[property] = value
@@ -66,7 +67,19 @@ local function _uiTooltip(name, parent)
 	separator:SetHeight(1)
 	
 	separator:SetBackgroundColor(defaultBorderColor[1], defaultBorderColor[2], defaultBorderColor[3], defaultBorderColor[4])
-		
+
+	function tooltip:SetFont (addonId, fontName)
+		font = { addonId = addonId, fontName = fontName}
+
+		EnKai.ui.setFont(title, addonId, fontName)
+		EnKai.ui.setFont(subTitle, addonId, fontName)
+
+		for idx = 1, #lines, 1 do
+			local line = lines[idx]
+			EnKai.ui.setFont(line, addonId, fontName)
+		end
+	end
+
 	function tooltip:SetTitle(newTitle)
 		title:ClearWidth()
 		title:SetText(newTitle)
@@ -115,6 +128,10 @@ local function _uiTooltip(name, parent)
 				line = EnKai.uiCreateFrame ('nkText', name .. 'line' .. idx, tooltipInner)
 				line:SetFontColor(defaultLinesColor[1], defaultLinesColor[2], defaultLinesColor[3], defaultLinesColor[4])
 				line:SetFontSize(11)
+
+				if font ~= nil then
+					EnKai.ui.setFont(line, font.addonId, font.fontName)
+				end
 								
 				if idx == 1 then
 					line:SetPoint("TOPLEFT", separator, "BOTTOMLEFT")

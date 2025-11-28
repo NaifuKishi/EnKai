@@ -499,6 +499,14 @@ local function _uiCombobox(name, parent)
 	
 	function combo:SetText(text) comboLabel:SetText(text) end
 	
+	function combo:SetFont(addonInfo, font)
+		EnKai.ui.setFont(comboLabel, addonInfo, font)
+		EnKai.ui.setFont(label, addonInfo, font)		
+		for idx = 1, 5, 1 do
+			EnKai.ui.setFont(selItems[idx].label, addonInfo, font)
+		end
+	end
+	
 	function combo:SetLabelWidth(newLabelWidth)
 		
 		comboLabel:SetWidth(newLabelWidth)

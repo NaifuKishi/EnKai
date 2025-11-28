@@ -19,6 +19,81 @@ local arrowTextureAddon =  "EnKai"
 
 ---------- addon internal function block ---------
 
+--[[
+   _uiWindowElement
+
+    Description:
+        Creates and configures a customizable window element with header, title, close button,
+        and various interactive features. This function provides a framework for creating
+        draggable, resizable, and collapsible windows with customizable appearance and behavior.
+
+    Parameters:
+        name (string): Unique identifier for the window element
+        parent (frame): Parent frame to which this window will be attached
+
+    Returns:
+        window (frame): The configured window frame with all child elements and functionality
+
+    Process:
+        1. Creates the main window frame and its components (header, body, title, etc.)
+        2. Sets up default styling and positioning
+        3. Configures event handlers for mouse interactions (dragging, resizing, etc.)
+        4. Implements various window behaviors (auto-hide, collapse, etc.)
+        5. Provides getter and setter methods for window properties
+        6. Sets up event system for window state changes
+
+    Notes:
+        - The window can be made draggable, resizable, and collapsible
+        - Supports auto-hide functionality for both the window body and header
+        - Provides customization options for appearance (colors, textures, fonts)
+        - Implements secure mode support for restricted environments
+        - Includes event system for tracking window state changes
+        - Supports reverse-at-border behavior to keep windows within visible area
+
+    Available Methods:
+
+    **Window Behavior Methods:**
+        - SetAutoHide(flag, duration): Sets auto-hide behavior for the window body
+        - SetAutoHideHeader(flag, duration, delay): Sets auto-hide behavior for the window header
+        - SetCollapseable(flag): Sets whether the window is collapsible
+        - Collapse(flag): Collapses or expands the window
+        - ToggleCollapse(): Toggles the collapse state of the window
+        - SetReverseAtBorder(flag): Sets whether the window should reverse at the border
+        - ProcessMove(): Processes window movement and adjusts layout if needed
+
+    **Window State Methods:**
+        - SetDragable(flag): Sets whether the window is draggable
+        - SetCloseable(flag): Sets whether the window is closeable
+        - SetResizable(flag): Sets whether the window is resizable
+        - ShowContent(flag): Shows or hides the window content
+        - DisplayHeader(flag): Shows or hides the window header
+        - SetSecureMode(newMode): Sets the secure mode of the window
+
+    **Window Appearance Methods:**
+        - SetBackgroundColor(r, g, b, a): Sets the background color of the window body
+        - SetArrowTextures(addon, arrowRight, arrowDown): Sets custom arrow textures
+        - SetTitleFont(addonId, fontName): Sets custom font for the title
+        - SetTitle(newTitle): Sets the window title text
+        - SetTitleAlign(newAlign, newOffSet): Sets title alignment and offset
+        - SetFontSize(newFontSize): Sets title font size
+        - SetTitleColor(r, g, b, a): Sets title color
+
+    **Window Size and Position Methods:**
+        - SetWidth(newWidth): Sets the width of the window
+        - SetHeight(newHeight): Sets the height of the window
+        - SetPoint(from, object, to, x, y): Sets the position of the window
+
+    **UI Element Accessor Methods:**
+        - GetContent(): Returns the content body frame
+        - GetHeader(): Returns the header frame
+        - GetArrow(): Returns the arrow icon frame
+        - GetMoveCheckbox(): Returns the move checkbox frame
+
+    **UI Element Visibility Methods:**
+        - ShowMoveToggle(flag): Shows or hides the move toggle checkbox
+        - ShowAutoHideToggle(flag): Shows or hides the auto-hide toggle arrow
+]]
+
 local function _uiWindowElement(name, parent)
 
   --if EnKai.internal.checkEvents (name, true) == false then return nil end
@@ -74,10 +149,14 @@ local function _uiWindowElement(name, parent)
     if self.leftDown ~= true then return end
     
     local newX, newY = x - self.originalXDiff, y - self.originalYDiff
-    
-    if newX >= data.uiBoundLeft and newX <= data.uiBoundRight and newY + window:GetHeight() >= data.uiBoundTop and newY + window:GetHeight() <= data.uiBoundBottom then    
+
+    -- the boundary below if fucked in scale mode and turned out to be completely useless
+
+    --if newX >= data.uiBoundLeft and newX <= data.uiBoundRight and newY + window:GetHeight() >= data.uiBoundTop and newY + window:GetHeight() <= data.uiBoundBottom then    
       window:SetPoint("TOPLEFT", UIParent, "TOPLEFT", newX, newY)
-    end
+    --else
+    --  print ("check failed")
+    --end
     
   end, name .. ".header.Cursor.Move")
   
@@ -300,6 +379,10 @@ local function _uiWindowElement(name, parent)
     arrowTextureDown = arrowDown
 
     arrow:SetTextureAsync(arrowTextureAddon, arrowTextureDown)
+  end
+
+  function window:SetTitleFont (addonId, fontName)
+    EnKai.ui.setFont(title, addonId, fontName)
   end
 
   function window:SetTitle(newTitle)

@@ -185,6 +185,10 @@ local function _uiGridCell(name, parent)
 			if cell:GetWidth()-2 < label:GetWidth() then label:SetWidth(cell:GetWidth()-2) end
 		end
 	end
+
+	function cell:SetFont (addonId, fontName)
+		EnKai.ui.setFont(label, addonId, fontName)
+	end
 	
 	function cell:SetFontSize(newFontSize)
 		fontSize = newFontSize

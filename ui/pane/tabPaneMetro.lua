@@ -56,7 +56,9 @@ local function tabHeader (name, parent)
   
   function tabButton:SetText(text)
     label:SetText(text)
-  end
+  end  
+
+  function tabButton:SetFont(addonInfo, font) EnKai.ui.setFont(label, addonInfo, font) end
   
   function tabButton:SetSelected(flag)
     selected = flag
@@ -141,6 +143,7 @@ local function _uiTabpaneMetro(name, parent)
   
   local panes = {}
   local tabButtons = {}
+  local fontInfo = {}
   
 	-- GARBAGE COLLECTOR ROUTINES
   
@@ -208,10 +211,12 @@ local function _uiTabpaneMetro(name, parent)
 
 		local tabButton = tabHeader (stepButtonName, tabPane)
 		tabButton:SetText(newPaneInfo.label)
+
+		if fontInfo.fontName then tabButton:SetFont(fontInfo.addonInfo, fontInfo.fontName) end
 		
 		Command.Event.Attach(EnKai.events[stepButtonName].Clicked, function ()
-		  tabButtons[activePane]:SetSelected(false)
-      tabPane:SwitchToPane(paneNo)
+			tabButtons[activePane]:SetSelected(false)
+		tabPane:SwitchToPane(paneNo)
     end, stepButtonName .. '.Clicked')
 		
 		table.insert(tabButtons, tabButton)
@@ -347,6 +352,13 @@ local function _uiTabpaneMetro(name, parent)
 	  if init == true then tabPane:UpdatePanes() end
 	end
 	
+	function tabPane:SetFont(addonInfo, fontName) 
+		fontInfo = { addonInfo = addonInfo, fontName = fontName}
+		--for k, v in pairs(tabButtons) do
+		--	EnKai.ui.setFont(v, addonInfo, fontName)
+		--end
+	end
+
 	function tabPane:SetBorder(flag)
 	  border = flag
 	  if init == true then tabPane:UpdatePanes() end

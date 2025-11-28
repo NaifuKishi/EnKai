@@ -238,6 +238,7 @@ local function _uiColorPicker(name, parent)
 	end
 	
 	function colorPicker:SetText(text) label:SetText(text) end	
+	function colorPicker:SetFont(addonInfo, font) EnKai.ui.setFont(label, addonInfo, font) end
 	
 	local oSetWidth, oSetHeight = colorPicker.SetWidth, colorPicker.SetHeight
 	

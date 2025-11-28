@@ -13,6 +13,69 @@ local oFuncs	  = privateVars.oFuncs
 
 ---------- addon internal function block ---------
 
+--[[
+   _uiWindowMetro
+
+    Description:
+        Creates and configures a customizable metro-style window element with rounded corners,
+        header, title, and close button. This function provides a framework for creating
+        draggable windows with customizable appearance and behavior.
+
+    Parameters:
+        name (string): Unique identifier for the window element
+        parent (frame): Parent frame to which this window will be attached
+
+    Returns:
+        window (frame): The configured window frame with all child elements and functionality
+
+    Process:
+        1. Creates the main window canvas and its components (header, body, title, etc.)
+        2. Sets up default styling and positioning
+        3. Configures event handlers for mouse interactions (dragging, etc.)
+        4. Implements various window behaviors (auto-hide, collapse, etc.)
+        5. Provides getter and setter methods for window properties
+        6. Sets up event system for window state changes
+
+    Notes:
+        - The window has rounded corners created through a custom shape
+        - Supports shadow effects around the window
+        - Provides customization options for appearance (colors, textures, fonts)
+        - Implements secure mode support for restricted environments
+        - Includes event system for tracking window state changes
+        - Supports reverse-at-border behavior to keep windows within visible area
+
+    Available Methods:
+
+    **Window Behavior Methods:**
+        - SetShadow(flag): Enables or disables the window shadow
+        - Resize(): Updates the window shape and dimensions
+        - SetColor(stroke, fill): Sets the window border and fill colors
+        - SetTitleFontColor(r, g, b, a): Sets the title font color
+        - SetCloseable(flag): Sets whether the window is closeable
+        - SetDragable(flag): Sets whether the window is draggable
+        - SetVisible(flag): Shows or hides the window
+        - SetReverseAtBorder(flag): Sets whether the window should reverse at the border
+
+    **Window Appearance Methods:**
+        - SetTitleFont(addonId, fontName): Sets custom font for the title
+        - SetTitleFontSize(fontSize): Sets the title font size
+        - SetTitle(newTitle): Sets the window title text
+        - SetTitleAlign(newAlign, newOffSet): Sets title alignment and offset
+        - SetFontSize(newFontSize): Sets title font size
+        - SetWindowColor(r, g, b, a): Sets the window fill color
+
+    **Window Size and Position Methods:**
+        - SetWidth(newWidth): Sets the width of the window
+        - SetHeight(newHeight): Sets the height of the window
+        - SetPoint(from, object, to, x, y): Sets the position of the window
+
+    **UI Element Accessor Methods:**
+        - GetContent(): Returns the content body frame
+
+    **Cleanup Method:**
+        - destroy(): Cleans up all window elements and prepares them for garbage collection
+]]
+
 local function _uiWindowMetro(name, parent)
 
   local window = EnKai.uiCreateFrame("nkCanvas", name, parent)  
@@ -34,12 +97,12 @@ local function _uiWindowMetro(name, parent)
     internal.uiAddToGarbageCollector ('nkText', title)
     internal.uiAddToGarbageCollector ('nkTexture', closeIcon)
 	
-	if shadowL ~= nil then
-		internal.uiAddToGarbageCollector ('nkFrame', shadowL)
-		internal.uiAddToGarbageCollector ('nkFrame', shadowR)
-		internal.uiAddToGarbageCollector ('nkFrame', shadowT)
-		internal.uiAddToGarbageCollector ('nkFrame', shadowB)
-	end
+    if shadowL ~= nil then
+      internal.uiAddToGarbageCollector ('nkFrame', shadowL)
+      internal.uiAddToGarbageCollector ('nkFrame', shadowR)
+      internal.uiAddToGarbageCollector ('nkFrame', shadowT)
+      internal.uiAddToGarbageCollector ('nkFrame', shadowB)
+    end
 	
   end 
   
@@ -232,6 +295,9 @@ local function _uiWindowMetro(name, parent)
   end
   
   function window:GetContent() return body end
+
+  function window:SetTitleFont (addonId, fontName) EnKai.ui.setFont(title, addonId, fontName) end
+  function window:SetTitleFontSize (fontSize) title:SetFontSize(fontSize) end
   
   function window:SetTitle(newTitle)
     title:ClearAll()

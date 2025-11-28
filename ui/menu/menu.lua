@@ -19,6 +19,7 @@ local function _uiMenu(name, parent)
 		
 	local entries = {}
 	local properties = {}
+	local fontInfo = {}
 
 	function menu:SetValue(property, value)
 		properties[property] = value
@@ -53,9 +54,10 @@ local function _uiMenu(name, parent)
 		local menuEntry = EnKai.uiCreateFrame('nkMenuEntry', name .. '.entry.' .. (#entries + 1), menu)
 
 		menuEntry:SetFontSize(fontSize)
+		if fontInfo.fontName then menuEntry:SetFont(fontInfo.addonInfo, fontInfo.fontName) end
 		menuEntry:SetWidth(menu:GetWidth()-2)
 		local newWidth = menuEntry:SetText(newEntry.label)
-				
+
 		menuEntry:SetFontColor(labelColor[1], labelColor[2], labelColor[3], labelColor[4] )
 		menuEntry:SetHeight(fontSize+6)
 		menuEntry:SetBackgroundColor(0, 0, 0, 0)
@@ -121,25 +123,35 @@ local function _uiMenu(name, parent)
 	function menu:SetFontSize(newFontSize)
 
 		fontSize = newFontSize
-	
-	  local width = 0
-	  menuHeight = 0
-	
+
+		local width = 0
+		menuHeight = 0
+
 		for k, v in pairs (entries) do
-      if string.find(v:GetName(), '.separator') == nil then		
-        v:ClearWidth()
-        local newWidth = v:SetFontSize(newFontSize)
-        if newWidth > width then width = newWidth end
-        v:SetHeight(newFontSize + 6)
-        menuHeight = menuHeight + fontSize + 6
-      else
-        menuHeight = menuHeight + 3
-      end 
-    end
+			if string.find(v:GetName(), '.separator') == nil then		
+				v:ClearWidth()
+				local newWidth = v:SetFontSize(newFontSize)
+				if newWidth > width then width = newWidth end
+				v:SetHeight(newFontSize + 6)
+				menuHeight = menuHeight + fontSize + 6
+			else
+				menuHeight = menuHeight + 3
+			end 
+    	end
 		
 		menu:SetWidth(width)
-    menu:SetHeight(menuHeight)
+    	menu:SetHeight(menuHeight)
 		
+	end
+
+	function menu:SetFont(addonInfo, fontName)
+		fontInfo = { addonInfo = addonInfo, fontName = fontName }
+
+		for k, v in pairs (entries) do
+			if string.find(v:GetName(), '.separator') == nil then		
+				v:SetFont(addonInfo, fontName)
+			end 
+    	end
 	end
 
 	local oSetPoint, oSetVisible = menu.SetPoint, menu.SetVisible

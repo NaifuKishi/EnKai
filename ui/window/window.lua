@@ -12,6 +12,33 @@ local data       	= privateVars.data
 
 ---------- addon internal function block ---------
 
+--[[
+   _uiWindow
+
+    Description:
+        Creates a draggable RiftWindow with customizable properties and events.
+        
+    Parameters:
+        name (string): Unique identifier for the window.
+        parent (frame): Parent frame to attach the window to.
+        
+    Returns:
+        window (frame): Configured RiftWindow frame with additional functionality.
+        
+    Process:
+        1. Creates a RiftWindow frame with the specified name and parent.
+        2. Adds a draggable frame to the window's border.
+        3. Adds a close button with secure mode support.
+        4. Implements window dragging functionality with boundary checks.
+        5. Provides methods to control window behavior (draggable, closeable, secure close).
+        6. Overrides SetWidth and SetPoint methods to maintain consistent behavior.
+        7. Creates and registers a "Moved" event for position tracking.
+       
+    Notes:
+        - The window will respect UI boundaries defined in data.uiBoundLeft, etc.
+        - Secure mode prevents closing during combat if oFuncs.oInspectSystemSecure() is false.
+        - The window maintains its position within screen bounds when moved.
+]]
 local function _uiWindow(name, parent) 
 
 	if EnKai.internal.checkEvents (name, true) == false then return nil end
