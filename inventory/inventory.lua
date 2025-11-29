@@ -22,6 +22,8 @@ local CommandSystemWatchdogQuiet	= Command.System.Watchdog.Quiet
 
 local stringFind	= string.find
 
+local EnKaiUnitGetPlayerDetails		= EnKai.unit.getPlayerDetails
+
 ---------- init local variables ---------
 
 local _invManager = false
@@ -32,8 +34,8 @@ local function _storeItem (slot, details)
 
 	if not details then return end
 
-	local inventory = EnKaiInv[EnKai.unit.getPlayerDetails().name].inventory
-	local itemCache = EnKaiInv[EnKai.unit.getPlayerDetails().name].itemCache
+	local inventory = EnKaiInv[EnKaiUnitGetPlayerDetails().name].inventory
+	local itemCache = EnKaiInv[EnKaiUnitGetPlayerDetails().name].itemCache
 	
 	if not details.type then details.type = "t" .. details.id end
 	if details.stack == nil then details.stack = 1 end
@@ -58,8 +60,8 @@ end
 
 local function _removeItem (slot)
 
-	local inventory = EnKaiInv[EnKai.unit.getPlayerDetails().name].inventory
-	local itemCache = EnKaiInv[EnKai.unit.getPlayerDetails().name].itemCache
+	local inventory = EnKaiInv[EnKaiUnitGetPlayerDetails().name].inventory
+	local itemCache = EnKaiInv[EnKaiUnitGetPlayerDetails().name].itemCache
 	
 	local slotDetails = inventory.bySlot[slot]
 	local cacheDetails = itemCache[slotDetails.id]
@@ -103,12 +105,12 @@ local function _fctGetInventory ()
 
 	if InspectSystemSecure() == false then CommandSystemWatchdogQuiet() end
 
-	if (not EnKaiInv[EnKai.unit.getPlayerDetails().name]) or (not EnKaiInv[EnKai.unit.getPlayerDetails().name].inventory) then
-		EnKaiInv[EnKai.unit.getPlayerDetails().name] = {}
+	if (not EnKaiInv[EnKaiUnitGetPlayerDetails().name]) or (not EnKaiInv[EnKaiUnitGetPlayerDetails().name].inventory) then
+		EnKaiInv[EnKaiUnitGetPlayerDetails().name] = {}
 	end
 	
-	EnKaiInv[EnKai.unit.getPlayerDetails().name].inventory = { byID = {}, byType = {}, bySlot = {} }
-	EnKaiInv[EnKai.unit.getPlayerDetails().name].itemCache = {}
+	EnKaiInv[EnKaiUnitGetPlayerDetails().name].inventory = { byID = {}, byType = {}, bySlot = {} }
+	EnKaiInv[EnKaiUnitGetPlayerDetails().name].itemCache = {}
 
 	local slots = { InspectItemList(UtilityItemSlotInventory()), 
 					InspectItemList(UtilityItemSlotEquipment()), 
@@ -133,12 +135,12 @@ end
 
 local function _fctProcessUpdate (_, updates)
 
-	if EnKai.unit.getPlayerDetails() == nil then return end
+	if EnKaiUnitGetPlayerDetails() == nil then return end
 
-	if (not EnKaiInv[EnKai.unit.getPlayerDetails().name]) or (not EnKaiInv[EnKai.unit.getPlayerDetails().name].inventory) then _fctGetInventory() end
+	if (not EnKaiInv[EnKaiUnitGetPlayerDetails().name]) or (not EnKaiInv[EnKaiUnitGetPlayerDetails().name].inventory) then _fctGetInventory() end
 
-	local inventory = EnKaiInv[EnKai.unit.getPlayerDetails().name].inventory
-	local itemCache = EnKaiInv[EnKai.unit.getPlayerDetails().name].itemCache
+	local inventory = EnKaiInv[EnKaiUnitGetPlayerDetails().name].inventory
+	local itemCache = EnKaiInv[EnKaiUnitGetPlayerDetails().name].itemCache
 
 	local updatedKeys = {}
 
@@ -272,12 +274,12 @@ end
 
 function EnKai.inventory.getAllItems ()
 
-	return EnKaiInv[EnKai.unit.getPlayerDetails().name].itemCache
+	return EnKaiInv[EnKaiUnitGetPlayerDetails().name].itemCache
 	
 end
 
 function EnKai.inventory.GetItemByKey (key)
-	return EnKaiInv[EnKai.unit.getPlayerDetails().name].itemCache[key]
+	return EnKaiInv[EnKaiUnitGetPlayerDetails().name].itemCache[key]
 end
 
 function EnKai.inventory.querySlotById (id)
@@ -287,7 +289,7 @@ function EnKai.inventory.querySlotById (id)
 		return
 	end
 	
-	local inventory = EnKaiInv[EnKai.unit.getPlayerDetails().name].inventory
+	local inventory = EnKaiInv[EnKaiUnitGetPlayerDetails().name].inventory
 
 	for slot, v in pairs(inventory.bySlot) do
 		if v.id ~= nil and EnKai.strings.startsWith(id, v.id) then return slot end
@@ -310,8 +312,8 @@ function EnKai.inventory.querySlotByType (typeId)
 		return
 	end
 	
-	local inventory = EnKaiInv[EnKai.unit.getPlayerDetails().name].inventory
-	local itemCache = EnKaiInv[EnKai.unit.getPlayerDetails().name].itemCache
+	local inventory = EnKaiInv[EnKaiUnitGetPlayerDetails().name].inventory
+	local itemCache = EnKaiInv[EnKaiUnitGetPlayerDetails().name].itemCache
 
 	for slot, v in pairs(inventory.bySlot) do
 		if itemCache[v.id] ~= nil and EnKai.strings.startsWith(typeId, itemCache[v.id].typeId) then return slot end
@@ -328,14 +330,14 @@ function EnKai.inventory.queryQtyById (key)
 		return
 	end
 	
-	if (not EnKaiInv[EnKai.unit.getPlayerDetails().name]) or (not EnKaiInv[EnKai.unit.getPlayerDetails().name].inventory) then _fctGetInventory() end
+	if (not EnKaiInv[EnKaiUnitGetPlayerDetails().name]) or (not EnKaiInv[EnKaiUnitGetPlayerDetails().name].inventory) then _fctGetInventory() end
 	
 	if not stringFind(key, ',') then
 		-- key is an id, get type			
 		key = inventory.byID[key]
 	end
 	
-	local inventory = EnKaiInv[EnKai.unit.getPlayerDetails().name].inventory
+	local inventory = EnKaiInv[EnKaiUnitGetPlayerDetails().name].inventory
 	
 	if inventory.byType[key] ~= nil then
 		return inventory.byType[key]
@@ -352,11 +354,11 @@ function EnKai.inventory.queryByCategory (category)
 		return
 	end
 
-	if EnKaiInv[EnKai.unit.getPlayerDetails().name] == nil then _fctGetInventory() end
+	if EnKaiInv[EnKaiUnitGetPlayerDetails().name] == nil then _fctGetInventory() end
 	
 	local retValues = {}
 	
-	local itemCache = EnKaiInv[EnKai.unit.getPlayerDetails().name].itemCache
+	local itemCache = EnKaiInv[EnKaiUnitGetPlayerDetails().name].itemCache
 	
 	for id, details in pairs(itemCache) do
 		if details.category == category then
@@ -427,8 +429,8 @@ function EnKai.inventory.getBagItems()
         return
     end
 
-    local inventory = EnKaiInv[EnKai.unit.getPlayerDetails().name].inventory
-    local itemCache = EnKaiInv[EnKai.unit.getPlayerDetails().name].itemCache
+    local inventory = EnKaiInv[EnKaiUnitGetPlayerDetails().name].inventory
+    local itemCache = EnKaiInv[EnKaiUnitGetPlayerDetails().name].itemCache
     local allItems = {}
 
 	for slot, details in pairs(inventory.bySlot) do
@@ -444,6 +446,8 @@ function EnKai.inventory.getBagItems()
                 name = itemCache[details.id].name,
                 icon = itemCache[details.id].icon,
 				rarity = itemCache[details.id].rarity,
+				bind = itemCache[details.id].bind,
+				bound = itemCache[details.id].bound,
             }
         end
     end
