@@ -12,6 +12,9 @@ local data		= privateVars.data
 local InspectItemList           	= Inspect.Item.List
 local UtilityItemSlotInventory  	= Utility.Item.Slot.Inventory
 local UtilityItemSlotQuest      	= Utility.Item.Slot.Quest
+local UtilityItemSlotEquipment		= Utility.Item.Slot.Equipment
+local UtilityItemSlotBank			= Utility.Item.Slot.Bank
+local UtilityItemSlotVault			= Utility.Item.Slot.Vault
 local InspectItemDetail				= Inspect.Item.Detail
 local InspectSystemSecure			= Inspect.System.Secure
 local InspectTimeFrame				= Inspect.Time.Frame
@@ -39,7 +42,7 @@ local function _storeItem (slot, details)
 	if inventory.bySlot[slot] ~= nil then prevId = inventory.bySlot[slot].id end
 	
 	inventory.bySlot[slot] = { id = details.id, stack = details.stack }
-	itemCache[details.id] = { typeId = details.type, stack = details.stack, category = details.category, cooldown = details.cooldown, name = details.name, icon = details.icon }
+	itemCache[details.id] = { typeId = details.type, stack = details.stack, category = details.category, cooldown = details.cooldown, name = details.name, icon = details.icon, rarity = details.rarity }
 				
 	if not inventory.byType[details.type] then
 		inventory.byType[details.type] = details.stack
@@ -88,7 +91,7 @@ local function _processItems (list)
 
 	local itemList = InspectItemDetail(list)
 	
-	for slot, v in pairs(itemList) do
+	for slot, v in pairs(itemList) do		
 		if v.id ~= nil then
 			_storeItem (slot, v)
 		end
@@ -108,12 +111,13 @@ local function _fctGetInventory ()
 	EnKaiInv[EnKai.unit.getPlayerDetails().name].itemCache = {}
 
 	local slots = { InspectItemList(UtilityItemSlotInventory()), 
-					InspectItemList(Utility.Item.Slot.Equipment()), 
-					InspectItemList(Utility.Item.Slot.Bank()), 
-					InspectItemList(Utility.Item.Slot.Vault()), 
+					InspectItemList(UtilityItemSlotEquipment()), 
+					InspectItemList(UtilityItemSlotBank()), 
+					InspectItemList(UtilityItemSlotVault()), 
 					InspectItemList(UtilityItemSlotQuest()) }
 
-	for idx = 1, #slots, 1 do
+
+					for idx = 1, #slots, 1 do
 	
 		local lu = {}
 		
@@ -149,7 +153,7 @@ local function _fctProcessUpdate (_, updates)
 			if inventory.bySlot[slot] ~= nil then -- target slot is not empty
 			
 				if not inventory.bySlot[slot].id then -- content of slot not known => Error
-					dump(inventory.bySlot[slot])
+					--dump(inventory.bySlot[slot])
 				else
 					if key ~= inventory.bySlot[slot].id then -- not just more of the same
 						if updatedKeys[inventory.bySlot[slot].id] == nil then updatedKeys[inventory.bySlot[slot].id] = 0 end
@@ -415,3 +419,34 @@ end
  	return nil
  
  end 
+
+function EnKai.inventory.getBagItems()
+
+    if not _invManager then
+        EnKai.tools.error.display("EnKai", "Inventory manager not initialized", 1)
+        return
+    end
+
+    local inventory = EnKaiInv[EnKai.unit.getPlayerDetails().name].inventory
+    local itemCache = EnKaiInv[EnKai.unit.getPlayerDetails().name].itemCache
+    local allItems = {}
+
+	for slot, details in pairs(inventory.bySlot) do
+		--if not stringFind(slot, "sv") then print (slot) end
+		
+		if stringFind(slot, "si") and not stringFind(slot, "sibg") and details.id and itemCache[details.id] then
+            allItems[slot] = {
+                id = details.id,
+                stack = details.stack,
+                typeId = itemCache[details.id].typeId,
+                category = itemCache[details.id].category,
+                cooldown = itemCache[details.id].cooldown,
+                name = itemCache[details.id].name,
+                icon = itemCache[details.id].icon,
+				rarity = itemCache[details.id].rarity,
+            }
+        end
+    end
+
+    return allItems
+end
