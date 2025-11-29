@@ -7,6 +7,11 @@ if not EnKai.items then EnKai.items = {} end
 
 local lang        = privateVars.langTexts
 
+local stringLower  = string.lower
+local stringFind   = string.find
+local stringSub    = string.sub
+local stringLen    = string.len
+
 ---------- init local variables ---------
 
 local _itemTypeTranslation = { 
@@ -206,7 +211,7 @@ local _slotText = {
 	seal			= lang.items.txtSeal
 }
 
-local itemRarityColor = {trash = {0.502, 0.502, 0.502, 1}, sellable = {1, 1, 1, 1}, uncommon = {0.149, 0.498, 0, 1}, rare = { 0.278, 0.467, 0.718, 1 }, epic = { 0.596, 0.365, 0.788, 1 }, relic = { 1, 0.416, 0, 1 }, transcendent = {1, 0.8, 0.2, 1}, quest = {1, 0.847, 0, 1}, ascended = {0.93, 0.51, 0.93, 1}}
+local itemRarityColor = {trash = {0.502, 0.502, 0.502, 1}, sellable = {1, 1, 1, 1}, uncommon = {0, 1, 0, 1}, common = {1, 0.498, 0, 1}, rare = { 0.278, 0.467, 0.718, 1 }, epic = { 0.596, 0.365, 0.788, 1 }, relic = { 1, 0.416, 0, 1 }, transcendent = {1, 0.8, 0.2, 1}, quest = {1, 0.847, 0, 1}, ascended = {0.93, 0.51, 0.93, 1}}
 
 ---------- library public function block ---------
             
@@ -231,9 +236,9 @@ end
 function EnKai.items.translateRiftCategoryToSlot (ID)
 
 	for k, v in pairs(_slotToCategory) do
-		if string.find(ID, v.mainType) ~= nil then
+		if stringFind(ID, v.mainType) ~= nil then
 			for l, w in pairs(v.subType) do
-				if string.find(ID, w) ~= nil then
+				if stringFind(ID, w) ~= nil then
 					return k
 				end
 			end
@@ -247,13 +252,13 @@ function EnKai.items.translateRiftCategory (ID)
 	if ID == nil then return nil end
 
 	local retValue = _riftCategoryToType[ID]
-	
+
 	if retValue == nil then
-		if string.find(ID, 'dimension') == 1 then
+		if stringFind(ID, 'dimension') == 1 then
 			retValue = 'dimension:items'
-		elseif string.find(ID, 'crafting') == 1 then
-			local profession = string.sub(ID, string.len("crafting recipe")+2)
-			if profession == 'apothecary' then profession = 'alchemist' end
+		elseif stringFind(ID, 'crafting recipe') == 1 then
+			local profession = stringSub(ID, stringLen("crafting recipe")+2)
+      if profession == 'apothecary' then profession = 'alchemist' end
 			if profession == 'runecrafting' then profession = 'runecrafter' end
 			retValue = 'recipe:' .. profession
 		end
@@ -298,10 +303,10 @@ end
 
 function EnKai.items.getRarityColor (rarity)
 
-	if itemRarityColor[string.lower(rarity)] == nil then
+  if itemRarityColor[stringLower(rarity)] == nil then
 		EnKai.tools.error.display ("EnKai", "Could not find color definition for rarity " .. rarity, 1)
 	else
-		return itemRarityColor[string.lower(rarity)]
+		return itemRarityColor[stringLower(rarity)]
 	end
 
 end

@@ -197,7 +197,7 @@ local function _uiItemTooltip(name, parent)
 	
 		local err, details = pcall (oFuncs.oInspectItemDetail, itemID)
 		if err == true then tooltip:SetItemDetails(details, itemLibDetails, equipped, equipSlot) end
-	
+
 		local tooltipCoRoutine = coroutine.create(
 		   function ()
 				for idx = 1, 10, 1 do
@@ -253,7 +253,7 @@ local function _uiItemTooltip(name, parent)
 		
 		height = height + title:GetHeight()
 		
-		local color = EnKai.items.getRarityColor ("trash")
+		local color = EnKai.items.getRarityColor ("uncommon")
 		
 		if details.rarity ~= nil then
 			color = EnKai.items.getRarityColor (details.rarity)
@@ -282,6 +282,7 @@ local function _uiItemTooltip(name, parent)
 		local riftSlot, itemTypeText = nil
 		
 		--if EnKai.items.getRessource ('riftCategoryToType', details.category) ~= nil then riftSlot = EnKai.items.getRessource ('riftCategoryToType', details.category) end
+
 		if EnKai.items.translateRiftCategory (details.category) ~= nil then riftSlot = EnKai.items.translateRiftCategory (details.category) end
 		
 		if riftSlot ~= nil then
