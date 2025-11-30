@@ -282,6 +282,27 @@ function EnKai.inventory.findFreeBankSlot(bag)
 
 end
 
+function EnKai.inventory.findFreeVaultSlot(bag)
+
+	local startBag, endBag = 1, 2
+	if bag then startBag, endBag = bag, bag end
+
+	for idx = startBag, endBag, 1 do
+		local bagSlot = UtilityItemSlotValut(idx)
+		
+		if bagSlot then
+			local bagInfo = InspectItemList(bagSlot)
+
+			for slot, details in pairs (bagInfo) do
+				if details == false then return slot end    
+			end
+		end
+	end
+	
+	return nil
+
+end
+
 function EnKai.inventory.getAllItems ()
 
 	return EnKaiInv[EnKaiUnitGetPlayerDetails().name].itemCache
