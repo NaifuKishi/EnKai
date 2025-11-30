@@ -454,3 +454,46 @@ function EnKai.inventory.getBagItems()
 
     return allItems
 end
+
+function EnKai.inventory.getBagSlots()
+
+	if not _invManager then
+        EnKai.tools.error.display("EnKai", "Inventory manager not initialized", 1)
+        return
+    end
+
+    local inventory = EnKaiInv[EnKaiUnitGetPlayerDetails().name].inventory
+    local itemCache = EnKaiInv[EnKaiUnitGetPlayerDetails().name].itemCache
+    local allItems = {
+		["sibg.001"] = {},
+		["sibg.002"] = {},
+		["sibg.003"] = {},
+		["sibg.004"] = {},
+		["sibg.005"] = {},
+		["sibg.006"] = {},
+		["sibg.007"] = {},
+		["sibg.008"] = {}
+	}
+
+	for slot, details in pairs(inventory.bySlot) do
+		
+		if stringFind(slot, "sibg") then
+
+            allItems[slot] = {
+                id = details.id,
+                stack = details.stack,
+                typeId = itemCache[details.id].typeId,
+                category = itemCache[details.id].category,
+                cooldown = itemCache[details.id].cooldown,
+                name = itemCache[details.id].name,
+                icon = itemCache[details.id].icon,
+				rarity = itemCache[details.id].rarity,
+				bind = itemCache[details.id].bind,
+				bound = itemCache[details.id].bound,
+            }
+        end
+    end
+
+    return allItems
+
+end
