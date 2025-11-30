@@ -126,6 +126,7 @@ if Inspect.System.Language() == "English" then
                   		txtWeaponsmith = 'Weaponsmith',
                   		txtOutfitter = 'Outfitter',
                   		txtArmorsmith = 'Armorsmith',
+                        txtSurvival    = 'Survival',
 	}
 	
 	lang.factionNames = { ["Arcane Hand"]= "Arcane Hand",

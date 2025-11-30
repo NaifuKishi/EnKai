@@ -125,7 +125,8 @@ if ( Inspect.System.Language() == "German"  ) then
                   		txtRunecrafter = 'Runenwerk',
                   		txtWeaponsmith = 'Waffenschmied',
                   		txtOutfitter   = 'Ausstatter',
-                  		txtArmorsmith  = 'Rüstungsschmid'
+                  		txtArmorsmith  = 'Rüstungsschmid',
+                        txtSurvival    = 'Überlebenskünstler',
 	}
 	
 	lang.factionNames = { ["Arcane Hand"]= "Arkane Hand",
