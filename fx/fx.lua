@@ -18,8 +18,6 @@ local _fxStore = {}
 
 function EnKai.fx.register (id, frame, effect)
 
-	--print ("register fx", id)
-
 	_fxStore[id] = { frame = frame, effect = effect }
 	_fxStore[id].lastUpdate = InspectTimeReal()
 
@@ -37,7 +35,6 @@ end
 
 function EnKai.fx.cancel (id) 
 
-	--print ('cancel fx', id)
 	_fxStore[id] = nil 
 	
 end

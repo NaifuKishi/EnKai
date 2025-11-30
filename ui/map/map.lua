@@ -366,8 +366,6 @@ local function _uiMap(name, parent)
 
 		if x == mathFloor(newX) and y == mathFloor(newY) then return end -- only do computation of radius for significant x / y change
 
-		--print (mask:GetLeft(), map:GetLeft())
-		
 		local xPixel = (mapInfo.x2 - mapInfo.x1) / map:GetWidth()
 		local yPixel = (mapInfo.y2 - mapInfo.y1) / map:GetHeight()
 		
@@ -397,10 +395,8 @@ local function _uiMap(name, parent)
 				if element.GetRadius and element:GetRadius() ~= nil then radius = element:GetRadius() / 2 end
 
 				if (eleX + radius) < coordsArea.x1 or (eleX - radius) > coordsArea.x2 or ( eleZ + radius) < coordsArea.y1 or ( eleZ - radius) > coordsArea.y2 then
-					--print (element:GetId())
 					element:SetVisible(false)
 				--elseif element:GetWidth() <= 10 and element:GetHeight() <= 10 then
-					--print (element:GetId())
 					--element:SetVisible(false)
 				elseif not element:GetDuplicate() then
 					element:SetVisible(true)
@@ -444,10 +440,8 @@ local function _uiMap(name, parent)
 		local duplicate = false
 
 		local checkKey = tostring(newElement.coordX) .. tostring(newElement.coordY) .. tostring(newElement.coordZ) .. tostring(newElement.type)
-		--print ('add', newElement.id)
 		
 		if checkIdentical[checkKey] ~= nil and #checkIdentical[checkKey] > 0 then
-			--if nkDebug then print ('duplicate', checkKey) end
 			table.insert(checkIdentical[checkKey], newElement.id)
 			duplicate = true
 		else
@@ -498,7 +492,6 @@ local function _uiMap(name, parent)
 			if nkDebug then
 				EnKai.tools.error.display ("EnKai", "map entry without coordinates", 2)
 				nkDebug.logEntry (InspectAddonCurrent(), "_uiMap", "ui:AddElement error", "map entry without coordinates" .. newElement.id .. "\n\n" .. EnKai.tools.table.serialize(newElement))
-				--dump (newElement)
 			end
 		else
 			thisElement:SetZoom(thisScale, maximized)
@@ -525,7 +518,6 @@ local function _uiMap(name, parent)
 		if nkDebug then 
 			if elements[updateElement.id] == nil then 
 				nkDebug.logEntry (InspectAddonCurrent(), "_uiMap", "ui:ChangeElement error", "unknown element with id " .. updateElement.id)				
-				--print ("unknown element with id " .. updateElement.id) 
 			end
 		end
 
@@ -566,8 +558,6 @@ local function _uiMap(name, parent)
 		local debugId  
 		if nkDebug then debugId = nkDebug.traceStart (InspectAddonCurrent(), "EnKai _uiMap:RemoveElement") end
 
-		--print ('remove', removeElement)
-		
 		local thisElement = elements[removeElement]
 
 		for id, details in pairs(checkIdentical) do
@@ -717,7 +707,6 @@ local function _uiMap(name, parent)
 
 	ui:GetContent():EventAttach(Event.UI.Input.Mouse.Right.Down.Bubble, function ()
 	
-		--if nkDebug then print ("Right.Down.Bubble", allowWayPoints) end
 		if allowWayPoints == false then return end
 		
 		_fctProcessWayPoint()

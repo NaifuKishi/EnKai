@@ -9,7 +9,10 @@ if not privateVars.uiFunctions then privateVars.uiFunctions = {} end
 local uiFunctions   = privateVars.uiFunctions
 local internal      = privateVars.internal
 local lang          = privateVars.langTexts
-local oFuncs        = privateVars.oFuncs
+
+local InspectItemDetail	= Inspect.Item.Detail
+
+local itemCache = {}
 
 ---------- addon internal function block ---------
 
@@ -81,54 +84,65 @@ local function _uiItemTooltip(name, parent)
 	isEquipped:SetFontSize(12)
 	isEquipped:SetFontColor(0.58, 0.58, 0.58, 1)
 	isEquipped:SetPoint("TOPLEFT", tooltip, "TOPLEFT")	
+	EnKai.ui.setFont(isEquipped, addonInfo.id, "MontserratSemiBold")
 	
 	title:SetWordwrap(true)
 	title:SetFontSize(15)
 	title:SetFontColor(defaultTitleColor[1], defaultTitleColor[2], defaultTitleColor[3], defaultTitleColor[4])
+	EnKai.ui.setFont(title, addonInfo.id, "Montserrat")
 		
 	bound:SetPoint ("TOPLEFT", title, "BOTTOMLEFT", 0, -3)
 	bound:SetFontSize(12)
 	bound:SetFontColor(1, 1, 1, 1)
 	bound:SetWidth(defaultWidth- 4)
+	EnKai.ui.setFont(bound, addonInfo.id, "Montserrat")
 	
 	itemCat:SetPoint("TOPLEFT", bound, "BOTTOMLEFT", 0, -3)
 	itemCat:SetFontSize(12)
 	itemCat:SetFontColor(1, 1, 1, 1)
 	itemCat:SetWidth(defaultWidth- 4)
+	EnKai.ui.setFont(itemCat, addonInfo.id, "Montserrat")
 	
 	itemType:SetPoint("CENTERRIGHT", itemCat, "CENTERRIGHT")
 	itemType:SetFontSize(12)
 	itemType:SetFontColor(1, 1, 1, 1)
+	EnKai.ui.setFont(itemType, addonInfo.id, "Montserrat")
 	
 	description:SetFontSize(12)
 	description:SetFontColor (1,1,1,1)
 	description:SetWidth(defaultWidth-4)
 	description:SetWordwrap(true)
+	EnKai.ui.setFont(description, addonInfo.id, "Montserrat")
 	
 	dps:SetPoint("TOPLEFT", itemCat, "BOTTOMLEFT", 0, 10)
 	dps:SetFontSize(12)
 	dps:SetWordwrap(true)
 	dps:SetWidth(defaultWidth-4)
 	dps:SetFontColor(1, 1, 1, 1)
+	EnKai.ui.setFont(dps, addonInfo.id, "Montserrat")
 	
 	equip:SetFontSize(12)
 	equip:SetFontColor (1,1,1,1)
 	equip:SetWidth(defaultWidth-4)
 	equip:SetWordwrap(true)
+	EnKai.ui.setFont(equip, addonInfo.id, "Montserrat")
 	
 	use:SetFontSize(12)
 	use:SetFontColor (1,1,1,1)
 	use:SetWidth(defaultWidth-4)
 	use:SetWordwrap(true)
+	EnKai.ui.setFont(use, addonInfo.id, "Montserrat")
 	
 	set:SetFontSize(12)
 	set:SetFontColor(0.455, 0.929, 0.882, 1)
 	set:SetWidth(defaultWidth-4)
 	set:SetWordwrap(true)
+	EnKai.ui.setFont(set, addonInfo.id, "Montserrat")
 		
 	costLabel:SetFontSize(12)
 	costLabel:SetFontColor(1, 1, 1, 1)
 	costLabel:SetWordwrap(false)
+	EnKai.ui.setFont(costLabel, addonInfo.id, "Montserrat")
 	if nkItemBase then costLabel:SetText(nkItemBase.texts.cost) end
 	
 	costCurrencyIcon:SetWidth(14)
@@ -136,6 +150,7 @@ local function _uiItemTooltip(name, parent)
 	
 	costCurrencyText:SetFontSize(12)
 	costCurrencyText:SetFontColor(1, 1, 1, 1)
+	EnKai.ui.setFont(costCurrencyText, addonInfo.id, "Montserrat")
 	
 	costCurrencyText:SetWordwrap(false)
 	costCurrencyText:SetPoint("CENTERLEFT", costCurrencyIcon, "CENTERRIGHT", 2, 0)
@@ -148,10 +163,12 @@ local function _uiItemTooltip(name, parent)
 	costShopText:SetFontColor(1, 1, 1, 1)
 	costShopText:SetWordwrap(false)
 	costShopText:SetPoint("CENTERLEFT", costShopIcon, "CENTERRIGHT", 2, 0)
+	EnKai.ui.setFont(costShopText, addonInfo.id, "Montserrat")
 	
 	upgradeText:SetFontSize(12)
 	upgradeText:SetFontColor(1, 1, 1, 1)
 	upgradeText:SetWordwrap(false)
+	EnKai.ui.setFont(upgradeText, addonInfo.id, "Montserrat")
 	if nkItemBase then upgradeText:SetText(nkItemBase.texts.upgrade) end
 	
 	upgradeItem1:SetPoint("CENTERLEFT", upgradeText, "CENTERRIGHT", 2, 0)
@@ -161,6 +178,7 @@ local function _uiItemTooltip(name, parent)
 	upgradeCount1:SetPoint("CENTERLEFT", upgradeItem1, "CENTERRIGHT", 2, 0)
 	upgradeCount1:SetFontColor(1, 1, 1, 1)
 	upgradeCount1:SetWordwrap(false)
+	EnKai.ui.setFont(upgradeCount1, addonInfo.id, "Montserrat")
 	
 	upgradeItem2:SetPoint("CENTERLEFT", upgradeCount1, "CENTERRIGHT", 2, 0)
 	upgradeItem2:SetWidth(16)
@@ -169,6 +187,7 @@ local function _uiItemTooltip(name, parent)
 	upgradeCount2:SetPoint("CENTERLEFT", upgradeItem2, "CENTERRIGHT", 2, 0)
 	upgradeCount2:SetFontColor(1, 1, 1, 1)
 	upgradeCount2:SetWordwrap(false)
+	EnKai.ui.setFont(upgradeCount2, addonInfo.id, "Montserrat")
 	
 	upgradeItem3:SetPoint("CENTERLEFT", upgradeCount2, "CENTERRIGHT", 2, 0)
 	upgradeItem3:SetWidth(16)
@@ -177,31 +196,36 @@ local function _uiItemTooltip(name, parent)
 	upgradeCount3:SetPoint("CENTERLEFT", upgradeItem3, "CENTERRIGHT", 2, 0)
 	upgradeCount3:SetFontColor(1, 1, 1, 1)
 	upgradeCount3:SetWordwrap(false)
+	EnKai.ui.setFont(upgradeCount3, addonInfo.id, "Montserrat")
 	
 	--level:SetPoint("TOPLEFT", dps, "BOTTOMLEFT")
 	level:SetFontSize(12)
 	level:SetFontColor (1,1,1,1)
+	EnKai.ui.setFont(level, addonInfo.id, "Montserrat")
 	
 	faction:SetFontSize(12)
 	faction:SetFontColor (1,1,1,1)
 	faction:SetWordwrap(true)
+	EnKai.ui.setFont(faction, addonInfo.id, "Montserrat")
 	
 	calling:SetPoint("TOPLEFT", level, "BOTTOMLEFT")
 	calling:SetFontSize(12)
 	calling:SetFontColor (1,1,1,1)
+	EnKai.ui.setFont(calling, addonInfo.id, "Montserrat")
 	
 	function tooltip:SetItem(itemID, itemLibDetails, equipped, equipSlot)
 	
 		thisItemID = itemID
-		if itemID == nil then return end
-	
-		local err, details = pcall (oFuncs.oInspectItemDetail, itemID)
+		if itemID == nil then return end		
+
+		local err, details = pcall (InspectItemDetail, itemID)
+
 		if err == true then tooltip:SetItemDetails(details, itemLibDetails, equipped, equipSlot) end
 
 		local tooltipCoRoutine = coroutine.create(
 		   function ()
 				for idx = 1, 10, 1 do
-					local err, details = pcall (oFuncs.oInspectItemDetail, itemID)
+					local err, details = pcall (InspectItemDetail, itemID)
 					if err == true then 
 						tooltip:SetItemDetails(details, itemLibDetails, equipped, equipSlot)
 						coroutine.yield(nil)
@@ -309,13 +333,28 @@ local function _uiItemTooltip(name, parent)
 				height = height + itemCat:GetHeight() -4
 				object = itemCat
 			end
+		elseif details.category ~= nil then
+			itemCat:SetText(EnKai.strings.Capitalize(details.category))
+			itemType:SetText("")
+
+			height = height + itemCat:GetHeight() -4
+			object = itemCat
+
+			itemCat:SetVisible(true)
+			itemType:SetVisible(true)
 		else
 			itemCat:SetVisible(false)
 			itemType:SetVisible(false)
 		end
 		
-		if details.description ~= nil then
-			description:SetText (details.description)
+		if details.description ~= nil or details.flavor ~= nil then
+			local thisDesc
+			if details.description ~= nil then thisDesc = details.description end
+			if details.flavor ~= nil then
+				if thisDesc ~= nil then thisDesc = thisDesc .. "\n\n" .. details.flavor else thisDesc = details.flavor end
+			end
+
+			description:SetText (thisDesc)
 			description:SetPoint("TOPLEFT", object, "BOTTOMLEFT", 0, 10)
 			description:SetVisible(true)
 			height = height + description:GetHeight() + 10
@@ -352,6 +391,7 @@ local function _uiItemTooltip(name, parent)
 						statLine = EnKai.uiCreateFrame ('nkText', name .. '.stats.' .. counter, tooltipInner)
 						statLine:SetFontSize(12)
 						statLine:SetFontColor(1,1,1,1)
+						EnKai.ui.setFont(statLine, addonInfo.id, "Montserrat")
 						
 						table.insert(stats, statLine)				
 					end  

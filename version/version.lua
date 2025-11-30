@@ -68,7 +68,6 @@ local function _fctAddonStartupEnd ()
     if v.localVersion ~= nil then
       local detail = InspectAddonDetail(k)
       if detail == nil then
-        --print ('deregister local version of ' .. k)
         EnKaiSetup.addonVersions[k].localVersion = nil
       end
     end

@@ -114,14 +114,11 @@ local function _fctCheckPattern (value)
 			local subValue = stringMatch(checkValue, pattern)
 			
 			if subValue ~= nil then
-				--if stringFind(value, "Bolidium") ~= nil then print (subValue, checkValue, pattern) end
-				--print (value, pattern, subValue)
 				for k, v in pairs(details.regExValues) do
 					if stringMatch(subValue, k) then return idx, details, details.type .. "." .. v end
 				end
 
 				--EnKai.tools.error.display ("EnKai", subValue .. " not found in " .. EnKai.tools.table.serialize(details.regExValues), 2)
-				--dump (checkValue)
 
 			end          
 		elseif details.exact == false then
@@ -158,8 +155,6 @@ end
 
 local function _fctIdentify(values)
 
-	--print ('-----------')
-
 	--local thisPattern = nil
 	local mapIdentifier = nil
 	local titleIdentifier, titleType
@@ -167,8 +162,6 @@ local function _fctIdentify(values)
 	local descIndex, titleIndex = 0, 0
 
 	if values.title ~= nil then 
-
-		--if values.title ~= nil then print ("titel: " .. stringGSub(values.title, "\n", "@@")) end
 
 		values.titleList = EnKai.strings.split(values.title, "\n")
 
@@ -189,10 +182,6 @@ local function _fctIdentify(values)
 		values.descList = EnKai.strings.split(values.description, "\n")
 
 		if mapIdentifier == nil then 
-
-			--print ("desc: " .. stringGSub(values.description, "\n", "@@"))
-			--dump (values.descList)
-
 			for idx = 1, #values.descList, 1 do
 				local thisDesc = values.descList[idx]
 				if stringFind(thisDesc, lang.mapIdentifiersExcludeLevel, 1, true) == nil then -- exclude level info
@@ -222,7 +211,6 @@ local function _fctIdentify(values)
 		if nkDebug then
 			EnKai.tools.error.display ("EnKai", "Could not identify map entry", 2)
 			nkDebug.logEntry (InspectAddonCurrent(), "_fctIdentify", "Unidentified map entry", values)
-			--dump (values)
 		end
 		mapIdentifier = lang.mapIdentifiersGeneric["UNKNOWN"]
 		values.type = "UNKNOWN"
@@ -281,7 +269,7 @@ local function _fctIdentify(values)
 				values.descList[1] = values.name
 			end      
 		else
-			--dump (values)
+			
 		end
 	end 
 
@@ -356,8 +344,6 @@ local function _fctMapEventChange (_, info)
   end
   
   if hasChange == true then
-    --print ("----------------- change ----------------")
-    --dump (changeList)
     EnKai.eventHandlers["EnKai.map"]["change"](changeList)
   end
 
@@ -379,8 +365,6 @@ local function _fctMapEventCoord  (_, x, y, z)
       changeList[key] = _mapPoints[key]
       
     else
-      --print ("unknown coord change: " ..key)
-    
       hasAdd = true
       addList[key] = true
     end

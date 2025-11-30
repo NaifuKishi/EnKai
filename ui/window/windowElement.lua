@@ -155,7 +155,6 @@ local function _uiWindowElement(name, parent)
     --if newX >= data.uiBoundLeft and newX <= data.uiBoundRight and newY + window:GetHeight() >= data.uiBoundTop and newY + window:GetHeight() <= data.uiBoundBottom then    
       window:SetPoint("TOPLEFT", UIParent, "TOPLEFT", newX, newY)
     --else
-    --  print ("check failed")
     --end
     
   end, name .. ".header.Cursor.Move")

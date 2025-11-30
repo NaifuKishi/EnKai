@@ -45,9 +45,6 @@ local function _fctIsSubscribed(unit, buffDetails, combatLogFlag)
 
 	for addon, sDetails in pairs(_subscriptions) do
 
-		--print ("_fctIsSubscribed")
-		--dump(sDetails[thisType])
-
 		if sDetails[thisType] ~= nil then
 		
 			if sDetails[thisType]["*"] ~= nil then
@@ -60,11 +57,6 @@ local function _fctIsSubscribed(unit, buffDetails, combatLogFlag)
 				local subscription = sDetails[thisType][buffDetails.id]
 				if subscription == nil then subscription = sDetails[thisType][buffDetails.type] end
 				if subscription == nil then subscription = sDetails[thisType][buffDetails.name] end
-
-				--if subscription ~= nil then
-				--	dump (subscription)
-				--	print (buffDetails.caster )
-				--end
 
 				if subscription ~= nil and subscription.caster == buffDetails.caster then
 
@@ -132,8 +124,6 @@ local function _fctBuffAdd (_, unit, buffs)
 		
 		local sFlag, subscriptionList = _fctIsSubscribed(unit, buffDetails)
 
-		--print (unit, buffDetails.name, sFlag)
-
 		if sFlag then
 		
 			if _processBDList[unit] == nil then _processBDList[unit] = {} end
@@ -148,10 +138,6 @@ local function _fctBuffAdd (_, unit, buffs)
 		end
 	end
 
-	--print ("_fctBuffAdd")
-	--dump(_bdList)
-	--print "-----------------"
-	
 	if hasAdds then 
 		for addon, addList in pairs(adds) do
 			EnKai.eventHandlers["EnKai.BuffManager"]["Add"](unit, addon, addList) 
@@ -222,8 +208,6 @@ end
 
 local function _fctBuffChange (_, unit, buffs, combatLogFlag)
 
-	--print ("_fctBuffChange")
-
 	local debugId  
 	if nkDebug then debugId = nkDebug.traceStart (addonInfo.identifier, "_fctBuffChange") end
 
@@ -276,7 +260,7 @@ local function _fctBuffChange (_, unit, buffs, combatLogFlag)
 				if _bdByType[unit] == nil then _bdByType[unit] = {} end
 				
 				if buffDetails.type == nil then
-					--dump(buffDetails)
+					
 				else
 					_bdByType[unit][buffDetails.type] = buffId
 				end
@@ -432,8 +416,6 @@ end
 
 local function _fctProcessBuffDebuffList()
 
-	--print ("_fctProcessBuffDebuffList #1")
-
 	local debugId  
 	if nkDebug then debugId = nkDebug.traceStart (InspectAddonCurrent(), "_fctProcessBuffDebuffList") end
 	
@@ -442,11 +424,7 @@ local function _fctProcessBuffDebuffList()
 	local updateList = {}
 	local updatesFound = false
 
-	--dump(_processBDList)
-	
 	for unit, buffList in pairs(_processBDList) do
-
-		--print ("_fctProcessBuffDebuffList #2")
 
 		for buffId, _ in pairs(buffList) do
 		
@@ -588,8 +566,6 @@ function EnKai.BuffManager.init()
 end
 
 function EnKai.BuffManager.subscribe(sType, sId, castBy, sTarget, sStack)
-
-	--print ("subscribe", sType, sId)
 
 	local debugId  
 	if nkDebug then debugId = nkDebug.traceStart (addonInfo.identifier, "EnKai.BuffManager.subscribe") end
@@ -895,12 +871,8 @@ function internal.processBuffs ()
 		return
 	end
 
-	--dump(updateList)
-
 	local hasUpdates, updates, hasStop, stop = _fctProcessBuffDebuffUpdates (updateList)
 
-	--print (hasUpdates)
-		
 	if hasUpdates == true then 
 		for addon, unitList in pairs(updates) do
 			for unitId, changeList  in pairs(unitList) do

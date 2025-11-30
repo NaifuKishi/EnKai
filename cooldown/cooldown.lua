@@ -33,15 +33,9 @@ local function _fctIsSubscribed(cdType, key)
 
 	local retList = {}
 
-	--print (cdType)
-	
 	for addon, details in pairs (_cdSubscriptions) do
 	
-		--dump (_cdSubscriptions[addon][cdType])
-		
 		for thisKey, _ in pairs(details[cdType]) do
-			--print (thisKey, key)
-		
 			if thisKey == "*" or thisKey == key then table.insert(retList, addon) end
 		end
 	end
@@ -53,10 +47,6 @@ local function _fctIsSubscribed(cdType, key)
 end
 
 local function _fctProcessAbilityCooldown (_, info)
-
-	--print ("_fctProcessAbilityCooldown")
-
-	--dump (info)
 
 	local adds, hasAdds = {}, false
 	local stops, hasStops = {}, false  
@@ -76,7 +66,6 @@ local function _fctProcessAbilityCooldown (_, info)
 			end
 		elseif data > _gcd then -- only check cd > 1 so we don't process all the standard cooldowns
 		--else
-			--print ('new cooldown', key)
 
 			_cdStore.ABILITY[key] = { type = "ABILITY", duration = data, begin = InspectTimeFrame(), remaining = data }
 			
@@ -93,7 +82,6 @@ local function _fctProcessAbilityCooldown (_, info)
 
 	if hasAdds == true then 
 		for addon, addList in pairs(adds) do
-			--print (addon)
 			EnKai.eventHandlers["EnKai.CDManager"]["Start"](addon, addList) 
 		end
 	end
@@ -136,8 +124,6 @@ end
 
 function EnKai.cdManager.subscribe(sType, id)
 
-	--print (sType, id)
-
 	sType = stringUpper(sType)
 
 	if _cdSubscriptions[InspectAddonCurrent()] == nil then
@@ -149,8 +135,6 @@ function EnKai.cdManager.subscribe(sType, id)
 	end
 
 	_cdSubscriptions[InspectAddonCurrent()][sType][id] = true
-	
-	--dump(_cdSubscriptions[InspectAddonCurrent()])
 	
 	if sType == 'ABILITY' then
 		local list

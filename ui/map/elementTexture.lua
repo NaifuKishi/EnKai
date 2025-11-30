@@ -96,14 +96,8 @@ local function _uiMapElementTexture(name, parent)
   
 	if x == coordX and y == coordY then return end
 	
-	-- print ('---- texture ' .. mapElement:GetName() .. ' sectcoord ----')
-	-- print (x, y)
-
 	if smoothCoords == false and x ~= nil and mathFloor(mathAbs(coordX - x)) < 1 and y ~= nil and mathFloor(mathAbs(coordY - y)) < 1 then return end
 		    
-	-- if x ~= nil then print (mapElement:GetName() .. "-x " .. mathFloor(mathAbs(coordX - x))) end
-	-- if y ~= nil then print (mapElement:GetName() .. "-y " .. mathFloor(mathAbs(coordY - y))) end	
-			
     if x ~= nil then coordX = x end
     if y ~= nil then coordY = y end
 		

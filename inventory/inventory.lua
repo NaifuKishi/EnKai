@@ -44,7 +44,7 @@ local function _storeItem (slot, details)
 	if inventory.bySlot[slot] ~= nil then prevId = inventory.bySlot[slot].id end
 	
 	inventory.bySlot[slot] = { id = details.id, stack = details.stack }
-	itemCache[details.id] = { typeId = details.type, stack = details.stack, category = details.category, cooldown = details.cooldown, name = details.name, icon = details.icon, rarity = details.rarity }
+	itemCache[details.id] = { typeId = details.type, stack = details.stack, category = details.category, cooldown = details.cooldown, name = details.name, icon = details.icon, rarity = details.rarity, bind = details.bind, bound = details.bound }
 				
 	if not inventory.byType[details.type] then
 		inventory.byType[details.type] = details.stack
@@ -146,8 +146,6 @@ local function _fctProcessUpdate (_, updates)
 
 	for slot, key in pairs(updates) do
 	
-		--print (slot, key)
-
 		if not EnKai.strings.startsWith(slot, 'sg') then
 
 			if key == "nil" then key = false end
@@ -155,13 +153,11 @@ local function _fctProcessUpdate (_, updates)
 			if inventory.bySlot[slot] ~= nil then -- target slot is not empty
 			
 				if not inventory.bySlot[slot].id then -- content of slot not known => Error
-					--dump(inventory.bySlot[slot])
+
 				else
 					if key ~= inventory.bySlot[slot].id then -- not just more of the same
 						if updatedKeys[inventory.bySlot[slot].id] == nil then updatedKeys[inventory.bySlot[slot].id] = 0 end
-						
-						--print ("remove qty " .. inventory.bySlot[slot].id .. ": " .. inventory.bySlot[slot].stack)
-						
+												
 						updatedKeys[inventory.bySlot[slot].id] = updatedKeys[inventory.bySlot[slot].id] - inventory.bySlot[slot].stack
 						_removeItem (slot)
 												
@@ -173,8 +169,6 @@ local function _fctProcessUpdate (_, updates)
 				local updateDetails = InspectItemDetail(key)
 				
 				if updateDetails ~= nil then
-					--print (updateDetails.category)
-				
 					if updateDetails.stack == nil then updateDetails.stack = 1 end
 					local qty = 0
 					
@@ -190,15 +184,10 @@ local function _fctProcessUpdate (_, updates)
 					updatedKeys[inventory.bySlot[slot].id] = updatedKeys[inventory.bySlot[slot].id] + qty
 					
 				end
-				
-				--print ("add qty " .. inventory.bySlot[slot].id .. ": " .. qty)
-				
 			end
 			
 		end
 	end
-	
-	--dump (updatedKeys)
 
 	EnKai.eventHandlers["EnKai.InventoryManager"]["Update"](updatedKeys)
 
@@ -434,8 +423,6 @@ function EnKai.inventory.getBagItems()
     local allItems = {}
 
 	for slot, details in pairs(inventory.bySlot) do
-		--if not stringFind(slot, "sv") then print (slot) end
-		
 		if stringFind(slot, "si") and not stringFind(slot, "sibg") and details.id and itemCache[details.id] then
             allItems[slot] = {
                 id = details.id,

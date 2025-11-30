@@ -132,8 +132,6 @@ local function _uiMapElementCanvas(name, parent)
 		thisX = (thisMap:GetWidth() * xP) - (mapElement:GetWidth() / 2)
 		thisY = (thisMap:GetHeight() * yP) - (mapElement:GetWidth() / 2)
 
-		--print (mathFloor(thisX), mathFloor(thisY), lastX, lastY)
-
 		if mathFloor(thisX) ~= lastX or mathFloor(thisY) ~= lastY then
 
 			lastX = mathFloor(thisX)

@@ -187,8 +187,6 @@ local function _uiWindowMetro(name, parent)
     local xProp = 1 / window:GetWidth() * 5
     local yProp = 1 / window:GetHeight() * 5
     
-    --print (xProp, yProp)
-    
     local path = {  {xProportional = xProp, yProportional = 0},
                     {xProportional = (1-xProp), yProportional = 0},
                     {xProportional = 1, yProportional = yProp, xControlProportional = 1, yControlProportional = 0},

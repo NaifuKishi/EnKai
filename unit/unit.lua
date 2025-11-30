@@ -113,12 +113,6 @@ local function _fctSetIDCache(key, value, flag, source)
 	if nkDebug and value then nkDebug.logEntry (addonInfo.identifier, "_fctSetIDCache", key, {source = source, value = value, flag = flag}) end
 
 	if key == value then return end
-
-	-- if flag then
-		-- print (stringFormat('adding %s to %s (%s)', (value or 'nil'), key, source))
-	-- else
-		-- print (stringFormat('removing %s from %s (%s)', (value or 'nil'), key, source))
-	-- end
 	
 	if flag == false then
 		if _idCache[key] == nil then return end
@@ -183,9 +177,7 @@ local function _fctCombatDeath(_, info)
 			_fctSetIDCache(key, info.target, false, "_fctCombatDeath")
 			_unitCache[info.target] = nil
 			EnKai.eventHandlers["EnKai.Unit"]["Unavailable"]({[info.target] = false})
-			
-			--print ('remove unit', info.target)
-		
+					
 			if debugUI then debugUI:Update() end
 		end
 	end
