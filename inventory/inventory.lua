@@ -143,6 +143,7 @@ local function _fctProcessUpdate (_, updates)
 	local itemCache = EnKaiInv[EnKaiUnitGetPlayerDetails().name].itemCache
 
 	local updatedKeys = {}
+	local updatedSlots = {}
 
 	for slot, key in pairs(updates) do
 	
@@ -158,9 +159,9 @@ local function _fctProcessUpdate (_, updates)
 					if key ~= inventory.bySlot[slot].id then -- not just more of the same
 						if updatedKeys[inventory.bySlot[slot].id] == nil then updatedKeys[inventory.bySlot[slot].id] = 0 end
 												
-						updatedKeys[inventory.bySlot[slot].id] = updatedKeys[inventory.bySlot[slot].id] - inventory.bySlot[slot].stack
+						updatedKeys[inventory.bySlot[slot].id] = updatedKeys[inventory.bySlot[slot].id] - inventory.bySlot[slot].stack						
 						_removeItem (slot)
-												
+						updatedSlots[slot] = false
 					end
 				end
 			end
@@ -182,7 +183,7 @@ local function _fctProcessUpdate (_, updates)
 					
 					if qty == 0 then qty = inventory.bySlot[slot].stack	end
 					updatedKeys[inventory.bySlot[slot].id] = updatedKeys[inventory.bySlot[slot].id] + qty
-					
+					updatedSlots[slot] = inventory.bySlot[slot].id
 				end
 			end
 			
@@ -190,6 +191,7 @@ local function _fctProcessUpdate (_, updates)
 	end
 
 	EnKai.eventHandlers["EnKai.InventoryManager"]["Update"](updatedKeys)
+	EnKai.eventHandlers["EnKai.InventoryManager"]["SlotUpdate"](updatedSlots)
 
 end
 
@@ -221,6 +223,7 @@ function EnKai.inventory.init (updateFlag)
 		Command.Event.Attach(Event.Item.Update, _fctProcessUpdate, "EnKai.inventory.Item.Update")
 		
 		EnKai.eventHandlers["EnKai.InventoryManager"]["Update"], EnKai.events["EnKai.InventoryManager"]["Update"] = Utility.Event.Create(addonInfo.identifier, "EnKai.InventoryManagerUpdate")
+		EnKai.eventHandlers["EnKai.InventoryManager"]["SlotUpdate"], EnKai.events["EnKai.InventoryManager"]["SlotUpdate"] = Utility.Event.Create(addonInfo.identifier, "EnKai.InventoryManagerSlotUpdate")
 
 		_invManager = true
 		
@@ -284,11 +287,11 @@ end
 
 function EnKai.inventory.findFreeVaultSlot(bag)
 
-	local startBag, endBag = 1, 2
+	local startBag, endBag = 1, 4
 	if bag then startBag, endBag = bag, bag end
 
 	for idx = startBag, endBag, 1 do
-		local bagSlot = UtilityItemSlotValut(idx)
+		local bagSlot = UtilityItemSlotVault(idx)
 		
 		if bagSlot then
 			local bagInfo = InspectItemList(bagSlot)
