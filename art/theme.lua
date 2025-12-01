@@ -49,7 +49,7 @@ local _themes = { default = { logo              = {'EnKai', 'gfx/EnKaiLogo.png'}
       { r = 0.12, g = 0.12, b = 0.12, a = 1},
       { r = 0.08, g = 0.08, b = 0.08, a = 1},
       { r = 1, g = 1, b = 1, a = 1},
-      {r = 1, g = 1, b = 1, a = 1},
+      {r = 0.2, g = 0.6, b = 1, a = 1},
       {r = 1, g = 1, b = 1, a = 1}
     },
     gridColor = {
