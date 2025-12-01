@@ -71,6 +71,7 @@ local function _uiSlider(name, parent)
 	local highlightColor = EnKai.art.GetThemeColor("highlightColor")
 	
 	local labelText = nil
+	local labelHTML = false
 
 	local slider = EnKai.uiCreateFrame ('nkFrame', name, parent)
 	
@@ -166,7 +167,7 @@ local function _uiSlider(name, parent)
 		
 		self:SetValue("value", newValue)
 		
-		if labelText ~= nil then slider:SetText(labelText) end
+		if labelText ~= nil then slider:SetText(labelText, labelHTML) end
 
 		sliderPos:SetPoint ("CENTER", sliderLane, "CENTER", curdivX, 0)
 		
@@ -198,7 +199,7 @@ local function _uiSlider(name, parent)
 		local newX = (newValue + precision - range[1] - (range[2] - range[1]) / 2) * pixelPerValue
 		sliderPos:SetPoint ("CENTER", sliderLane, "CENTER", newX, 0)
 		
-		if labelText ~= nil then slider:SetText(labelText) end
+		if labelText ~= nil then slider:SetText(labelText, labelHTML) end
 		
 		EnKai.eventHandlers[name]["SliderChanged"](newValue)
 		
@@ -243,10 +244,11 @@ local function _uiSlider(name, parent)
 		isActive = flag
 	end
 	
-	function slider:SetText(text) 
+	function slider:SetText(text, html) 
 		labelText = text
+		labelHTML = html or false
 		if self:GetValue("value") ~= nil then
-			sliderLabel:SetText(string.format(text, self:GetValue("value"))) 
+			sliderLabel:SetText(string.format(text, self:GetValue("value")), labelHTML) 
 		end
 	end	
 
