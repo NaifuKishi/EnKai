@@ -201,7 +201,7 @@ local function _uiSlider(name, parent)
 		
 		if labelText ~= nil then slider:SetText(labelText, labelHTML) end
 		
-		EnKai.eventHandlers[name]["SliderChanged"](newValue)
+		--EnKai.eventHandlers[name]["SliderChanged"](newValue)
 		
 	end
 	

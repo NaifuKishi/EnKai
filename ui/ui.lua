@@ -861,7 +861,7 @@ function EnKai.ui.reloadDialog (title)
 	uiElements.reloadDialog:SetWidth(400)
 	uiElements.reloadDialog:SetHeight(125)
 	uiElements.reloadDialog:SetCloseable(false)
-	uiElements.reloadDialog:SetPoifontNament("CENTERTOP", UIParent, "CENTERTOP", 0, 50)
+	uiElements.reloadDialog:SetPoint("CENTERTOP", UIParent, "CENTERTOP", 0, 50)
 	
 	local msg = EnKai.uiCreateFrame("nkText", name .. ".msg", uiElements.reloadDialog:GetContent())
 	msg:SetText(privateVars.langTexts.msgReload)

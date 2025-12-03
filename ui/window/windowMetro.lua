@@ -8,8 +8,9 @@ if not privateVars.uiFunctions then privateVars.uiFunctions = {} end
 
 local uiFunctions   = privateVars.uiFunctions
 local internal      = privateVars.internal
-local data       = privateVars.data
-local oFuncs	  = privateVars.oFuncs
+local data          = privateVars.data
+
+local InspectSystemSecure = Inspect.System.Secure
 
 ---------- addon internal function block ---------
 
@@ -119,6 +120,7 @@ local function _uiWindowMetro(name, parent)
   
   local windowFill = { type = "solid", r = EnKai.art.GetThemeColor('windowColor')[2].r, g  = EnKai.art.GetThemeColor('windowColor')[2].g, b = EnKai.art.GetThemeColor('windowColor')[2].b, a = EnKai.art.GetThemeColor('windowColor')[2].a} 
   local windowStroke =  { thickness = 1, r = EnKai.art.GetThemeColor('windowColor')[1].r, g  = EnKai.art.GetThemeColor('windowColor')[1].g, b = EnKai.art.GetThemeColor('windowColor')[1].b, a = EnKai.art.GetThemeColor('windowColor')[1].a}
+  local windowPath
   local headerColor = EnKai.art.GetThemeColor('windowColor')[3]
     
   window:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 200, 0)
@@ -134,59 +136,59 @@ local function _uiWindowMetro(name, parent)
   
   function window:SetShadow(flag)
   
-	if flag == true then
-	
-		if shadowL == nil then
-		
-			shadowL = EnKai.uiCreateFrame("nkFrame", name .. '.shadowL', window)
-			shadowR = EnKai.uiCreateFrame("nkFrame", name .. '.shadowR', window)
-			shadowT = EnKai.uiCreateFrame("nkFrame", name .. '.shadowT', window)
-			shadowB = EnKai.uiCreateFrame("nkFrame", name .. '.shadowB', window)
-		
-			shadowL:SetPoint("TOPLEFT", window, "TOPLEFT", -5, -5)
-			shadowL:SetPoint("BOTTOMRIGHT", window, "BOTTOMLEFT", 0, 5)
-			shadowL:SetBackgroundColor(0, 0, 0, .7)
-			shadowL:SetLayer(-1)
+    if flag == true then
+    
+      if shadowL == nil then
+      
+        shadowL = EnKai.uiCreateFrame("nkFrame", name .. '.shadowL', window)
+        shadowR = EnKai.uiCreateFrame("nkFrame", name .. '.shadowR', window)
+        shadowT = EnKai.uiCreateFrame("nkFrame", name .. '.shadowT', window)
+        shadowB = EnKai.uiCreateFrame("nkFrame", name .. '.shadowB', window)
+      
+        shadowL:SetPoint("TOPLEFT", window, "TOPLEFT", -5, -5)
+        shadowL:SetPoint("BOTTOMRIGHT", window, "BOTTOMLEFT", 0, 5)
+        shadowL:SetBackgroundColor(0, 0, 0, .7)
+        shadowL:SetLayer(-1)
 
-			shadowR:SetPoint("TOPLEFT", window, "TOPRIGHT", 0, -5)
-			shadowR:SetPoint("BOTTOMRIGHT", window, "BOTTOMRIGHT", 5, 5)
-			shadowR:SetBackgroundColor(0, 0, 0, .7)
-			shadowR:SetLayer(-1)
+        shadowR:SetPoint("TOPLEFT", window, "TOPRIGHT", 0, -5)
+        shadowR:SetPoint("BOTTOMRIGHT", window, "BOTTOMRIGHT", 5, 5)
+        shadowR:SetBackgroundColor(0, 0, 0, .7)
+        shadowR:SetLayer(-1)
 
-			shadowT:SetPoint("TOPLEFT", window, "TOPLEFT", 0, -5)
-			shadowT:SetPoint("BOTTOMRIGHT", window, "TOPRIGHT", 0, 0)
-			shadowT:SetBackgroundColor(0, 0, 0, .7)
-			shadowT:SetLayer(-1)
+        shadowT:SetPoint("TOPLEFT", window, "TOPLEFT", 0, -5)
+        shadowT:SetPoint("BOTTOMRIGHT", window, "TOPRIGHT", 0, 0)
+        shadowT:SetBackgroundColor(0, 0, 0, .7)
+        shadowT:SetLayer(-1)
 
-			shadowB:SetPoint("TOPLEFT", window, "BOTTOMLEFT", 0, 0)
-			shadowB:SetPoint("BOTTOMRIGHT", window, "BOTTOMRIGHT", 0, 5)
-			shadowB:SetBackgroundColor(0, 0, 0, .7)
-			shadowB:SetLayer(-1)		
-		end
-		
-		shadowL:SetVisible(true)
-		shadowR:SetVisible(true)
-		shadowT:SetVisible(true)
-		shadowB:SetVisible(true)
-	
-	else
-		if shadowL ~= nil then
-			shadowL:SetVisible(false)
-			shadowR:SetVisible(false)
-			shadowT:SetVisible(false)
-			shadowB:SetVisible(false)
-		end
-	
-	end
-  
-  
+        shadowB:SetPoint("TOPLEFT", window, "BOTTOMLEFT", 0, 0)
+        shadowB:SetPoint("BOTTOMRIGHT", window, "BOTTOMRIGHT", 0, 5)
+        shadowB:SetBackgroundColor(0, 0, 0, .7)
+        shadowB:SetLayer(-1)		
+      end
+      
+      shadowL:SetVisible(true)
+      shadowR:SetVisible(true)
+      shadowT:SetVisible(true)
+      shadowB:SetVisible(true)
+    
+    else
+      if shadowL ~= nil then
+        shadowL:SetVisible(false)
+        shadowR:SetVisible(false)
+        shadowT:SetVisible(false)
+        shadowB:SetVisible(false)
+      end
+    
+    end
   end
   
   function window:Resize ()
   
+    local path
+
     local xProp = 1 / window:GetWidth() * 5
     local yProp = 1 / window:GetHeight() * 5
-    
+
     local path = {  {xProportional = xProp, yProportional = 0},
                     {xProportional = (1-xProp), yProportional = 0},
                     {xProportional = 1, yProportional = yProp, xControlProportional = 1, yControlProportional = 0},
@@ -194,8 +196,8 @@ local function _uiWindowMetro(name, parent)
                     {xProportional = 0, yProportional = 1},
                     {xProportional = 0, yProportional = yProp},
                     {xProportional = xProp, yProportional = 0, xControlProportional = 0, yControlProportional = 0}
-                 }  
-      
+                }  
+
     window:SetShape(path, windowFill, windowStroke)
     
   end
@@ -229,7 +231,7 @@ local function _uiWindowMetro(name, parent)
   
   header:EventAttach(Event.UI.Input.Mouse.Left.Down, function (self)    
     if dragable == false then return end
-    if window:GetSecureMode() == 'restricted' and oFuncs.oInspectSystemSecure() == true then return end
+    if window:GetSecureMode() == 'restricted' and InspectSystemSecure() == true then return end
     
     self.leftDown = true
     local mouse = Inspect.Mouse()
@@ -374,8 +376,13 @@ local function _uiWindowMetro(name, parent)
   end 
   
   function window:SetWindowColor(r, g, b, a)
-	 windowFill = { type = "solid", r = r, g = g, b = b, a = a} 
-	 window:Resize()
+    windowFill = { type = "solid", r = r, g = g, b = b, a = a} 
+    window:Resize()
+  end
+
+  function window:SetWindowFill(newFill)
+    windowFill = newFill
+    window:Resize()
   end
   
   EnKai.eventHandlers[name]["Moved"], EnKai.events[name]["Moved"] = Utility.Event.Create(addonInfo.identifier, name .. "Moved") 

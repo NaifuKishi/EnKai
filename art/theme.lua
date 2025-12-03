@@ -41,16 +41,16 @@ local _themes = { default = { logo              = {'EnKai', 'gfx/EnKaiLogo.png'}
                   nkUI = { logo = {'EnKai', 'gfx/EnKaiLogo.png'},
                   labelColor = {r = 0.9, g = 0.9, b = 0.9, a = 1},
     windowColor = {
-      { r = 0.08, g = 0.08, b = 0.08, a = 0.9},
-      { r = 0.08, g = 0.08, b = 0.08, a = 0.9},
-      { r = 1, g = 1, b = 1, a = 1}
+      { r = 0.08, g = 0.08, b = 0.08, a = 0.9}, -- stroke
+      { r = 0, g = 0, b = 0, a = 0.3}, -- fill
+      { r = 1, g = 1, b = 1, a = 1} -- header
     },
     tabPaneColor = {
-      { r = 0.12, g = 0.12, b = 0.12, a = 1},
-      { r = 0.08, g = 0.08, b = 0.08, a = 1},
-      { r = 1, g = 1, b = 1, a = 1},
-      {r = 0.2, g = 0.6, b = 1, a = 1},
-      {r = 1, g = 1, b = 1, a = 1}
+      { r = 0.12, g = 0.12, b = 0.12, a = 0}, -- stroke
+      { r = 0.08, g = 0.08, b = 0.08, a = .5}, -- fill
+      { r = 1, g = 1, b = 1, a = 0}, -- fill selected
+      { r = 0.2, g = 0.6, b = 1, a = 1}, -- text
+      { r = 1, g = 1, b = 1, a = 1} -- selected
     },
     gridColor = {
       { r = 0.12, g = 0.12, b = 0.12, a = 1},
