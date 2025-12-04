@@ -212,9 +212,9 @@ local function _uiImageGallery(name, parent) -- used by nkRebuff
 	function imageGallery:ShowImages ()
 	
 		if imageList[currentPos].textureType == nil or imageList[currentPos].texturePath == nil then
-			texture:SetTexture( 'EnKai.ui', 'gfx/iconMissing.png')
+			texture:SetTextureAsync( 'EnKai.ui', 'gfx/iconMissing.png')
 		else
-			texture:SetTexture( imageList[currentPos].textureType, imageList[currentPos].texturePath)
+			texture:SetTextureAsync( imageList[currentPos].textureType, imageList[currentPos].texturePath)
 		end
 	
 		for idx = -2, 2, 1 do

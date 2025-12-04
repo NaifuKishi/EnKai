@@ -117,7 +117,7 @@ local function _updateFrame()
 
         if _buttonIcons[name] == nil then
             button = UI.CreateFrame("Texture", "EnKai.minimapButton." .. name, _frame)
-            button:SetTexture(buttonInfo.iconSource, buttonInfo.icon)
+            button:SetTextureAsync(buttonInfo.iconSource, buttonInfo.icon)
             button:SetWidth(32)
             button:SetHeight(32)
             button:EventDetach(Event.UI.Input.Mouse.Left.Click, nil, name .. ".Click")

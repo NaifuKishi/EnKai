@@ -538,3 +538,34 @@ function EnKai.tools.gfx.rotate(frame, angle, scale)
   return m
   
 end
+
+--[[
+   hex_to_number
+    Description:
+        Converts a hexadecimal string in the format 'h[hex_digits]' to a number
+    Parameters:
+        hex_str (string): The hexadecimal string to convert
+    Returns:
+        number: The converted number
+    Notes:
+        - The function expects the input to start with 'h' followed by one or more hex digits
+        - Returns nil if the input format is invalid
+]]
+function EnKai.tools.hex2number(hex_str)
+    if not hex_str or type(hex_str) ~= "string" then
+        return nil
+    end
+
+    -- Check if string matches the expected format
+    if not hex_str:match("^h[xX]?%x+$") then
+        return nil
+    end
+
+    -- Remove the 'h' prefix
+    local hex_digits = hex_str:sub(2)
+
+    -- Remove optional "0x" or "0X" prefix if present after 'h'
+    hex_digits = hex_digits:gsub("^[xX]", "")
+
+    return tonumber(hex_digits, 16)
+end
