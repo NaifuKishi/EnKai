@@ -719,6 +719,13 @@ function EnKai.ui.genericTooltipSetFont (addonId, fontName)
 	uiElements.genericTooltip:SetFont (addonId, fontName)
 end
 
+function EnKai.ui.abilityTooltipSetFont (addonId, fontName)
+	if privateVars.uiTooltipContext == nil then return end
+	if uiElements.abilityTooltip == nil then return end
+
+	uiElements.abilityTooltip:SetFont (addonId, fontName)
+end
+
 function EnKai.ui.confirmDialog (message, yesFunc, noFunc)
 
 	local thisDialog
