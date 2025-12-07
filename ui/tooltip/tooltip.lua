@@ -182,7 +182,7 @@ local function _uiTooltip(name, parent)
 		
 		tooltip:SetWidth(newWidth + 10)
 		--separator:SetWidth(newWidth-2)
-		tooltip:SetHeight(newHeight+2)
+		tooltip:SetHeight(newHeight+12)
 	end
 	
 	local oSetWidth = tooltip.SetWidth
@@ -198,12 +198,12 @@ local function _uiTooltip(name, parent)
 		
 		if #lines == 0 then
 			separator:SetVisible(false)	
-			tooltip:SetHeight(title:GetHeight())
+			tooltip:SetHeight(title:GetHeight()+10)
 		else
 			local key, value = EnKai.tools.table.getFirstElement(lines)
 			if value:GetVisible() == false then
 				separator:SetVisible(false)
-				tooltip:SetHeight(title:GetHeight())
+				tooltip:SetHeight(title:GetHeight()+10)
 			else
 				separator:SetVisible(true)
 			end
