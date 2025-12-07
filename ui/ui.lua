@@ -821,7 +821,7 @@ function EnKai.ui.showWithinBound (element, target)
 			from, to, x, y = "BOTTOMLEFT", "TOPRIGHT", 5, -5
 		end
 	else
-		from, to, x, y = "TOPRIGHT", "BOTTOMLEFT", -5, 5
+		from, to, x, y = "TOPLEFT", "BOTTOMLEFT", -5, 5
 	end
 	
 	if from ~= nil then
