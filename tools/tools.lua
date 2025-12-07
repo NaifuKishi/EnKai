@@ -569,3 +569,21 @@ function EnKai.tools.hex2number(hex_str)
 
     return tonumber(hex_digits, 16)
 end
+
+function EnKai.tools.updateSettings(defaultSettings, thisSettings)
+
+    if type(defaultSettings) ~= 'table' or type(thisSettings) ~= 'table' then
+        return thisSettings
+    end
+
+    for key, value in pairs(defaultSettings) do
+        if thisSettings[key] == nil then
+            thisSettings[key] = value
+        elseif type(value) == 'table' and type(thisSettings[key]) == 'table' then
+            EnKai.tools.updateSettings(value, thisSettings[key])
+        end
+    end
+
+    return thisSettings
+	
+end
