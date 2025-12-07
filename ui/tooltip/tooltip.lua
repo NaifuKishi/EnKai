@@ -46,13 +46,14 @@ local function _uiTooltip(name, parent)
 	tooltip:SetVisible(false)
 	
 	tooltip:SetWidth(defaultWidth)
-	tooltip:SetBackgroundColor (defaultBorderColor[1], defaultBorderColor[2], defaultBorderColor[3], defaultBorderColor[4])
+	--tooltip:SetBackgroundColor (defaultBorderColor[1], defaultBorderColor[2], defaultBorderColor[3], defaultBorderColor[4])
+	tooltip:SetBackgroundColor (0, 0, 0, 1)
 	
 	tooltipInner:SetPoint ("TOPLEFT", tooltip, "TOPLEFT", 1, 1)
 	tooltipInner:SetPoint ("BOTTOMRIGHT", tooltip, "BOTTOMRIGHT", -1, -1)
 	tooltipInner:SetBackgroundColor (0, 0, 0, 1)
 	 
-	title:SetPoint ("TOPLEFT", tooltip, "TOPLEFT")
+	title:SetPoint ("TOPLEFT", tooltip, "TOPLEFT", 5, 5)
 	title:SetFontSize(13)
 	title:SetFontColor(defaultTitleColor[1], defaultTitleColor[2], defaultTitleColor[3], defaultTitleColor[4])
 		
@@ -179,16 +180,16 @@ local function _uiTooltip(name, parent)
 			end
 		end
 		
-		tooltip:SetWidth(newWidth)
-		separator:SetWidth(newWidth-2)
+		tooltip:SetWidth(newWidth + 10)
+		--separator:SetWidth(newWidth-2)
 		tooltip:SetHeight(newHeight+2)
 	end
 	
 	local oSetWidth = tooltip.SetWidth
 	
 	function tooltip:SetWidth(newWidth)
-    oSetWidth(self, newWidth)
-    separator:SetWidth(newWidth-2)
+		oSetWidth(self, newWidth)
+		separator:SetWidth(newWidth-10)
 	end
 	
 	local oSetVisible = tooltip.SetVisible
