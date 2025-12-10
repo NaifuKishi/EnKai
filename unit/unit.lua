@@ -619,12 +619,14 @@ function EnKai.unit.getUnitIDByType (unitType)
 	if _idCache[unitType] == nil then
 		local flag, details = pcall (InspectUnitDetail, unitType)
 		if flag and details ~= nil then
-			if details.type == unitType then 
-				_fctSetIDCache(details.type, details.id, true, 'EnKai.unit.getUnitIDByType')
+			--if details.type == unitType then 
+				_fctSetIDCache(unitType, details.id, true, 'EnKai.unit.getUnitIDByType')
 				_unitCache[details.id] = details
 				_unitCache[details.id].lastUpdate = InspectTimeReal()
-			end
+			--end
 		end
+	else
+		--print "cache not nil"
 	end
 	
 	return _idCache[unitType] 
@@ -714,8 +716,11 @@ function EnKai.unit.UpdateGroupUnit()
 
 	for unitType, value in pairs (_subscriptions) do
 		if value[addon] == true then
-			if stringFind(unitType, "group") then			
+			if stringFind(unitType, "group") then
 				local unitID = EnKai.unit.getUnitIDByType (unitType) 				
+
+				print (unitType, unitID)
+
 				if unitID then
 					for key, thisUnit in pairs(unitID) do
 						unitInfo[thisUnit] = unitType
