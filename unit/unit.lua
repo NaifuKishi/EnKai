@@ -718,9 +718,6 @@ function EnKai.unit.UpdateGroupUnit()
 		if value[addon] == true then
 			if stringFind(unitType, "group") then
 				local unitID = EnKai.unit.getUnitIDByType (unitType) 				
-
-				print (unitType, unitID)
-
 				if unitID then
 					for key, thisUnit in pairs(unitID) do
 						unitInfo[thisUnit] = unitType
