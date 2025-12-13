@@ -101,6 +101,7 @@ local function _uiMap(name, parent)
 	local tooltip = EnKai.uiCreateFrame("nkTooltip", name .. ".tooltip", ui)
 	tooltip:SetVisible(false)
 	tooltip:SetLayer(999)
+	tooltip:SetFont (addonInfo.id, "MontserratSemiBold")
 
 	---------- LOCAL METHODS ----------
 
