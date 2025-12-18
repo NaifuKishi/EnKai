@@ -220,6 +220,10 @@ local function _uiWindowMetro(name, parent)
     title:SetFontColor(r, g, b, a)
     headerColor = {r = r, g = g, b = b, a = a}
   end
+
+  function window:SetTitleEffect(newEffect)
+    title:SetEffectGlow(newEffect)
+  end
   
   window:EventAttach(Event.UI.Input.Mouse.Left.Down, function (self)
     -- dummy event to prevent click through
