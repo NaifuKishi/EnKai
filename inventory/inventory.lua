@@ -5,7 +5,8 @@ local addonInfo, privateVars = ...
 if not EnKai then EnKai = {} end
 if not EnKai.inventory then EnKai.inventory = {} end
 
-local data		= privateVars.data
+local data			= privateVars.data
+local uiElements	= privateVars.uiElements
 
 ---------- make global functions local ---------
 
@@ -27,8 +28,67 @@ local EnKaiUnitGetPlayerDetails		= EnKai.unit.getPlayerDetails
 ---------- init local variables ---------
 
 local _invManager = false
+local debugUI
 
 ---------- local function block ---------
+
+local function _debugUI ()
+
+	if debugUI then return end
+
+	local name = "EnKai.inventory.debugUI"
+
+	debugUI = EnKai.uiCreateFrame("nkFrame", name, privateVars.uiContext)
+	debugUI:SetPoint("TOPLEFT", UIParent, "TOPLEFT")
+	debugUI:SetBackgroundColor(0, 0, 0, 1)
+	debugUI:SetWidth(250)
+	debugUI:SetHeight(800)
+	
+	--local itemCache = EnKaiInv[EnKaiUnitGetPlayerDetails().name].itemCache
+
+	local slotText = {}
+
+	function debugUI:update()
+
+		local inventory = EnKaiInv[EnKaiUnitGetPlayerDetails().name].inventory
+
+		for k, v in pairs(slotText) do
+			v.details = nil
+			v.text:SetVisible(false)
+		end
+
+		for k, v in pairs(inventory.bySlot) do	
+			if not EnKai.strings.startsWith(k, "sibg.") and not EnKai.strings.startsWith(k, "seqp.") and not EnKai.strings.startsWith(k, "sqst.") then
+				if slotText[k] == nil then
+					local thisSlot = EnKai.uiCreateFrame("nkText", name .. "." .. k, debugUI)				
+					slotText[k] = { text = thisSlot, details = v }
+				else
+					slotText[k].details = v
+				end
+			end
+		end
+
+		local sortedSlots = EnKai.tools.table.getSortedKeys (slotText)
+
+		local from, object, to = "TOPLEFT", debugUI, "TOPLEFT"
+
+		for idx, slotID in pairs(sortedSlots) do
+			local slotInfo = slotText[slotID]
+
+			if slotInfo.details then
+				slotInfo.text:SetVisible(true)
+				slotInfo.text:SetPoint(from, object, to)
+				slotInfo.text:SetText(string.format("%s: %s %d", slotID, slotInfo.details.id, slotInfo.details.stack))
+				from, object, to = "TOPLEFT", slotInfo.text, "BOTTOMLEFT"
+			end
+		end
+	end
+
+	debugUI:update()
+	
+	return debugUI
+
+end
 
 local function _storeItem (slot, details)
 
@@ -56,6 +116,8 @@ local function _storeItem (slot, details)
 
 	inventory.byID[details.id] = details.type
 
+	if debugUI then debugUI:update() end
+
 end
 
 local function _removeItem (slot)
@@ -67,6 +129,8 @@ local function _removeItem (slot)
 	local cacheDetails = itemCache[slotDetails.id]
 	
 	if cacheDetails == nil then -- wie auch immer das passieren kann
+		--print ("cacheDetails == nil")
+
 		local details = InspectItemDetail(slotDetails.id)
 		if not details then details = { id = slotDetails.id } end
 				
@@ -86,6 +150,8 @@ local function _removeItem (slot)
 	inventory.bySlot[slot] = nil
 	itemCache[slotDetails.id] = nil
 	inventory.byID[slotDetails.id] = nil
+
+	if debugUI then debugUI:update() end
 	
 end
 
@@ -135,6 +201,8 @@ end
 
 local function _fctProcessUpdate (_, updates)
 
+	--dump (updates)
+
 	if EnKaiUnitGetPlayerDetails() == nil then return end
 
 	if (not EnKaiInv[EnKaiUnitGetPlayerDetails().name]) or (not EnKaiInv[EnKaiUnitGetPlayerDetails().name].inventory) then _fctGetInventory() end
@@ -154,7 +222,7 @@ local function _fctProcessUpdate (_, updates)
 			if inventory.bySlot[slot] ~= nil then -- target slot is not empty
 			
 				if not inventory.bySlot[slot].id then -- content of slot not known => Error
-
+					print ('content of slot not known')
 				else
 					if key ~= inventory.bySlot[slot].id then -- not just more of the same
 						if updatedKeys[inventory.bySlot[slot].id] == nil then updatedKeys[inventory.bySlot[slot].id] = 0 end
@@ -190,6 +258,8 @@ local function _fctProcessUpdate (_, updates)
 		end
 	end
 
+	--dump (updatedSlots)
+
 	EnKai.eventHandlers["EnKai.InventoryManager"]["Update"](updatedKeys)
 	EnKai.eventHandlers["EnKai.InventoryManager"]["SlotUpdate"](updatedSlots)
 
@@ -211,7 +281,7 @@ end
 
 ---------- library public function block ---------
 
-function EnKai.inventory.init (updateFlag)
+function EnKai.inventory.init (updateFlag, showDebugUI)
 
 	if not _invManager then
 	
@@ -228,6 +298,8 @@ function EnKai.inventory.init (updateFlag)
 		_invManager = true
 		
 	end
+
+	if showDebugUI then _debugUI () end
 		
 	if updateFlag then EnKai.events.addInsecure(_fctGetInventory, InspectTimeFrame(), 20) end
 
