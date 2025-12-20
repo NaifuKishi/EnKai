@@ -17,22 +17,19 @@ internal.mapEvent = {}
 
 ---------- make global functions local ---------
 
-local inspectMapDetail		= Inspect.Map.Detail
-local inspectMapList		= Inspect.Map.List
-local inspectTimeReal		= Inspect.Time.Real
-local inspectUnitDetail		= Inspect.Unit.Detail
-local inspectAddonCurrent	= Inspect.Addon.Current
-local inspectMapWaypointGet	= Inspect.Map.Waypoint.Get
-
-local stringMatch  			= string.match
-local stringFind   			= string.find
-local stringGSub			= string.gsub
+local InspectMapDetail		= Inspect.Map.Detail
+local InspectMapList		= Inspect.Map.List
+local InspectTimeReal		= Inspect.Time.Real
+local InspectUnitDetail		= Inspect.Unit.Detail
+local InspectAddonCurrent	= Inspect.Addon.Current
+local InspectMapWaypointGet	= Inspect.Map.Waypoint.Get
 
 local EnKaiGetLanguageShort	= EnKai.tools.lang.getLanguageShort
 local EnKaiStringsSplit		= EnKai.strings.split
-local EnKaiGetZoneByUnit	= EnKai.map.getZoneByUnit
-local EnKaiGetPlayerDetails	= EnKai.unit.getPlayerDetails
 
+local stringMatch  		= string.match
+local stringFind   		= string.find
+local stringGSub		= string.gsub
 
 ---------- init local variables ---------
 
@@ -44,8 +41,6 @@ local _mapColossus = nil
 local _mapNPC = {}
 local _mapEvents = false
 local _playerDeath = false
-
-
   
 ---------- local function block ---------
 
@@ -80,7 +75,7 @@ end
 
 local function _fctCheckForNPC (values)
 
-	local zone = EnKaiGetZoneByUnit (EnKaiGetPlayerDetails().id)
+	local zone = EnKai.map.getZoneByUnit (EnKai.unit.getPlayerDetails().id)
 	
 	if _mapNPC [zone] == nil then
 		if NPCData[zone] == nil then return false end
@@ -216,7 +211,7 @@ local function _fctIdentify(values)
 	if titleIndex == 0 and descIndex == 0 then
 		if nkDebug then
 			EnKai.tools.error.display ("EnKai", "Could not identify map entry", 2)
-			nkDebug.logEntry (inspectAddonCurrent(), "_fctIdentify", "Unidentified map entry", values)
+			nkDebug.logEntry (InspectAddonCurrent(), "_fctIdentify", "Unidentified map entry", values)
 		end
 		mapIdentifier = lang.mapIdentifiersGeneric["UNKNOWN"]
 		values.type = "UNKNOWN"
@@ -318,7 +313,7 @@ local function _fctMapEventChange (_, info)
     for k, v in pairs(addList) do info[k] = nil end    
   end
   
-  local thisMapData = inspectMapDetail(info)
+  local thisMapData = InspectMapDetail(info)
   
   local changeList, removeList = {}, {}
   local descTitleChange, hasChange = false, false
@@ -390,7 +385,7 @@ local function _fctMapEventUnitCoordChange (_, x, y, z)
     if _mapUnits[unit] == nil then
       addUnit[unit] = {id = unit, type = "UNKNOWN", coordX = x[unit], coordY = y[unit], coordZ = z[unit]}
       _mapUnits[unit] = addUnit[unit]
-	  _mapUnits[unit].lastUpdate = inspectTimeReal()
+	  _mapUnits[unit].lastUpdate = InspectTimeReal()
       hasAdd = true
     else
       if stringFind(_mapUnits[unit].type, "group..%.target") == nil then
@@ -398,7 +393,7 @@ local function _fctMapEventUnitCoordChange (_, x, y, z)
         _mapUnits[unit].coordX = x[unit]
         _mapUnits[unit].coordY = y[unit]
         _mapUnits[unit].coordZ = z[unit]
-		_mapUnits[unit].lastUpdate = inspectTimeReal()
+		_mapUnits[unit].lastUpdate = InspectTimeReal()
         hasChange = true
       end
     end
@@ -434,10 +429,10 @@ local function _fctMapEventUnitAvailable (_, info)
   
   for unit, unitType in pairs (info) do
     if _mapUnits[unit] == nil then
-      local details = inspectUnitDetail(unit)
+      local details = InspectUnitDetail(unit)
       addUnit[unit] = {id = unit, type = unitType, coordX = details.coordX, coordY = details.coordY, coordZ = details.coordZ}
       _mapUnits[unit] = addUnit[unit]
-	  _mapUnits[unit].lastUpdate = inspectTimeReal()
+	  _mapUnits[unit].lastUpdate = InspectTimeReal()
       hasAdds = true
     end
   end 
@@ -452,7 +447,7 @@ local function _fctMapEventCombatDeath (_, info)
   
   if info.target == data.playerDetails.id then
     _playerDeath = true
-    local details = inspectUnitDetail('player')
+    local details = InspectUnitDetail('player')
     local addInfo = {}
     addInfo["pb" .. data.playerDetails.id] = {id = "pb" .. data.playerDetails.id, type = "UNIT.BODY", coordX = details.coordX, coordY = details.coordY, coordZ = details.coordZ}
     EnKai.eventHandlers["EnKai.map"]["add"](addInfo)
@@ -501,7 +496,7 @@ end
 function EnKai.map.refresh()
   
   EnKai.map.clearAll()
-  internal.mapEvent.add (_, inspectMapList())
+  internal.mapEvent.add (_, InspectMapList())
 
 end
 
@@ -536,7 +531,7 @@ function EnKai.map.init(flag)
   Command.Map.Monitor(flag)
   _mapEvents = flag
   
-  if flag == true then internal.mapEvent.add (_, inspectMapList()) end
+  if flag == true then internal.mapEvent.add (_, InspectMapList()) end
 
 end
 
@@ -545,7 +540,7 @@ end
 function internal.processMap()
 
 	local debugId  
-	if nkDebug then debugId = nkDebug.traceStart (inspectAddonCurrent(), "EnKai internal.processMap") end
+	if nkDebug then debugId = nkDebug.traceStart (InspectAddonCurrent(), "EnKai internal.processMap") end
 
 	if _mapEvents == false then return end
 
@@ -553,9 +548,9 @@ function internal.processMap()
 		internal.MapEventWaypoint (_, {[data.playerDetails.id] = true})
 	end
 
-	local curTime = inspectTimeReal()
+	local curTime = InspectTimeReal()
 
-	local list = inspectMapList()
+	local list = InspectMapList()
 
 	local hasAdds, hasRemoves = false, false
 	local addList, removeList = {}, {}
@@ -579,14 +574,14 @@ function internal.processMap()
 
 	for k, v in pairs(_mapUnits) do
 		if curTime - v.lastUpdate > 1 and stringFind(v.type, "UNIT.PLAYER") == nil then
-			local details = inspectUnitDetail(k)
+			local details = InspectUnitDetail(k)
 			if details ~= nil then
 				_fctMapEventUnitCoordChange(_, {[k] = details.coordX}, {[k] = details.coordY}, {[k] = details.coordZ} )
 			end
 		end
 	end
 
-	if nkDebug then nkDebug.traceEnd (inspectAddonCurrent(), "EnKai internal.processMap", debugId) end
+	if nkDebug then nkDebug.traceEnd (InspectAddonCurrent(), "EnKai internal.processMap", debugId) end
 
 end
 
@@ -596,7 +591,7 @@ function internal.MapEventWaypoint (_, info)
 	local hasAdd, hasRemove, hasChange = false, false, false
 
 	for unit, _ in pairs (info) do
-		local flag, x, z = pcall(inspectMapWaypointGet, unit)
+		local flag, x, z = pcall(InspectMapWaypointGet, unit)
 
 		if flag == false or x == nil then
 
@@ -629,7 +624,7 @@ end
 
 function internal.mapEvent.add (_, info)
 
-  local thisMapData = inspectMapDetail(info)
+  local thisMapData = InspectMapDetail(info)
 
   local changeList = {}
   local addList = {}

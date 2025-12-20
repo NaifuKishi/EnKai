@@ -10,6 +10,9 @@ Environment = "4.0"
 
 RunOnStartup = {
   "main.lua",
+  "strings/strings.lua",
+  "tools/tools.lua",
+  "tools/uuid.lua",  
   "locales/localizationDE.lua",
   "locales/localizationFR.lua",
   "locales/localizationEN.lua",
@@ -30,9 +33,6 @@ RunOnStartup = {
   "map/location.lua",
   "map/map.lua",
   "map/zone.lua",
-  "strings/strings.lua",
-  "tools/tools.lua",
-  "tools/uuid.lua",
   "ui/ui.lua",
   "ui/button/actionbutton.lua",  
   "ui/button/actionbuttonmetro.lua",  
