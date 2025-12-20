@@ -6,9 +6,9 @@ if not EnKai then EnKai = {} end
 
 if not privateVars.uiFunctions then privateVars.uiFunctions = {} end
 
-local uiFunctions  = privateVars.uiFunctions
+local uiFunctions  	= privateVars.uiFunctions
 local data          = privateVars.data
-local uiNames      = privateVars.uiNames
+local uiNames      	= privateVars.uiNames
 local internal      = privateVars.internal
 
 ---------- addon internal function block ---------
