@@ -224,8 +224,7 @@ local function _uiCombobox(name, parent)
 		
 		local hasTextures = combo:GetValue('textures')    
     if selection[1].texturePath ~= nil then hasTextures = true end
-    combo:SetValue('textures', hasTextures)
-		
+    	combo:SetValue('textures', hasTextures)		
 			
 		if hasIcons == true then
 			icon:SetPoint ("CENTERLEFT", displayInner, "CENTERLEFT")
@@ -233,12 +232,12 @@ local function _uiCombobox(name, parent)
 			label:SetPoint ("CENTERLEFT", icon, "CENTERRIGHT", 2, 0)			
 			label:SetWidth(displayInner:GetWidth() - 40) -- 20 due to arrow box and 20 due to icon (18 + 2 distance)
 		elseif hasTextures == true then
-		  icon:SetPoint ("CENTERLEFT", displayInner, "CENTERLEFT")
-      icon:SetVisible(true)
-      icon:SetWidth(displayInner:GetWidth() - 20)
-      label:SetPoint ("CENTERLEFT", displayInner, "CENTERLEFT")
-      label:SetWidth(displayInner:GetWidth() - 20)
-      label:SetVisible(false)
+		  	icon:SetPoint ("CENTERLEFT", displayInner, "CENTERLEFT")
+			icon:SetVisible(true)
+			icon:SetWidth(displayInner:GetWidth() - 20)
+			label:SetPoint ("CENTERLEFT", displayInner, "CENTERLEFT")
+			label:SetWidth(displayInner:GetWidth() - 20)
+			label:SetVisible(false)
 		else
 			label:SetPoint ("CENTERLEFT", displayInner, "CENTERLEFT")
 			label:SetWidth(displayInner:GetWidth() - 20)
@@ -256,12 +255,12 @@ local function _uiCombobox(name, parent)
 				selItems[idx].icon:SetPoint("CENTERLEFT", selItems[idx].frame, "CENTERLEFT")
 				selItems[idx].label:SetPoint("CENTERLEFT", selItems[idx].icon, "CENTERRIGHT", 2, 0)
 				selItems[idx].label:SetWidth(selItems[idx].frame:GetWidth() - 20) -- 20 due to icon (18 + 2 distance)
-		  elseif hasTextures == true then
-		    selItems[idx].icon:SetPoint("CENTERLEFT", selItems[idx].frame, "CENTERLEFT")
-		    selItems[idx].icon:SetWidth(selItems[idx].frame:GetWidth())
-		    selItems[idx].label:SetPoint("CENTERLEFT", selItems[idx].frame, "CENTERLEFT")
-		    selItems[idx].label:SetWidth(selItems[idx].frame:GetWidth() )
-        selItems[idx].label:SetVisible(false)        
+			elseif hasTextures == true then
+				selItems[idx].icon:SetPoint("CENTERLEFT", selItems[idx].frame, "CENTERLEFT")
+				selItems[idx].icon:SetWidth(selItems[idx].frame:GetWidth())
+				selItems[idx].label:SetPoint("CENTERLEFT", selItems[idx].frame, "CENTERLEFT")
+				selItems[idx].label:SetWidth(selItems[idx].frame:GetWidth() )
+				selItems[idx].label:SetVisible(false)        
 			else
 				selItems[idx].label:SetPoint("CENTERLEFT", selItems[idx].frame, "CENTERLEFT")
 				selItems[idx].icon:SetPoint("CENTERLEFT", selItems[idx].label, "CENTERRIGHT")
@@ -306,17 +305,17 @@ local function _uiCombobox(name, parent)
 					
 					selItems[idx-counter+1].label:SetVisible(true)
 				elseif combo:GetValue('textures') == true then 
-          selItems[idx-counter+1].icon:SetVisible(true)
-          if selection[idx].texturePath == '' or selection[idx].textureType == '' then
-            selItems[idx-counter+1].icon:SetVisible(false)
-            selItems[idx-counter+1].label:SetVisible(true)            
-          else
-            selItems[idx-counter+1].icon:SetVisible(true)
-            selItems[idx-counter+1].icon:SetTextureAsync(selection[idx].textureType, selection[idx].texturePath)
-            selItems[idx-counter+1].label:SetVisible(false)
-          end
-        else
-          selItems[idx-counter+1].label:SetVisible(true)
+          			selItems[idx-counter+1].icon:SetVisible(true)
+          			if selection[idx].texturePath == '' or selection[idx].textureType == '' then
+						selItems[idx-counter+1].icon:SetVisible(false)
+						selItems[idx-counter+1].label:SetVisible(true)            
+					else
+						selItems[idx-counter+1].icon:SetVisible(true)
+						selItems[idx-counter+1].icon:SetTextureAsync(selection[idx].textureType, selection[idx].texturePath)
+						selItems[idx-counter+1].label:SetVisible(false)
+					end
+        		else
+          			selItems[idx-counter+1].label:SetVisible(true)
 				end
 				
 				selItems[idx-counter+1].label:SetText(selection[idx].label)
@@ -333,8 +332,9 @@ local function _uiCombobox(name, parent)
 			selItems[row].frame:SetBackgroundColor(selectedColor.r, selectedColor.g, selectedColor.b, selectedColor.a)
 			selItems[row].label:SetFontColor(elementColorInner.r, elementColorInner.g, elementColorInner.b, elementColorInner.a)
 		else
-			selItems[row].frame:SetBackgroundColor(elementColorInner.r, elementColorInner.g, elementColorInner.b, elementColorInner.a)
+			--selItems[row].frame:SetBackgroundColor(elementColorInner.r, elementColorInner.g, elementColorInner.b, elementColorInner.a)
 			selItems[row].label:SetFontColor (labelColor.r, labelColor.g, labelColor.b, labelColor.a)
+			selItems[row].frame:SetBackgroundColor(elementColor.r, elementColor.g, elementColor.b, elementColor.a)
 		end
 	
 	end
