@@ -110,7 +110,7 @@ mapData.mapData = {
 }
 
 mapData.mapElements = {
-  ["UNKNOWN"]               = { path = "NPCDialogIcon_help.png.dds", width = 32, height = 32, layer = 8},
+  ["UNKNOWN"]               = { path = "NPCDialogIcon_help.png.dds", width = 48, height = 48, layer = 8},
   ["WAYPOINT"]              = { path = "indicator_waypoint_player.png.dds", width = 16, height = 16, factor = 1.5, minZoom = 0, layer = 100},
   ["CUSTOMPOI"]             = { path = "icon_menu_achievements.png.dds", width = 32, height = 32, factor = 1, minZoom = 0, layer = 98},
   
@@ -211,22 +211,22 @@ mapData.mapElements = {
   
   ["PORTAL"] = {path = "Map_Travel.png.dds", width = 32, height = 32},
     
-  ["RIFT.POST.FIRE"] = {path = "indicator_foothold_fire.png.dds", width = 64, height = 64, minZoom = 1},
-  ["RIFT.POST.AIR"] = {path = "indicator_foothold_air.png.dds", width = 64, height = 64, minZoom = 1},
-  ["RIFT.POST.DEATH"] = {path = "indicator_foothold_death.png.dds", width = 64, height = 64, minZoom = 1},
-  ["RIFT.POST.LIFE"] = {path = "indicator_foothold_life.png.dds", width = 64, height = 64, minZoom = 1},
-  ["RIFT.POST.WATER"] = {path = "indicator_foothold_water.png.dds", width = 64, height = 64, minZoom = 1},
-  ["RIFT.POST.EARTH"] = {path = "indicator_foothold_earth.png.dds", width = 64, height = 64, minZoom = 1},
-  ["RIFT.POST.NEUTRAL"] = {path = "indicator_foothold_neutral.png.dds", width = 64, height = 64, minZoom = 1},
-  ["RIFT.POST.GUARDIAN"] = {path = "indicator_foothold_guardian.png.dds", width = 64, height = 64, minZoom = 1},
-  ["RIFT.POST.DEFIANT"] = {path = "indicator_foothold_defiant.png.dds", width = 64, height = 64, minZoom = 1},
-  ["RIFT.INVASION.AIR"] = {path = "indicator_invasion_air.png.dds", width = 32, height = 32, minZoom = 1},
-  ["RIFT.INVASION.DEATH"] = {path = "indicator_invasion_death.png.dds", width = 32, height = 32, minZoom = 1},
-  ["RIFT.INVASION.LIFE"] = {path = "indicator_invasion_life.png.dds", width = 32, height = 32, minZoom = 1},
-  ["RIFT.INVASION.WATER"] = {path = "indicator_invasion_water.png.dds", width = 32, height = 32, minZoom = 1},
-  ["RIFT.INVASION.EARTH"] = {path = "indicator_invasion_earth.png.dds", width = 32, height = 32, minZoom = 1},
-  ["RIFT.INVASION.FIRE"] = {path = "indicator_invasion_earth.png.dds", width = 32, height = 32, minZoom = 1},
-  ["RIFT.INVASION.NEUTRAL"] = {path = "indicator_invasion_neutral.png.dds", width = 32, height = 32, minZoom = 1},  
+  ["RIFT.POST.FIRE"] = {path = "indicator_foothold_fire.png.dds", width = 48, height = 48, minZoom = 1},
+  ["RIFT.POST.AIR"] = {path = "indicator_foothold_air.png.dds", width = 48, height = 48, minZoom = 1},
+  ["RIFT.POST.DEATH"] = {path = "indicator_foothold_death.png.dds", width = 48, height = 48, minZoom = 1},
+  ["RIFT.POST.LIFE"] = {path = "indicator_foothold_life.png.dds", width = 48, height = 48, minZoom = 1},
+  ["RIFT.POST.WATER"] = {path = "indicator_foothold_water.png.dds", width = 48, height = 48, minZoom = 1},
+  ["RIFT.POST.EARTH"] = {path = "indicator_foothold_earth.png.dds", width = 48, height = 48, minZoom = 1},
+  ["RIFT.POST.NEUTRAL"] = {path = "indicator_foothold_neutral.png.dds", width = 48, height = 48, minZoom = 1},
+  ["RIFT.POST.GUARDIAN"] = {path = "indicator_foothold_guardian.png.dds", width = 48, height = 48, minZoom = 1},
+  ["RIFT.POST.DEFIANT"] = {path = "indicator_foothold_defiant.png.dds", width = 48, height = 48, minZoom = 1},
+  ["RIFT.INVASION.AIR"] = {path = "indicator_invasion_air.png.dds", width = 48, height = 48, minZoom = 1},
+  ["RIFT.INVASION.DEATH"] = {path = "indicator_invasion_death.png.dds", width = 48, height = 48, minZoom = 1},
+  ["RIFT.INVASION.LIFE"] = {path = "indicator_invasion_life.png.dds", width = 48, height = 48, minZoom = 1},
+  ["RIFT.INVASION.WATER"] = {path = "indicator_invasion_water.png.dds", width = 48, height = 48, minZoom = 1},
+  ["RIFT.INVASION.EARTH"] = {path = "indicator_invasion_earth.png.dds", width = 48, height = 48, minZoom = 1},
+  ["RIFT.INVASION.FIRE"] = {path = "indicator_invasion_earth.png.dds", width = 48, height = 48, minZoom = 1},
+  ["RIFT.INVASION.NEUTRAL"] = {path = "indicator_invasion_neutral.png.dds", width = 48, height = 48, minZoom = 1},  
     
   ["RIFT.COLOSSUS.AIR"] = {path = "indicator_collossus_air.png.dds", width = 64, height = 64, minZoom = 1},
   ["RIFT.COLOSSUS.DEATH"] = {path = "indicator_collossus_death.png.dds", width = 64, height = 64, minZoom = 1},
