@@ -86,6 +86,8 @@ local function _uiMap(name, parent)
 	coordLabel:SetFontColor(1, 1, 1, 1)
 	coordLabel:SetPoint("CENTER", ui:GetHeader(), "CENTER") 
 
+	EnKai.ui.setFont(coordLabel, addonInfo.id, "MontserratSemiBold")
+
 	local mask = UI.CreateFrame('Mask', name .. ".mask", ui:GetContent())
 	mask:SetPoint("TOPLEFT", ui:GetContent(), "TOPLEFT")
 	mask:SetPoint("BOTTOMRIGHT", ui:GetContent(), "BOTTOMRIGHT")
