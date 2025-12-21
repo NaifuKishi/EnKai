@@ -154,9 +154,9 @@ mapData.mapElements = {
   ["UNIT.MARK.29"]           = {path = "vfx_ui_mob_tag_tank_mini.png.dds", width = 16, height = 16, layer = 98},  
   ["UNIT.MARK.30"]           = {path = "vfx_ui_mob_tag_clover_mini.png.dds", width = 16, height = 16, layer = 98},
   
-  ["POI.QUESTHUB"]    = {path = "Map_QuestGroup_Icon.png.dds", width = 32, height = 32, minZoom = 1, layer = 80},
+  ["POI.QUESTHUB"]    = {path = "Map_QuestGroup_Icon.png.dds", width = 32, height = 32, mlayer = 80},
   ["POI.DUNGEON"]     = {path = "Map_Instance_Icon.png.dds", width = 48, height = 48, minZoom = 1, layer = 80},
-  ["POI.OTHER"]       = {path = "Map_POI_Icon.png.dds", width = 32, height = 32, minZoom = 1, layer = 80},
+  ["POI.OTHER"]       = {path = "Map_POI_Icon.png.dds", width = 32, height = 32, layer = 80},
   ["POI.CAVE"]        = {path = "Map_Cave_Icon.png.dds", width = 32, height = 32, minZoom = 1, layer = 80},
   ["POI.PORTAL"]      = {path = "Map_Travel.png.dds", width = 32, height = 32, minZoom = 1, layer = 81},
   ["POI.PORTALWORLD"] = {path = "map_travel_ep1.png.dds", width = 32, height = 32, minZoom = 1, layer = 81},
@@ -207,8 +207,8 @@ mapData.mapElements = {
   --["QUEST.CARNAGE"] = { path = "indicator_track_carnage.png.dds", width = 32, height = 32, layer = 99},
   ["QUEST.ZONEEVENT"] = { fill = {source = "Rift", type = "texture", texture = "indicator_track_zonequest.png.dds"}, width = 32, height = 32, minZoom = 1, layer = 98, anim = "rotation"},
   --["QUEST.POINT"] = { addon = "EnKai", path = "gfx/iconQuest.png", width = 18, height = 18, minZoom = 1, layer = 99},
-  ["QUEST.AREA"] = { gfxType = "canvas", stroke = {r = 0.9, g = 0.6, b = 0.2, a = 1, thickness = 2}, fill = { type = "solid", r = 1, g = 0.7, b = 0.3, a = 0.3}, layer = 2},
-  ["QUEST.CARNAGE"] = { gfxType = "canvas", stroke = {r = 0.8, g = 0.2, b = 0.2, a = 1, thickness = 2}, fill = { type = "solid", r = 1, g = 0.4, b = 0.4, a = 0.3}, layer = 2},
+  ["QUEST.AREA"] = { gfxType = "canvas", stroke = {r = 0.9, g = 0.6, b = 0.2, a = 1, thickness = 2}, fill = { type = "solid", r = 1, g = 0.7, b = 0.3, a = 0.2}, layer = 2},
+  ["QUEST.CARNAGE"] = { gfxType = "canvas", stroke = {r = 0.8, g = 0.2, b = 0.2, a = 1, thickness = 2}, fill = { type = "solid", r = 1, g = 0.4, b = 0.4, a = 0.2}, layer = 2},
   
   ["PORTAL"] = {path = "Map_Travel.png.dds", width = 32, height = 32},
     

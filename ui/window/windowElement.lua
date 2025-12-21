@@ -384,6 +384,10 @@ local function _uiWindowElement(name, parent)
     EnKai.ui.setFont(title, addonId, fontName)
   end
 
+  function window:SetTitleEffectGlow( effect )
+    title:SetEffectGlow(effect)
+  end
+
   function window:SetTitle(newTitle)
     title:ClearAll()
     title:SetText(newTitle)
