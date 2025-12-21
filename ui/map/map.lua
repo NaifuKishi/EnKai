@@ -20,6 +20,8 @@ local stringLower			= string.lower
 local mathFloor				= math.floor
 local mathAbs				= math.abs
 
+local EnKaiUUID				= EnKai.tools.uuid
+
 ---------- addon internal function block ---------
 
 local function _uiMap(name, parent)
@@ -438,7 +440,7 @@ local function _uiMap(name, parent)
 			return 
 		end
 		
-		--if nkDebug then nkDebug.logEntry (addonInfo.identifier, "AddElement", "new element", newElement) end
+		if nkDebug then nkDebug.logEntry (addonInfo.identifier, "AddElement", newElement.title or "new element", newElement) end
 
 		if elements[newElement.id] ~= nil then return end
 
@@ -458,15 +460,15 @@ local function _uiMap(name, parent)
 		local thisElement
 		local mapInfo = mapData.mapElements[newElement.type]
 		
-		--if nkDebug then nkDebug.logEntry (addonInfo.identifier, "AddElement", "new element", mapInfo) end
+		if nkDebug then nkDebug.logEntry (addonInfo.identifier, "AddElement", "mapinfo", mapInfo) end
 
 		if mapInfo.anim ~= nil then
-			thisElement = EnKai.uiCreateFrame("nkMapElementCanvas", newElement.type .. "." .. EnKai.tools.uuid(), mask)
+			thisElement = EnKai.uiCreateFrame("nkMapElementCanvas", newElement.type .. "." .. EnKaiUUID(), mask)
 		elseif mapInfo.gfxType == nil or stringLower(mapInfo.gfxType) == 'texture' then
-			thisElement = EnKai.uiCreateFrame("nkMapElementTexture", newElement.type .. "." .. EnKai.tools.uuid(), mask)
+			thisElement = EnKai.uiCreateFrame("nkMapElementTexture", newElement.type .. "." .. EnKaiUUID(), mask)
 			if mapInfo.layer ~= nil then thisElement:SetLayer(mapInfo.layer) end
 		elseif stringLower(mapInfo.gfxType) == "canvas" then
-			thisElement = EnKai.uiCreateFrame("nkMapElementCanvas", newElement.type .. "." .. EnKai.tools.uuid(), mask)
+			thisElement = EnKai.uiCreateFrame("nkMapElementCanvas", newElement.type .. "." .. EnKaiUUID(), mask)
 		end
 
 		thisElement:SetId(newElement.id)
@@ -499,9 +501,14 @@ local function _uiMap(name, parent)
 				nkDebug.logEntry (inspectAddonCurrent(), "_uiMap", "ui:AddElement error", "map entry without coordinates" .. newElement.id .. "\n\n" .. EnKai.tools.table.serialize(newElement))
 			end
 		else
+
+			if nkDebug then nkDebug.logEntry (addonInfo.identifier, "AddElement", newElement.title or "new element", { coordX = newElement.coordX, coordY = thisY}) end
+
 			thisElement:SetZoom(thisScale, maximized)
 			thisElement:SetCoord(newElement.coordX, thisY)
 		end
+
+		if nkDebug then nkDebug.logEntry (addonInfo.identifier, "AddElement", newElement.title or "new element", tostring(duplicate)) end
 
 		if not duplicate then thisElement:SetVisible(true) end
 
