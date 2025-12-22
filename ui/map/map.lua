@@ -442,7 +442,10 @@ local function _uiMap(name, parent)
 		
 		if nkDebug then nkDebug.logEntry (addonInfo.identifier, "AddElement", newElement.title or "new element", newElement) end
 
-		if elements[newElement.id] ~= nil then return end
+		if elements[newElement.id] ~= nil then 
+			if nkDebug then nkDebug.logEntry (addonInfo.identifier, "AddElement", newElement.id .. " already exists", "") end
+			return 
+		end
 
 		local duplicate = false
 
@@ -454,6 +457,8 @@ local function _uiMap(name, parent)
 		else
 			checkIdentical[checkKey] = {}
 		end
+
+		if duplicate then return end
 
 		table.insert(checkIdentical[checkKey], newElement.id)
 
