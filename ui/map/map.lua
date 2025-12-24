@@ -48,7 +48,7 @@ local function _uiMap(name, parent)
 	local maximizedWidth, maximizedHeight = 800, 600
 	local origCoordX, origCoordY = nil, nil, nil
 	local origX, origY = nil, nil
-	local maxZoom = 4
+	local maxZoom = 6
 	local cursorX, cursorY
 	local coordsArea = {}
 	local waypoint = nil
