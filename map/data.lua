@@ -157,7 +157,7 @@ mapData.mapElements = {
   ["POI.QUESTHUB"]    = {path = "Map_QuestGroup_Icon.png.dds", width = 32, height = 32, mlayer = 80},
   ["POI.DUNGEON"]     = {path = "Map_Instance_Icon.png.dds", width = 48, height = 48, minZoom = 1, layer = 80},
   ["POI.OTHER"]       = {path = "Map_POI_Icon.png.dds", width = 32, height = 32, layer = 80},
-  ["POI.CAVE"]        = {path = "Map_Cave_Icon.png.dds", width = 32, height = 32, minZoom = 1, layer = 80},
+  ["POI.CAVE"]        = {path = "Map_Cave_Icon.png.dds", width = 32, height = 32, layer = 80},
   ["POI.PORTAL"]      = {path = "Map_Travel.png.dds", width = 32, height = 32, minZoom = 1, layer = 81},
   ["POI.PORTALWORLD"] = {path = "map_travel_ep1.png.dds", width = 32, height = 32, minZoom = 1, layer = 81},
   
@@ -434,7 +434,7 @@ mapData.mapElements = {
   ["EVENT.CARNIVAL"] = {path = "MainMap_IED.dds", width = 32, height = 32, minZoom = 1},
   ["EVENT.SUMMER"] = {path = "Fish_icon.png.dds", width = 32, height = 32, minZoom = 1},
   ["EVENT.AUTUMN"] = {path = "Mushrooms_icon.png.dds", width = 32, height = 32, minZoom = 1},
-  ["EVENT.FAEYULETREE"] = {path = "MainMap_I118.dds", width = 32, height = 32, minZoom = 1},
+  ["EVENT.FAEYULETREE"] = {path = "MainMap_I118.dds", width = 32, height = 32},
 
   
 }
