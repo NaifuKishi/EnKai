@@ -439,6 +439,11 @@ function EnKai.unit.getPlayerDetails()
    
 end
 
+function EnKai.unit.setPlayerDetails(detail, value)
+	EnKai.unit.getPlayerDetails()
+	_unitCache[_idCache.player[1]][detail] = value
+end
+
 --[[
    _getCallingText
     Description:

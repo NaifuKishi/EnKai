@@ -434,6 +434,7 @@ mapData.mapElements = {
   ["EVENT.CARNIVAL"] = {path = "MainMap_IED.dds", width = 32, height = 32, minZoom = 1},
   ["EVENT.SUMMER"] = {path = "Fish_icon.png.dds", width = 32, height = 32, minZoom = 1},
   ["EVENT.AUTUMN"] = {path = "Mushrooms_icon.png.dds", width = 32, height = 32, minZoom = 1},
+  ["EVENT.FAEYULETREE"] = {path = "MainMap_I118.dds", width = 32, height = 32, minZoom = 1},
 
   
 }

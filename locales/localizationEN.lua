@@ -328,6 +328,7 @@ if Inspect.System.Language() == "English" then
 	{ pattern="Summer Sunplant", type = "EVENT.SUMMER", name = "DESC1"},
     { pattern = "Artifact Pinata", type = "EVENT.CARNIVAL", name = "DESC1"},
 	{ pattern = "Faerie Ring", type = "EVENT.AUTUMN", name = "DESC1"},
+    { pattern = "Fae Yule Tree", type = "EVENT.FAEYULETREE", name = "DESC1"},
 	
     {pattern = "Body of (.+)", type = "UNIT.BODY",  regExCompute = {pattern = "name"} },	
 	{pattern = "(.+) Corpse", type = "UNIT.BODY",  regExCompute = {pattern = "name"} },
