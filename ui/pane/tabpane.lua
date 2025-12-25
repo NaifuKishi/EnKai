@@ -103,6 +103,15 @@ local function _uiTabpane(name, parent)
 		height = newHeight
 		tabPane:RecalcDimensions()
 	end
+
+	function tabPane:SetHeaderLabelColor (r, g, b, a)
+		if type(r) == "table" then
+		else
+
+		end
+		
+
+	end
 	
 	function tabPane:AddPane(newPaneInfo, updateFlag)
 		

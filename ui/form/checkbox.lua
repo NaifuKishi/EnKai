@@ -224,9 +224,14 @@ local function _uiCheckbox(name, parent)
 		end
 	end
 	
-	function checkBox:SetColorInner(newColor)
-	  innerColor = newColor
-	  boxInner:SetBackgroundColor(innerColor.r, innerColor.g, innerColor.b, innerColor.a)
+	function checkBox:SetColorInner(r, g, b, a)
+		if type(r) == "table" then
+	    	innerColor = r
+	  	else
+		    innerColor = { r = r, g = g, b = b, a = a }
+		end
+		  
+		boxInner:SetBackgroundColor(innerColor.r, innerColor.g, innerColor.b, innerColor.a)
 	end
 
 	function checkBox:SetFont(addonId, font) EnKai.ui.setFont(label, addonId, font) end

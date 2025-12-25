@@ -332,9 +332,9 @@ local function _uiCombobox(name, parent)
 			selItems[row].frame:SetBackgroundColor(selectedColor.r, selectedColor.g, selectedColor.b, selectedColor.a)
 			selItems[row].label:SetFontColor(elementColorInner.r, elementColorInner.g, elementColorInner.b, elementColorInner.a)
 		else
-			--selItems[row].frame:SetBackgroundColor(elementColorInner.r, elementColorInner.g, elementColorInner.b, elementColorInner.a)
+			selItems[row].frame:SetBackgroundColor(elementColorInner.r, elementColorInner.g, elementColorInner.b, elementColorInner.a)
 			selItems[row].label:SetFontColor (labelColor.r, labelColor.g, labelColor.b, labelColor.a)
-			selItems[row].frame:SetBackgroundColor(elementColor.r, elementColor.g, elementColor.b, elementColor.a)
+			--selItems[row].frame:SetBackgroundColor(elementColor.r, elementColor.g, elementColor.b, elementColor.a)
 		end
 	
 	end
@@ -481,8 +481,13 @@ local function _uiCombobox(name, parent)
     end
   end
 
-	function combo:SetColorBorder(newColor) 
-		borderColor = newColor
+	function combo:SetColorBorder(r, g, b, a) 
+		if type(r) == "table" then
+			borderColor = r
+		else   
+			borderColor = {r = r, g = g, b = b, a = a}
+		end
+
 		selFrame:SetBackgroundColor(borderColor.r, borderColor.g, borderColor.b, borderColor.a)
 		display:SetBackgroundColor(borderColor.r, borderColor.g, borderColor.b, borderColor.a) 
 		arrowBox:SetBackgroundColor(borderColor.r, borderColor.g, borderColor.b, borderColor.a)

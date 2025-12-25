@@ -59,6 +59,7 @@ local function tabHeader (name, parent)
   end  
 
   function tabButton:SetFont(addonInfo, font) EnKai.ui.setFont(label, addonInfo, font) end
+  function tabButton:SetFontEffect (newEffect) label:SetEffectGlow(newEffect) end
   
   function tabButton:SetSelected(flag)
     selected = flag
@@ -141,24 +142,24 @@ local function _uiTabpaneMetro(name, parent)
 	local bodyFrame = EnKai.uiCreateFrame("nkFrame", name .. ".body", uiFrame)
 	local helperLine = EnKai.uiCreateFrame("nKFrame", name .. ".helperLine", tabPane)
   
-  local panes = {}
-  local tabButtons = {}
-  local fontInfo = {}
-  
+	local panes = {}
+	local tabButtons = {}
+	local fontInfo = {}
+
 	-- GARBAGE COLLECTOR ROUTINES
   
-  function tabPane:destroy()
-    internal.uiAddToGarbageCollector ('nkFrame', tabPane)
-    internal.uiAddToGarbageCollector ('nkCanvas', uiFrame)
-    internal.uiAddToGarbageCollector ('nkFrame', bodyFrame)
-    internal.uiAddToGarbageCollector ('nkFrame', helperLine)
-    
-    for k, v in pairs(tabButtons) do
-       v:destroy()
-    end
-  end   
+	function tabPane:destroy()
+		internal.uiAddToGarbageCollector ('nkFrame', tabPane)
+		internal.uiAddToGarbageCollector ('nkCanvas', uiFrame)
+		internal.uiAddToGarbageCollector ('nkFrame', bodyFrame)
+		internal.uiAddToGarbageCollector ('nkFrame', helperLine)
+
+		for k, v in pairs(tabButtons) do
+			v:destroy()
+		end
+	end   
   
-  -- SPECIFIC FUNCTIONS
+  	-- SPECIFIC FUNCTIONS
 	
 	local activePane = 1
 	local init = false
@@ -166,29 +167,29 @@ local function _uiTabpaneMetro(name, parent)
 	local headerTabHeight = 30
 	local vertical = false
 	                           
-  local tabButtonPath = {  {xProportional = 0, yProportional = 1},
-                         {xProportional = 0, yProportional = 0},
-                          {xProportional = 1, yProportional = 0},
-                          {xProportional = 1, yProportional = 1} }	
-                          
-  local uiFrameFill = { type = 'solid', r = EnKai.art.GetThemeColor('tabPaneColor')[2].r, g = EnKai.art.GetThemeColor('tabPaneColor')[2].g, b = EnKai.art.GetThemeColor('tabPaneColor')[2].b, a = EnKai.art.GetThemeColor('tabPaneColor')[2].a}
-  
-  local uiFramePath = {  {xProportional = 0, yProportional = 0},
-                         {xProportional = 1, yProportional = 0},
-                          {xProportional = 1, yProportional = 1},
-                          {xProportional = 0, yProportional = 1},
-                          {xProportional = 0, yProportional = 0} }
-                          
-  local uiFrameStroke = { thickness = 1, r = EnKai.art.GetThemeColor('tabPaneColor')[1].r, g = EnKai.art.GetThemeColor('tabPaneColor')[1].g, b = EnKai.art.GetThemeColor('tabPaneColor')[1].b, a = EnKai.art.GetThemeColor('tabPaneColor')[1].a}
-  
-  local fontColor = EnKai.art.GetThemeColor('tabPaneColor')[4]
-  local fontColorSelected = nil
-  local border = true
-  
-  uiFrame:SetLayer(2)
-  uiFrame:SetPoint("TOPLEFT", tabPane, "TOPLEFT", 0, headerTabHeight)
-  uiFrame:SetPoint("BOTTOMRIGHT", tabPane, "BOTTOMRIGHT")
-  uiFrame:SetShape(uiFramePath, uiFrameFill, uiFrameStroke)
+	local tabButtonPath = {  {xProportional = 0, yProportional = 1},
+							{xProportional = 0, yProportional = 0},
+							{xProportional = 1, yProportional = 0},
+							{xProportional = 1, yProportional = 1} }	
+							
+	local uiFrameFill = { type = 'solid', r = EnKai.art.GetThemeColor('tabPaneColor')[2].r, g = EnKai.art.GetThemeColor('tabPaneColor')[2].g, b = EnKai.art.GetThemeColor('tabPaneColor')[2].b, a = EnKai.art.GetThemeColor('tabPaneColor')[2].a}
+	
+	local uiFramePath = {  {xProportional = 0, yProportional = 0},
+							{xProportional = 1, yProportional = 0},
+							{xProportional = 1, yProportional = 1},
+							{xProportional = 0, yProportional = 1},
+							{xProportional = 0, yProportional = 0} }
+							
+	local uiFrameStroke = { thickness = 1, r = EnKai.art.GetThemeColor('tabPaneColor')[1].r, g = EnKai.art.GetThemeColor('tabPaneColor')[1].g, b = EnKai.art.GetThemeColor('tabPaneColor')[1].b, a = EnKai.art.GetThemeColor('tabPaneColor')[1].a}
+	
+	local fontColor = EnKai.art.GetThemeColor('tabPaneColor')[4]
+	local fontColorSelected = nil
+	local border = true
+	
+	uiFrame:SetLayer(2)
+	uiFrame:SetPoint("TOPLEFT", tabPane, "TOPLEFT", 0, headerTabHeight)
+	uiFrame:SetPoint("BOTTOMRIGHT", tabPane, "BOTTOMRIGHT")
+	uiFrame:SetShape(uiFramePath, uiFrameFill, uiFrameStroke)
   
 	bodyFrame:SetPoint("TOPLEFT", uiFrame, "TOPLEFT", 10, 10)
 	bodyFrame:SetPoint("BOTTOMRIGHT", uiFrame, "BOTTOMRIGHT", -10, -10)
@@ -211,13 +212,14 @@ local function _uiTabpaneMetro(name, parent)
 
 		local tabButton = tabHeader (stepButtonName, tabPane)
 		tabButton:SetText(newPaneInfo.label)
+		tabButton:SetFontEffect(newPaneInfo.effect)
 
 		if fontInfo.fontName then tabButton:SetFont(fontInfo.addonInfo, fontInfo.fontName) end
 		
 		Command.Event.Attach(EnKai.events[stepButtonName].Clicked, function ()
 			tabButtons[activePane]:SetSelected(false)
-		tabPane:SwitchToPane(paneNo)
-    end, stepButtonName .. '.Clicked')
+			tabPane:SwitchToPane(paneNo)
+    	end, stepButtonName .. '.Clicked')
 		
 		table.insert(tabButtons, tabButton)
 		
@@ -255,38 +257,38 @@ local function _uiTabpaneMetro(name, parent)
 	
 	function tabPane:UpdatePanes()
 	
-	  local path = {}
-	  
-	  local cornerRelX = 1 / tabPane:GetWidth() * 5
-	  local cornerRelY = 1 / tabPane:GetHeight() * 5
-	  local startX = headerTabWidth * activePane
-	  local startX2 = headerTabWidth * (activePane-1)
-	  local startY = headerTabHeight
-	  local relX = 1 / tabPane:GetWidth() * startX + cornerRelX
-	  local relY = 1 / tabPane:GetHeight() * startY + cornerRelY
-	  
-	  table.insert(path, {xProportional = 0, yProportional = 0 })
-	  table.insert(path, {xProportional = (1-cornerRelX), yProportional = 0} )
-	  table.insert(path, {xProportional = 1, yProportional = cornerRelY})
-	  table.insert(path, {xProportional = 1, yProportional = 1 - cornerRelY })
-	  table.insert(path, {xProportional = (1-cornerRelX), yProportional = 1})
-	  table.insert(path, {xProportional = cornerRelX, yProportional = 1})
-	  table.insert(path, {xProportional = 0, yProportional = (1-cornerRelY)})
-	  table.insert(path, {xProportional = 0, yProportional = 0 })
-	  
-	  if border == true then
-	    uiFrame:SetShape(path, uiFrameFill, uiFrameStroke)
-	  else
-	    uiFrame:SetShape(path, uiFrameFill, { thickness = 1, r = uiFrameFill.r, g = uiFrameFill.g, b = uiFrameFill.b, a = uiFrameFill.a })
-	  end
-	  
-	  uiFrame:ClearPoint("TOPLEFT")
+		local path = {}
+
+		local cornerRelX = 1 / tabPane:GetWidth() * 5
+		local cornerRelY = 1 / tabPane:GetHeight() * 5
+		local startX = headerTabWidth * activePane
+		local startX2 = headerTabWidth * (activePane-1)
+		local startY = headerTabHeight
+		local relX = 1 / tabPane:GetWidth() * startX + cornerRelX
+		local relY = 1 / tabPane:GetHeight() * startY + cornerRelY
+
+		table.insert(path, {xProportional = 0, yProportional = 0 })
+		table.insert(path, {xProportional = (1-cornerRelX), yProportional = 0} )
+		table.insert(path, {xProportional = 1, yProportional = cornerRelY})
+		table.insert(path, {xProportional = 1, yProportional = 1 - cornerRelY })
+		table.insert(path, {xProportional = (1-cornerRelX), yProportional = 1})
+		table.insert(path, {xProportional = cornerRelX, yProportional = 1})
+		table.insert(path, {xProportional = 0, yProportional = (1-cornerRelY)})
+		table.insert(path, {xProportional = 0, yProportional = 0 })
+
+		if border == true then
+		uiFrame:SetShape(path, uiFrameFill, uiFrameStroke)
+		else
+		uiFrame:SetShape(path, uiFrameFill, { thickness = 1, r = uiFrameFill.r, g = uiFrameFill.g, b = uiFrameFill.b, a = uiFrameFill.a })
+		end
+
+		uiFrame:ClearPoint("TOPLEFT")
     
-    if vertical == true then
-	    uiFrame:SetPoint("TOPLEFT", tabPane, "TOPLEFT", headerTabWidth, 0)	   
-    else
-      uiFrame:SetPoint("TOPLEFT", tabPane, "TOPLEFT", 0, headerTabHeight)
-	  end
+		if vertical == true then
+			uiFrame:SetPoint("TOPLEFT", tabPane, "TOPLEFT", headerTabWidth, 0)	   
+		else
+			uiFrame:SetPoint("TOPLEFT", tabPane, "TOPLEFT", 0, headerTabHeight)
+		end
 	  
 		local from, paneHeaderObject, to, x, y = "TOPLEFT", tabPane, "TOPLEFT", 0, 0
 		
@@ -294,11 +296,11 @@ local function _uiTabpaneMetro(name, parent)
 		
 		for k, pane in pairs(panes) do
 		
-		  tabButtons[k]:SetPoint(from, paneHeaderObject, to, x, y)			
-		  tabButtons[k]:SetColor(uiFrameStroke, {type = 'solid', r = uiFrameStroke.r, g = uiFrameStroke.g, b = uiFrameStroke.b, a = uiFrameStroke.a}, uiFrameFill, fontColor, fontColorSelected)
-		  tabButtons[k]:SetBorder(border)
-		  tabButtons[k]:SetVertical(vertical)
-		
+			tabButtons[k]:SetPoint(from, paneHeaderObject, to, x, y)			
+			tabButtons[k]:SetColor(uiFrameStroke, {type = 'solid', r = uiFrameStroke.r, g = uiFrameStroke.g, b = uiFrameStroke.b, a = uiFrameStroke.a}, uiFrameFill, fontColor, fontColorSelected)
+			tabButtons[k]:SetBorder(border)
+			tabButtons[k]:SetVertical(vertical)
+
 			if init == false then
 				if pane.initFunc ~= nil then
 					pane.initFunc()
@@ -310,7 +312,7 @@ local function _uiTabpaneMetro(name, parent)
 				end
 			end			
 			
-  		pane.frame:SetVisible(false)
+  			pane.frame:SetVisible(false)
 			pane.frame:SetPoint("TOPLEFT", bodyFrame, "TOPLEFT")
 			pane.frame:SetPoint("BOTTOMRIGHT", bodyFrame, "BOTTOMRIGHT")
 			pane.frame:SetLayer(999)
@@ -320,12 +322,12 @@ local function _uiTabpaneMetro(name, parent)
 				tabButtons[k]:SetLayer(3)
 				
 				if border == true then
-				  helperLine:SetVisible(true)
-  				helperLine:SetPoint("TOPLEFT", tabButtons[k], "BOTTOMLEFT", 1,0)
-  				helperLine:SetBackgroundColor(uiFrameFill.r, uiFrameFill.g, uiFrameFill.b, uiFrameFill.a)
-  			else
-  			  helperLine:SetVisible(false)
-  			end
+					helperLine:SetVisible(true)
+					helperLine:SetPoint("TOPLEFT", tabButtons[k], "BOTTOMLEFT", 1,0)
+					helperLine:SetBackgroundColor(uiFrameFill.r, uiFrameFill.g, uiFrameFill.b, uiFrameFill.a)
+  				else
+  			  		helperLine:SetVisible(false)
+  				end
 			else
 				pane.frame:SetVisible(false)
 				tabButtons[k]:SetLayer(1)
@@ -334,22 +336,20 @@ local function _uiTabpaneMetro(name, parent)
 			paneHeaderObject = tabButtons[k]
 			
 			if vertical == true then
-			  to, y = "BOTTOMLEFT", -3
+				to, y = "BOTTOMLEFT", -3
 			else
-			  to, x = "TOPRIGHT", -3
+				to, x = "TOPRIGHT", -3
 			end
-
 		end
-		
 	end
 	
 	function tabPane:SetColor(stroke, fill, newFontColor, newFontColorSelected)
-	  if stroke ~= nil then uiFrameStroke = stroke end
-	  if fill ~= nil then uiFrameFill = fill end
-	  if newFontColor ~= nil then fontColor = newFontColor end
-	  if newFontColorSelected ~= nil then fontColorSelected = newFontColorSelected end
-	  
-	  if init == true then tabPane:UpdatePanes() end
+		if stroke ~= nil then uiFrameStroke = stroke end
+		if fill ~= nil then uiFrameFill = fill end
+		if newFontColor ~= nil then fontColor = newFontColor end
+		if newFontColorSelected ~= nil then fontColorSelected = newFontColorSelected end
+		
+		if init == true then tabPane:UpdatePanes() end
 	end
 	
 	function tabPane:SetFont(addonInfo, fontName) 
