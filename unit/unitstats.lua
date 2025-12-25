@@ -8,13 +8,13 @@ if not EnKai.stat then EnKai.stat = {} end
 local lang        = privateVars.langTexts
 local data        = privateVars.data
 
-local inspectUnitDetails	= Inspect.Unit.Details
+local inspectUnitDetail	= Inspect.Unit.Detail
 
 local lastFocus
 
-local function cooldownBegin(self, cooldowns)
+local function checkFocus()
 
-	local details = inspectUnitDetails("player")
+	local details = inspectUnitDetail("player")
 
 	if details.focus == lastFocus then return end
 	lastFocus = details.focus
@@ -23,12 +23,25 @@ local function cooldownBegin(self, cooldowns)
 
 end
 
+local function cooldownBegin(self, cooldowns)
+
+	checkFocus()
+
+end
 
 function EnKai.stat.init()
 
-	EnKai.eventHandlers["EnKai.Stat"]["Focus"], EnKai.events["EnKai.Stat"]["Focus"] = Utility.Event.Create(addonInfo.identifier, "EnKai.Stat.Focus")
+	if EnKai.internal.checkEvents ("EnKai.Stat", true) == false then return nil end
 
-	Command.Event.Attach(Event.Ability.New.Cooldown.Begin, cooldownBegin, "EnKai.stat.Ability.New.Cooldown.Begin")
+end
+
+function EnKai.stat.subscribe (stat)
+
+	if stat == "focus" then
+		EnKai.events.addInsecure(checkFocus, 10)
+		EnKai.eventHandlers["EnKai.Stat"]["Focus"], EnKai.events["EnKai.Stat"]["Focus"] = Utility.Event.Create(addonInfo.identifier, "EnKai.Stat.Focus")
+		Command.Event.Attach(Event.Ability.New.Cooldown.Begin, cooldownBegin, "EnKai.stat.Ability.New.Cooldown.Begin")
+	end
 
 end
 

@@ -176,7 +176,7 @@ end
 
 ---------- library public function block ---------
 
-function EnKai.events.addPeriodic(func, period, tries)
+function EnKai.events.addPeriodic(func, period, tries) -- period is in seconds
 	
 	local uuid = EnKai.tools.uuid ()
 	_periodicEvents[uuid] = {func = func, timer = InspectTimeFrame(), period = (period or 0), tries = (tries or 1), currentTries = 0 }

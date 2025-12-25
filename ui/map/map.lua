@@ -90,6 +90,7 @@ local function _uiMap(name, parent)
 	coordLabel:SetFontSize(12)
 	coordLabel:SetFontColor(1, 1, 1, 1)
 	coordLabel:SetPoint("CENTER", ui:GetHeader(), "CENTER") 
+	coordLabel:SetLayer(3)
 
 	EnKai.ui.setFont(coordLabel, addonInfo.id, "MontserratSemiBold")
 
@@ -704,6 +705,13 @@ local function _uiMap(name, parent)
 	function ui:ShowCoords(flag) coordLabel:SetVisible(flag) end
 	function ui:SetAllowWayPoints(flag) allowWayPoints = flag end
 	function ui:SetMaximizable(flag) iconMinMax:SetVisible(flag) end
+
+	function ui:ShowHeader(flag)
+		iconZoomIn:SetVisible(flag)
+		iconZoomOut:SetVisible(flag)
+		iconMinMax:SetVisible(flag)
+		ui:DisplayHeader(flag)
+	end
 
 	---------- EVENTS ---------- 
 

@@ -476,6 +476,12 @@ local function _uiWindowElement(name, parent)
   
   function window:DisplayHeader(flag)
     header:SetVisible(flag)
+
+    if flag then
+      body:SetPoint("TOPLEFT", window, "TOPLEFT", 0, 20)
+    else
+      body:SetPoint("TOPLEFT", window, "TOPLEFT", 0, 0)
+    end
   end
   
   function window:Collapse(flag)
