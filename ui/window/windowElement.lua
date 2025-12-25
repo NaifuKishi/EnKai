@@ -127,51 +127,7 @@ local function _uiWindowElement(name, parent)
   header:SetPoint("TOPRIGHT", window, "TOPRIGHT")
   header:SetHeight(20)
   header:SetBackgroundColor(0, 0, 0, 1)
-  header:SetLayer(2)
-  
-  header:EventAttach(Event.UI.Input.Mouse.Left.Down, function (self)    
-    if dragable == false then return end
-    if window:GetSecureMode() == 'restricted' and oFuncs.oInspectSystemSecure() == true then return end
-    
-    self.leftDown = true
-    local mouse = Inspect.Mouse()
-    
-    self.originalXDiff = mouse.x - self:GetLeft()
-    self.originalYDiff = mouse.y - self:GetTop()
-    
-    local left, top, right, bottom = window:GetBounds()
-    
-    window:ClearPoint("TOPLEFT")
-    window:SetPoint("TOPLEFT", UIParent, "TOPLEFT", left, top)
-  end, name .. ".header.Left.Down")
-  
-  header:EventAttach( Event.UI.Input.Mouse.Cursor.Move, function (self, _, x, y)  
-    if self.leftDown ~= true then return end
-    
-    local newX, newY = x - self.originalXDiff, y - self.originalYDiff
-
-    -- the boundary below if fucked in scale mode and turned out to be completely useless
-
-    --if newX >= data.uiBoundLeft and newX <= data.uiBoundRight and newY + window:GetHeight() >= data.uiBoundTop and newY + window:GetHeight() <= data.uiBoundBottom then    
-      window:SetPoint("TOPLEFT", UIParent, "TOPLEFT", newX, newY)
-    --else
-    --end
-    
-  end, name .. ".header.Cursor.Move")
-  
-  header:EventAttach( Event.UI.Input.Mouse.Left.Up, function (self) 
-    if self.leftDown ~= true then return end
-      self.leftDown = false
-      window:ProcessMove()         
-      EnKai.eventHandlers[name]["Moved"](window:GetLeft(), window:GetTop())
-  end, name .. ".header.Left.Up")
-  
-  header:EventAttach( Event.UI.Input.Mouse.Left.Upoutside, function (self)
-    if self.leftDown ~= true then return end
-    self.leftDown = false
-    window:ProcessMove()
-    EnKai.eventHandlers[name]["Moved"](window:GetLeft(), window:GetTop())
-  end , name .. ".header.Left.Upoutside")
+  header:SetLayer(2)  
   
   header:EventAttach(Event.UI.Input.Mouse.Cursor.In, function (self)    
     header:SetAlpha(1)    
@@ -229,7 +185,60 @@ local function _uiWindowElement(name, parent)
   body:SetPoint("TOPLEFT", window, "TOPLEFT", 0, 20)
   body:SetPoint("BOTTOMRIGHT", window, "BOTTOMRIGHT")
   body:SetLayer(1)
+
+  local moveIcon = EnKai.uiCreateFrame ('nkTexture', name .. '.moveIcon', body)
+  moveIcon:SetPoint("TOPLEFT", body, "TOPLEFT", 5, 5)
+  moveIcon:SetTextureAsync("EnKai", "gfx/icons/matrix.png")
+  moveIcon:SetWidth(20)
+  moveIcon:SetHeight(20)
+  moveIcon:SetAlpha(0)
+  moveIcon:SetLayer(2)
+
+  moveIcon:EventAttach(Event.UI.Input.Mouse.Cursor.In, function (self) 
+    if draggable == true then moveIcon:SetAlpha(1) end 
+  end, name .. ".moveIcon.Mouse.Cursor.In")
+  moveIcon:EventAttach(Event.UI.Input.Mouse.Cursor.Out, function (self) if draggable == true then moveIcon:SetAlpha(0) end end, name .. ".moveIcon.Mouse.Cursor.Out")
+
+  moveIcon:EventAttach(Event.UI.Input.Mouse.Left.Down, function (self)    
+    if dragable == false then return end
+    if window:GetSecureMode() == 'restricted' and oFuncs.oInspectSystemSecure() == true then return end
+    
+    self.leftDown = true
+    local mouse = Inspect.Mouse()
+    
+    self.originalXDiff = mouse.x - self:GetLeft()
+    self.originalYDiff = mouse.y - self:GetTop()
+    
+    local left, top, right, bottom = window:GetBounds()
+    
+    window:ClearPoint("TOPLEFT")
+    window:SetPoint("TOPLEFT", UIParent, "TOPLEFT", left, top)
+  end, name .. ".moveIcon.Left.Down")
   
+  moveIcon:EventAttach( Event.UI.Input.Mouse.Cursor.Move, function (self, _, x, y)  
+    if self.leftDown ~= true then return end
+    
+    local newX, newY = x - self.originalXDiff, y - self.originalYDiff
+
+    -- the boundary below if fucked in scale mode and turned out to be completely useless
+
+      window:SetPoint("TOPLEFT", UIParent, "TOPLEFT", newX, newY)    
+  end, name .. ".moveIcon.Cursor.Move")
+  
+  moveIcon:EventAttach( Event.UI.Input.Mouse.Left.Up, function (self) 
+    if self.leftDown ~= true then return end
+      self.leftDown = false
+      window:ProcessMove()         
+      EnKai.eventHandlers[name]["Moved"](window:GetLeft(), window:GetTop())
+  end, name .. ".moveIcon.Left.Up")
+  
+  moveIcon:EventAttach( Event.UI.Input.Mouse.Left.Upoutside, function (self)
+    if self.leftDown ~= true then return end
+    self.leftDown = false
+    window:ProcessMove()
+    EnKai.eventHandlers[name]["Moved"](window:GetLeft(), window:GetTop())
+  end , name .. ".moveIcon.Left.Upoutside")
+
   local resizeIcon = EnKai.uiCreateFrame ('nkTexture', name .. '.resizeIcon', body)
   resizeIcon:SetPoint("BOTTOMRIGHT", body, "BOTTOMRIGHT")
   resizeIcon:SetTextureAsync("EnKai", "gfx/icons/small-resize.png")
@@ -290,8 +299,15 @@ local function _uiWindowElement(name, parent)
 
   function window:ProcessMove()
     if reverseAtBorder == true and window:GetTop() + window:GetHeight() >= UIParent:GetHeight() then
+      
       body:SetPoint("TOPLEFT", window, "TOPLEFT")
-      body:SetPoint("BOTTOMRIGHT", window, "BOTTOMRIGHT", 0, -20)
+
+      if header:GetVisible() then
+        body:SetPoint("BOTTOMRIGHT", window, "BOTTOMRIGHT", 0, -20)
+      else
+        body:SetPoint("BOTTOMRIGHT", window, "BOTTOMRIGHT", 0, 0)
+      end
+
       header:ClearPoint("TOPLEFT")
       header:ClearPoint("TOPRIGHT")
       header:SetPoint("BOTTOMLEFT", window, "BOTTOMLEFT")
@@ -301,7 +317,12 @@ local function _uiWindowElement(name, parent)
       internalSetPoint = false
       
     else
-      body:SetPoint("TOPLEFT", window, "TOPLEFT", 0, 20)
+      if header:GetVisible() then
+        body:SetPoint("TOPLEFT", window, "TOPLEFT", 0, 20)
+      else
+        body:SetPoint("TOPLEFT", window, "TOPLEFT", 0, 0)
+      end
+
       body:SetPoint("BOTTOMRIGHT", window, "BOTTOMRIGHT")
       header:ClearPoint("BOTTOMLEFT")
       header:ClearPoint("BOTTOMRIGHT")
