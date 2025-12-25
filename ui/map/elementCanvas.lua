@@ -37,6 +37,7 @@ local function _uiMapElementCanvas(name, parent)
 	local lastX, lastY = 0, 0
 	local lastAngle = 0
 	local thisId
+	local elementType
 
 	local path = {{xProportional = 0, yProportional = 0}, {xProportional = 0, yProportional = 1}, {xProportional = 1, yProportional = 1},  {xProportional = 1, yProportional = 0}, {xProportional = 0, yProportional = 0}}
 
@@ -59,9 +60,11 @@ local function _uiMapElementCanvas(name, parent)
 
 	function mapElement:SetParentMap(newParentMap) parentMap = newParentMap end
 
-	function mapElement:SetType(elementType)
+	function mapElement:SetType(newElementType)
 
-		thisMapData = mapData.mapElements[elementType]
+		elementType = newElementType
+
+		thisMapData = mapData.mapElements[newElementType]
 		
 		if radius ~= nil then
 			thisMapData.width = radius * 3
@@ -86,6 +89,10 @@ local function _uiMapElementCanvas(name, parent)
 
 		if thisMapData.layer ~= nil then mapElement:SetLayer(thisMapData.layer) end
 		
+	end
+
+	function mapElement:GetElementType()
+		return elementType
 	end
 
 	function mapElement:SetToolTip(title, newDesc)

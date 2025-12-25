@@ -16,6 +16,7 @@ local inspectMouse			= Inspect.Mouse
 
 local stringFormat			= string.format
 local stringLower			= string.lower
+local stringFind			= string.find
 
 local mathFloor				= math.floor
 local mathAbs				= math.abs
@@ -117,7 +118,9 @@ local function _uiMap(name, parent)
 		if nkDebug then debugId = nkDebug.traceStart (inspectAddonCurrent(), "EnKai _uiMap:Redraw") end    
 
 		local thisScale = scale
+		
 		if maximized == true then thisScale = maximizedScale end
+		
 		local beforeScale = thisScale
 
 		if mapInfo.width * thisScale < mask:GetWidth() or mapInfo.height * thisScale < mask:GetHeight() then
@@ -145,18 +148,22 @@ local function _uiMap(name, parent)
 		end
 
 		for key, thisElement in pairs (elements) do
+			--if thisElement:GetElementType() == "QUEST.RETURN" then
+			--	dump (thisElement)
+			--end
+
 			thisElement:SetZoom(thisScale)
 			thisElement:SetCoord()
 		end
 
 		if beforeScale ~= thisScale then
 			if maximized == true then maximizedScale = thisScale else scale = thisScale end
-				EnKai.eventHandlers[name]["Zoomed"](thisScale, maximized)
-			end
-
-			if nkDebug then nkDebug.traceEnd (inspectAddonCurrent(), "EnKai _uiMap:Redraw", debugId) end
-
+			EnKai.eventHandlers[name]["Zoomed"](thisScale, maximized)
 		end
+
+		if nkDebug then nkDebug.traceEnd (inspectAddonCurrent(), "EnKai _uiMap:Redraw", debugId) end
+
+	end
 
 	local function _fctZoomOut()
 
@@ -401,11 +408,15 @@ local function _uiMap(name, parent)
 				local radius = 0
 				if element.GetRadius and element:GetRadius() ~= nil then radius = element:GetRadius() / 2 end
 
-				if (eleX + radius) < coordsArea.x1 or (eleX - radius) > coordsArea.x2 or ( eleZ + radius) < coordsArea.y1 or ( eleZ - radius) > coordsArea.y2 then
-					element:SetVisible(false)
+				-- this check prevents that some items are shown, deactivated for the moment
+
+				--if (eleX + radius) < coordsArea.x1 or (eleX - radius) > coordsArea.x2 or ( eleZ + radius) < coordsArea.y1 or ( eleZ - radius) > coordsArea.y2 then
+					--print (element:GetElementType() .. " no visible")
+				--	element:SetVisible(false)
 				--elseif element:GetWidth() <= 10 and element:GetHeight() <= 10 then
 					--element:SetVisible(false)
-				elseif not element:GetDuplicate() then
+				--elseif not element:GetDuplicate() then
+				if not element:GetDuplicate() then
 					element:SetVisible(true)
 				end
 			end
@@ -431,7 +442,7 @@ local function _uiMap(name, parent)
 
 		-- der check auf duplicates funktioniert ist aber nicht ideal. Er versteckt nur statt überhaupt nicht zu bauen. Immerhin ...
 		
-		local debugId  
+		local debugId 
 		if nkDebug then debugId = nkDebug.traceStart (inspectAddonCurrent(), "EnKai _uiMap:AddElement") end
 				
 		if mapData.mapElements[newElement.type] == nil then
@@ -439,15 +450,25 @@ local function _uiMap(name, parent)
 			if nkDebug then nkDebug.traceEnd (inspectAddonCurrent(), "EnKai _uiMap:AddElement", debugId) end
 			return 
 		end
+
+		local log = true
 		
-		if nkDebug then nkDebug.logEntry (addonInfo.identifier, "AddElement", newElement.title or "new element", newElement) end
+		--[[if nkDebug and log then 
+			nkDebug.logEntry (addonInfo.identifier, "--------------------------------", "") 
+			nkDebug.logEntry (addonInfo.identifier, "AddElement: " .. newElement.type, newElement.title or "new element", newElement) 
+		end]]
 
 		if elements[newElement.id] ~= nil then 
-			if nkDebug then nkDebug.logEntry (addonInfo.identifier, "AddElement", newElement.id .. " already exists", "") end
+			--[[if nkDebug and log then 
+				nkDebug.logEntry (addonInfo.identifier, "AddElement", newElement.id .. " already exists", newElements) 
+			end]]
 			return 
 		end
 
 		local duplicate = false
+
+		-- check if the exact same map identicator is found at exact the same position
+		-- this happens for example if you can return more than one quests to the same quest giver
 
 		local checkKey = tostring(newElement.coordX) .. tostring(newElement.coordY) .. tostring(newElement.coordZ) .. tostring(newElement.type)
 		
@@ -458,22 +479,48 @@ local function _uiMap(name, parent)
 			checkIdentical[checkKey] = {}
 		end
 
-		if duplicate then return end
+		if duplicate then 
+			--[[if nkDebug and log then 
+				nkDebug.logEntry (addonInfo.identifier, checkKey, "DUPLICATE") 
+			end]]
+			return
+		else
+			--[[if nkDebug and log then 
+				nkDebug.logEntry (addonInfo.identifier, checkKey, "NO DUPLICATE") 
+			end]]
+		end
 
 		table.insert(checkIdentical[checkKey], newElement.id)
 
 		local thisElement
 		local mapInfo = mapData.mapElements[newElement.type]
 		
-		if nkDebug then nkDebug.logEntry (addonInfo.identifier, "AddElement", "mapinfo", mapInfo) end
+		--[[if nkDebug and log then 
+			nkDebug.logEntry (addonInfo.identifier, "map Info", (newElement.title or "new element"), mapInfo) 
+		end]]
 
 		if mapInfo.anim ~= nil then
 			thisElement = EnKai.uiCreateFrame("nkMapElementCanvas", newElement.type .. "." .. EnKaiUUID(), mask)
+
+			--[[if nkDebug and log then			 
+				nkDebug.logEntry (addonInfo.identifier, "nkMapElementCanvas")
+			end]]
+
 		elseif mapInfo.gfxType == nil or stringLower(mapInfo.gfxType) == 'texture' then
 			thisElement = EnKai.uiCreateFrame("nkMapElementTexture", newElement.type .. "." .. EnKaiUUID(), mask)
+
 			if mapInfo.layer ~= nil then thisElement:SetLayer(mapInfo.layer) end
+
+			--[[if nkDebug and log then			 
+				nkDebug.logEntry (addonInfo.identifier, "nkMapElementTexture")
+			end]]
+
 		elseif stringLower(mapInfo.gfxType) == "canvas" then
 			thisElement = EnKai.uiCreateFrame("nkMapElementCanvas", newElement.type .. "." .. EnKaiUUID(), mask)
+
+			--[[if nkDebug and log then			 
+				nkDebug.logEntry (addonInfo.identifier, "nkMapElementCanvas")
+			end]]
 		end
 
 		thisElement:SetId(newElement.id)
@@ -485,6 +532,10 @@ local function _uiMap(name, parent)
 
 		local thisScale = scale
 		if maximized == true then thisScale = maximizedScale end
+
+		if nkDebug and log then			 
+			nkDebug.logEntry (addonInfo.identifier, "Scale", thisScale)
+		end
 
 		thisElement:SetParentMap(ui)    
 
@@ -507,15 +558,20 @@ local function _uiMap(name, parent)
 			end
 		else
 
-			if nkDebug then nkDebug.logEntry (addonInfo.identifier, "AddElement", newElement.title or "new element", { coordX = newElement.coordX, coordY = thisY}) end
+			--[[if nkDebug and log then 
+				nkDebug.logEntry (addonInfo.identifier, "Coord", newElement.title or "new element", { coordX = newElement.coordX, coordY = thisY}) 
+				nkDebug.logEntry (addonInfo.identifier, "zoom", newElement.title or "new element", { scale = thisScale, maximized = maximized }) 
+			end]]
 
 			thisElement:SetZoom(thisScale, maximized)
 			thisElement:SetCoord(newElement.coordX, thisY)
 		end
 
-		if nkDebug then nkDebug.logEntry (addonInfo.identifier, "AddElement", newElement.title or "new element", tostring(duplicate)) end
+		--[[if nkDebug and log then 
+			nkDebug.logEntry (addonInfo.identifier, "duplicate flag ", tostring(duplicate), "") 
+		end]]
 
-		if not duplicate then thisElement:SetVisible(true) end
+		if not duplicate then thisElement:SetVisible(true)  end
 
 		if newElement.clickCallBack ~= nil and thisElement.SetClickCallBack ~= nil then		
 			thisElement:SetClickCallBack (newElement.clickCallBack)

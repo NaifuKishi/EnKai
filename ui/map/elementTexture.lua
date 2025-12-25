@@ -12,6 +12,9 @@ local mapData       = privateVars.mapData
 
 local mathFloor     = math.floor
 local mathAbs       = math.abs
+local stringFormat  = string.format
+
+local inspectAddonCurrent = Inspect.Addon.Current
 
 ---------- addon internal function block ---------
 
@@ -32,7 +35,7 @@ local function _uiMapElementTexture(name, parent)
   local smoothCoords = false
   local clickCallBack = nil
   local thisId
-  
+
   local coordX, coordY, zoom = 0, 0, nil
 
 	--if EnKai.internal.checkEvents (name, true) == false then return nil end
@@ -43,17 +46,16 @@ local function _uiMapElementTexture(name, parent)
   
   function mapElement:SetClickCallBack(newCallBack)
   
-	if clickCallBack ~= nil then
-		mapElement:EventDetach(Event.UI.Input.Mouse.Left.Down, nil, name .. ".Mouse.Left.Down")
-	end
+    if clickCallBack ~= nil then
+      mapElement:EventDetach(Event.UI.Input.Mouse.Left.Down, nil, name .. ".Mouse.Left.Down")
+    end
 	
-	clickCallBack = newCallBack
-	
-	if newCallBack == nil then return end
-	
-	mapElement:EventAttach(Event.UI.Input.Mouse.Left.Down, function () clickCallBack(thisId) end, name .. ".Mouse.Left.Down")
-	
-  
+    clickCallBack = newCallBack
+    
+    if newCallBack == nil then return end
+    
+    mapElement:EventAttach(Event.UI.Input.Mouse.Left.Down, function () clickCallBack(thisId) end, name .. ".Mouse.Left.Down")
+
   end
   
   function mapElement:SetParentMap(newParentMap) parentMap = newParentMap end
@@ -68,6 +70,10 @@ local function _uiMapElementTexture(name, parent)
     
     if thisMapData.layer ~= nil then mapElement:SetLayer(thisMapData.layer) end
         
+  end
+
+  function mapElement:GetElementType()
+    return elementType
   end
   
   function mapElement:SetToolTip(title, newDesc)
@@ -93,16 +99,36 @@ local function _uiMapElementTexture(name, parent)
   end
 
   function mapElement:SetCoord(x, y)
+
+    --[[if nkDebug then
+        nkDebug.logEntry (addonInfo.identifier, "----------")
+				nkDebug.logEntry (addonInfo.identifier, "mapElement:SetCoord: " .. elementType, "SetCoord", {x, y})
+		end]]
   
-	if x == coordX and y == coordY then return end
-	
-	if smoothCoords == false and x ~= nil and mathFloor(mathAbs(coordX - x)) < 1 and y ~= nil and mathFloor(mathAbs(coordY - y)) < 1 then return end
-		    
+    if x == coordX and y == coordY then
+      --[[if nkDebug then
+          nkDebug.logEntry (addonInfo.identifier, "mapElement:SetCoord", stringFormat("x: %d, y: %d - coordX: %d, coordY: %d", x, y, coordX, coordY))
+      end]]
+      return 
+    end
+    
+    if smoothCoords == false and x ~= nil and mathFloor(mathAbs(coordX - x)) < 1 and y ~= nil and mathFloor(mathAbs(coordY - y)) < 1 then 
+      --[[if nkDebug then
+          nkDebug.logEntry (addonInfo.identifier, "mapElement:SetCoord", "the other check failed")
+      end]]
+      return 
+    end
+          
     if x ~= nil then coordX = x end
     if y ~= nil then coordY = y end
-		
-    if coordX == nil or coordY == nil then return end
-	
+    
+    if coordX == nil or coordY == nil then 
+      --[[if nkDebug then
+          nkDebug.logEntry (addonInfo.identifier, "mapElement:SetCoord", "coordX == nil or coordY == nil")
+      end]]
+      return 
+    end
+
     local mapInfo = parentMap:GetMapInfo()
     
     local xP = 1 / (mapInfo.x2 - mapInfo.x1) * (coordX - mapInfo.x1)
@@ -112,7 +138,11 @@ local function _uiMapElementTexture(name, parent)
     
     thisX = (parentMap:GetMap():GetWidth() * xP) - (mapElement:GetWidth() / 2)
     thisY = (parentMap:GetMap():GetHeight() * yP) - (mapElement:GetWidth() / 2)
-    
+
+    --[[if nkDebug then
+				nkDebug.logEntry (addonInfo.identifier, "mapElement:SetCoord", stringFormat("SETPOINT %d / %d", thisX, thisY))
+		end]]
+      
     mapElement:SetPoint("TOPLEFT", parentMap:GetMap(), "TOPLEFT", thisX, thisY)
     
   end
