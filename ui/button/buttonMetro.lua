@@ -185,12 +185,12 @@ local function _uiButtonMetro(name, parent)
 	function button:SetColor(r, g, b, a)
 
 		if type(r) == "table" then
-			fill = r			
+			fill = r
 		else
 			fill.r, fill.g, fill.b, fill.a = r, g, b, a			
 		end
 
-		fillHighlight.r, fillHighlight.g, fillHighlight.b, fillHighlight.a = fill.r * .8, fill.g * .8, fill.b * .8, fill..a
+		fillHighlight.r, fillHighlight.g, fillHighlight.b, fillHighlight.a = fill.r * .8, fill.g * .8, fill.b * .8, fill.a
 		
 		button:Redraw()
 	end
