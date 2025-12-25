@@ -260,6 +260,10 @@ local function _uiSlider(name, parent)
 		sliderLabel:SetFontSize(fontSize)
 	end
 
+	function slider:SetEffectGlow(newEffect)
+		sliderLabel:SetEffectGlow(newEffect)
+	end
+
 	function slider:SetLabelWidth(newLabelWidth)		
 		sliderLabel:SetWidth(newLabelWidth)
 		sliderLane:SetWidth(slider:GetWidth() - newLabelWidth)

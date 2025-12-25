@@ -528,6 +528,17 @@ local function _uiCombobox(name, parent)
 			label:SetWidth(displayInner:GetWidth() - 20) 
 		end
 	end
+
+	function combo:SetEffectGlow(effect)
+		comboLabel:SetEffectGlow(effect)
+		label:SetEffectGlow(effect)
+		arrowText:SetEffectGlow(effect)
+		
+		for idx = 1, 5, 1 do
+			selItems[idx].label:SetEffectGlow(effect)
+		end
+
+	end
 	
 	local oSetWidth, oSetHeight = combo.SetWidth, combo.SetHeight
 	
