@@ -587,3 +587,7 @@ function EnKai.tools.updateSettings(defaultSettings, thisSettings)
     return thisSettings
 	
 end
+
+function EnKai.tools.isNaN(x)
+	return x ~= x
+end
