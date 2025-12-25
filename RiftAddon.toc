@@ -26,7 +26,7 @@ RunOnStartup = {
   "events/events.lua",
   "fx/fx.lua",
   "unit/unit.lua",
-  --"unit/unitstats.lua",  
+  "unit/unitstats.lua",  
   "inventory/inventory.lua",
   "items/items.lua",
   "map/data.lua",
