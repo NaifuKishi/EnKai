@@ -195,11 +195,11 @@ local function _uiWindowElement(name, parent)
   moveIcon:SetLayer(2)
 
   moveIcon:EventAttach(Event.UI.Input.Mouse.Cursor.In, function (self) 
-    if draggable == true then moveIcon:SetAlpha(1) end 
+    if dragable == true then moveIcon:SetAlpha(1) end 
   end, name .. ".moveIcon.Mouse.Cursor.In")
-  moveIcon:EventAttach(Event.UI.Input.Mouse.Cursor.Out, function (self) if draggable == true then moveIcon:SetAlpha(0) end end, name .. ".moveIcon.Mouse.Cursor.Out")
+  moveIcon:EventAttach(Event.UI.Input.Mouse.Cursor.Out, function (self) if dragable == true then moveIcon:SetAlpha(0) end end, name .. ".moveIcon.Mouse.Cursor.Out")
 
-  moveIcon:EventAttach(Event.UI.Input.Mouse.Left.Down, function (self)    
+  moveIcon:EventAttach(Event.UI.Input.Mouse.Left.Down, function (self)        
     if dragable == false then return end
     if window:GetSecureMode() == 'restricted' and oFuncs.oInspectSystemSecure() == true then return end
     
@@ -376,7 +376,6 @@ local function _uiWindowElement(name, parent)
     autoHideHeader = flag
     
   end
-  
   
   function window:SetDragable(flag)
     dragable = flag
