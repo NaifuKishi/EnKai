@@ -38,9 +38,9 @@ local function tabHeader (name, parent)
                    {xProportional = 1, yProportional = 1 },
                    {xProportional = 0, yProportional = 1 } }
     
-  local tabButton = EnKai.uiCreateFrame("nkCanvas", name, parent)
-  
+  local tabButton = EnKai.uiCreateFrame("nkCanvas", name, parent)  
   local label = EnKai.uiCreateFrame("nkText", name .. ".label", tabButton)
+  local selectedLine = EnKai.uiCreateFrame("nkFrame", name .. ".selectedLine", tabButton)
       
   tabButton:SetShape(path, uiFrameFill, uiFrameStroke)
   tabButton:SetHeight(headerTabHeight)
@@ -49,6 +49,11 @@ local function tabHeader (name, parent)
   label:SetFontSize(12)
   label:SetFontColor(fontColor.r, fontColor.g, fontColor.b, fontColor.a)
   label:SetPoint("CENTER", tabButton, "CENTER")
+
+  selectedLine:SetPoint("TOPCENTER", label, "BOTTOMCENTER")
+  selectedLine:SetHeight(1)
+  selectedLine:SetWidth(headerTabWidth-4)
+  selectedLine:SetBackgroundColor(fontColor.r, fontColor.g, fontColor.b, fontColor.a)
   
   tabButton:EventAttach(Event.UI.Input.Mouse.Left.Click, function ()
     EnKai.eventHandlers[name]["Clicked"]()
@@ -61,27 +66,29 @@ local function tabHeader (name, parent)
   function tabButton:SetFont(addonInfo, font) EnKai.ui.setFont(label, addonInfo, font) end
   function tabButton:SetFontEffect (newEffect) label:SetEffectGlow(newEffect) end
   
-  function tabButton:SetSelected(flag)
-    selected = flag
-    
-    if selected == true then
-      if border == true then    
-        tabButton:SetShape(path, uiFrameFillSelected, uiFrameStroke)
-      else        
-        
-        tabButton:SetShape(path, uiFrameFillSelected, { thickness = 1, r = uiFrameFillSelected.r, g = uiFrameFillSelected.g, b = uiFrameFillSelected.b, a = uiFrameFillSelected.a })
-      end
-      
-      if fontColorSelected == nil then
-        label:SetFontColor(fontColor.r, fontColor.g, fontColor.b, 1)
-      else
-        label:SetFontColor(fontColorSelected.r, fontColorSelected.g, fontColorSelected.b, fontColorSelected.a)
-      end
-    else
-      tabButton:SetShape(path, uiFrameFill, uiFrameStroke)      
-      label:SetFontColor(fontColor.r, fontColor.g, fontColor.b, fontColor.a)
-    end
-  end
+	function tabButton:SetSelected(flag)
+		selected = flag
+
+		if selected == true then
+			if border == true then    
+				tabButton:SetShape(path, uiFrameFillSelected, uiFrameStroke)
+			else        
+				tabButton:SetShape(path, uiFrameFillSelected, { thickness = 1, r = uiFrameFillSelected.r, g = uiFrameFillSelected.g, b = uiFrameFillSelected.b, a = uiFrameFillSelected.a })
+			end
+
+			if fontColorSelected == nil then
+				label:SetFontColor(fontColor.r, fontColor.g, fontColor.b, 1)
+			else
+				label:SetFontColor(fontColorSelected.r, fontColorSelected.g, fontColorSelected.b, fontColorSelected.a)
+			end
+		else
+			tabButton:SetShape(path, uiFrameFill, uiFrameStroke)      
+			label:SetFontColor(fontColor.r, fontColor.g, fontColor.b, fontColor.a)
+		end
+
+		selectedLine:SetVisible(flag)
+		selectedLine:SetBackgroundColor(fontColor.r, fontColor.g, fontColor.b, fontColor.a)
+	end
   
   function tabButton:SetColor(stroke, fill, fillSelected, newFontColor, newFontColorSelected)
   

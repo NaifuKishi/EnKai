@@ -180,10 +180,18 @@ local function _uiButtonMetro(name, parent)
 	end
 
 	function button:SetFont(addonInfo, fontName) EnKai.ui.setFont(label, addonInfo, fontName) end
+	function button:SetEffectGlow(effect) label:SetEffectGlow(effect) end
 
-	function button:SetColor(r, g, b)
-		fill.r, fill.g, fill.b = r, g, b
-		fillHighlight.r, fillHighlight.g, fillHighlight.b = r * .8, g * .8, b * .8
+	function button:SetColor(r, g, b, a)
+
+		if type(r) == "table" then
+			fill = r			
+		else
+			fill.r, fill.g, fill.b, fill.a = r, g, b, a			
+		end
+
+		fillHighlight.r, fillHighlight.g, fillHighlight.b, fillHighlight.a = fill.r * .8, fill.g * .8, fill.b * .8, fill..a
+		
 		button:Redraw()
 	end
 
@@ -195,8 +203,13 @@ local function _uiButtonMetro(name, parent)
 	end
 	
 	function button:SetFontColor(r, g, b, a)
-		if a == nil then a = 1 end
-		labelColor = { r = r, g = g, b = b, a = a }
+		if type (r) == "table" then
+			labelColor = r
+		else
+			if a == nil then a = 1 end
+			labelColor = { r = r, g = g, b = b, a = a }
+		end
+		
 		label:SetFontColor(labelColor.r, labelColor.g, labelColor.b, labelColor.a )
 	end
 
