@@ -211,7 +211,8 @@ local function _uiWindowMetro(name, parent)
     end
     if fill ~= nil then 
       windowFill = fill
-      windowFill.type = 'solid' 
+
+      if windowFill == nil then windowFill.type = 'solid' end
     end
     window:Resize()
   end
