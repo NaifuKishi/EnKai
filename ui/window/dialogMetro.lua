@@ -120,6 +120,44 @@ local function _uiDialog(name, parent)
 		message:SetHeight( height - 120)
 	end
 
+	function dialog:SetFont(addonID, font)
+		EnKai.ui.setFont(message, addonID, font)
+	end
+
+	function dialog:SetEffectGlow(effect)
+		message:SetEffectGlow(effect)
+	end
+
+	function dialog:SetButtonFont(addonId, font)
+		leftButton:SetFont(addonId, font)
+		rightButton:SetFont(addonId, font)
+		centerButton:SetFont(addonId, font)	
+	end
+
+	function dialog:SetButtonColor (r, g, b, a)
+		leftButton:SetColor(r, g, b, a)
+		rightButton:SetColor(r, g, b, a)
+		centerButton:SetColor(r, g, b, a)
+	end
+
+	function dialog:SetButtonFontColor (color)
+		leftButton:SetFontColor(color)
+		rightButton:SetFontColor(color)
+		centerButton:SetFontColor(color)
+	end
+
+	function dialog:SetButtonBorderColor (r, g, b, a)
+		leftButton:SetBorderColor(r, g, b, a)
+		rightButton:SetBorderColor(r, g, b, a)
+		centerButton:SetBorderColor(r, g, b, a)
+	end
+	
+	function dialog:SetButtonEffect (effect)
+		leftButton:SetEffectGlow(effect)
+		rightButton:SetEffectGlow(effect)
+		centerButton:SetEffectGlow(effect)
+	end
+
 	EnKai.eventHandlers[name]["LeftButtonClicked"], EnKai.events[name]["LeftButtonClicked"] = Utility.Event.Create(addonInfo.identifier, name .. "LeftButtonClicked")
 	EnKai.eventHandlers[name]["RightButtonClicked"], EnKai.events[name]["RightButtonClicked"] = Utility.Event.Create(addonInfo.identifier, name .. "RightButtonClicked")
 	EnKai.eventHandlers[name]["CenterButtonClicked"], EnKai.events[name]["CenterButtonClicked"] = Utility.Event.Create(addonInfo.identifier, name .. "CenterButtonClicked")

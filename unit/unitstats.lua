@@ -23,9 +23,11 @@ local function checkFocus()
 
 end
 
-local function cooldownBegin(self, cooldowns)
+local function cooldownBegin(self, cooldowns) checkFocus() end
 
-	checkFocus()
+local function regularUpdateFocus(self) 
+
+	if lastFocus ~= 100 then checkFocus() end
 
 end
 
@@ -38,7 +40,7 @@ end
 function EnKai.stat.subscribe (stat)
 
 	if stat == "focus" then
-		EnKai.events.addInsecure(checkFocus, 10)
+		EnKai.events.addInsecure(regularUpdateFocus, 10)
 		EnKai.eventHandlers["EnKai.Stat"]["Focus"], EnKai.events["EnKai.Stat"]["Focus"] = Utility.Event.Create(addonInfo.identifier, "EnKai.Stat.Focus")
 		Command.Event.Attach(Event.Ability.New.Cooldown.Begin, cooldownBegin, "EnKai.stat.Ability.New.Cooldown.Begin")
 	end
