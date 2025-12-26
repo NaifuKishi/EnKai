@@ -437,13 +437,13 @@ function EnKai.inventory.queryQtyById (key)
 	end
 	
 	if (not EnKaiInv[EnKaiUnitGetPlayerDetails().name]) or (not EnKaiInv[EnKaiUnitGetPlayerDetails().name].inventory) then _fctGetInventory() end
-	
+
+	local inventory = EnKaiInv[EnKaiUnitGetPlayerDetails().name].inventory	
+
 	if not stringFind(key, ',') then
 		-- key is an id, get type			
 		key = inventory.byID[key]
 	end
-	
-	local inventory = EnKaiInv[EnKaiUnitGetPlayerDetails().name].inventory
 	
 	if inventory.byType[key] ~= nil then
 		return inventory.byType[key]
