@@ -20,6 +20,7 @@ local stringFind			= string.find
 
 local mathFloor				= math.floor
 local mathAbs				= math.abs
+local mathMax				= math.max
 
 local EnKaiUUID				= EnKai.tools.uuid
 
@@ -59,6 +60,9 @@ local function _uiMap(name, parent)
 	local animationSpeed = 0
 	local allowWayPoints = true
 
+	local mapWidth, mapHeight
+	local maskWidth, maskHeight
+
 	---------- UI ELEMENTS ----------
 
 	local ui = EnKai.uiCreateFrame("nkWindowElement", name .. ".window", parent)
@@ -97,14 +101,27 @@ local function _uiMap(name, parent)
 	local mask = UI.CreateFrame('Mask', name .. ".mask", ui:GetContent())
 	mask:SetPoint("TOPLEFT", ui:GetContent(), "TOPLEFT")
 	mask:SetPoint("BOTTOMRIGHT", ui:GetContent(), "BOTTOMRIGHT")
-	
-	-- local temp = EnKai.uiCreateFrame('nkFrame', name .. ".temp", ui:GetContent())
-	-- temp:SetPoint("TOPLEFT", ui:GetContent(), "TOPLEFT")
-	-- temp:SetPoint("BOTTOMRIGHT", ui:GetContent(), "BOTTOMRIGHT")
-	-- temp:SetBackgroundColor(1,1,1,1)
+
+	maskHeight = mask:GetHeight()
+	maskWidth = mask:GetWidth()
 
 	local map = EnKai.uiCreateFrame("nkTexture", name .. ".map", mask)
 	map:SetLayer(1)
+
+	local oMapSetWidth = map.SetWidth
+	function map:SetWidth (width)
+		if mapWidth == width then return end
+		mapWidth = width
+		oMapSetWidth(self, width)
+	end
+
+	local oMapSetHeight = map.SetHeight
+	function map:SetHeight (height)
+		if mapHeight == height then return end
+		mapHeight = height
+		oMapSetHeight(self, height)
+	end
+
 
 	local tooltip = EnKai.uiCreateFrame("nkTooltip", name .. ".tooltip", ui)
 	tooltip:SetVisible(false)
@@ -117,30 +134,21 @@ local function _uiMap(name, parent)
 
 		local debugId  
 		if nkDebug then debugId = nkDebug.traceStart (inspectAddonCurrent(), "EnKai _uiMap:Redraw") end    
-
-		local thisScale = scale
 		
-		if maximized == true then thisScale = maximizedScale end
-		
-		local beforeScale = thisScale
+		local currentScale = maximized and maximizedScale or scale
+    	local originalScale = currentScale
 
-		if mapInfo.width * thisScale < mask:GetWidth() or mapInfo.height * thisScale < mask:GetHeight() then
+		local mapInfoWidth = mapInfo.width
+    	local mapInfoHeight = mapInfo.height
 
-			local xScale, yScale = 0, 0
-
-			xScale = 1 / mapInfo.width * mask:GetWidth()
-			yScale = 1 / mapInfo.height * mask:GetHeight()
-
-			if xScale > yScale then
-				thisScale = xScale
-			else
-				thisScale = yScale
-			end
-
+		if mapInfoWidth * currentScale < maskWidth or mapInfoHeight * currentScale < maskHeight then
+			local xScale = 1 / mapInfoWidth * maskWidth
+			local yScale = 1 / mapInfoHeight * maskHeight
+			currentScale = mathMax(xScale, yScale)
 		end
 
-		map:SetWidth(mapInfo.width * thisScale)
-		map:SetHeight(mapInfo.height * thisScale)
+		map:SetWidth(mapInfoWidth * currentScale)
+		map:SetHeight(mapInfoHeight * currentScale)
 
 		if x == nil and y == nil then	
 			ui:SetCoord((mapInfo.x2 - mapInfo.x1)/2, (mapInfo.y2 - mapInfo.y1)/2)
@@ -149,17 +157,13 @@ local function _uiMap(name, parent)
 		end
 
 		for key, thisElement in pairs (elements) do
-			--if thisElement:GetElementType() == "QUEST.RETURN" then
-			--	dump (thisElement)
-			--end
-
-			thisElement:SetZoom(thisScale)
-			thisElement:SetCoord()
+			thisElement:SetZoom(currentScale)
+			thisElement:SetCoord()			
 		end
 
-		if beforeScale ~= thisScale then
-			if maximized == true then maximizedScale = thisScale else scale = thisScale end
-			EnKai.eventHandlers[name]["Zoomed"](thisScale, maximized)
+		if originalScale ~= currentScale then
+			if maximized == true then maximizedScale = currentScale else scale = currentScale end
+			EnKai.eventHandlers[name]["Zoomed"](currentScale, maximized)
 		end
 
 		if nkDebug then nkDebug.traceEnd (inspectAddonCurrent(), "EnKai _uiMap:Redraw", debugId) end
@@ -168,7 +172,7 @@ local function _uiMap(name, parent)
 
 	local function _fctZoomOut()
 
-		if map:GetWidth() >= mask:GetWidth() and map:GetHeight() >= mask:GetHeight() then
+		if mapWidth >= maskWidth and mapHeight >= maskHeight then
 
 			local debugId  
 			if nkDebug then debugId = nkDebug.traceStart (inspectAddonCurrent(), "EnKai _uiMap:ZoomOut") end
@@ -218,16 +222,21 @@ local function _uiMap(name, parent)
 
 	local function _fctUpdateCoord(cursorX, cursorY)
 
+		local debugId
+		if nkDebug then debugId = nkDebug.traceStart (inspectAddonCurrent(), "_fctUpdateCoord") end
+
 		local diffX = mask:GetLeft() - map:GetLeft() + (cursorX - mask:GetLeft())
 		local diffY = mask:GetTop() - map:GetTop() + (cursorY - mask:GetTop())
 
-		local xP = 1 / map:GetWidth() * diffX
-		local yP = 1 / map:GetHeight() * diffY
+		local xP = 1 / mapWidth * diffX
+		local yP = 1 / mapHeight * diffY
 
 		cursorCoordX = mathFloor(((mapInfo.x2 - mapInfo.x1) * xP) + mapInfo.x1)
 		cursorCoordY = mathFloor(((mapInfo.y2 - mapInfo.y1) * yP) + mapInfo.y1) 
 
 		coordLabel:SetText(stringFormat("%d / %d", cursorCoordX, cursorCoordY))
+
+		if nkDebug then nkDebug.traceEnd (inspectAddonCurrent(), "_fctUpdateCoord", debugId) end
 
 	end
 
@@ -237,12 +246,12 @@ local function _uiMap(name, parent)
 
 		x, y = newX, newY
 		
-		if x + map:GetWidth() < mask:GetWidth() then
-			x = mask:GetWidth() - map:GetWidth()
+		if x + mapWidth < maskWidth then
+			x = maskWidth - mapWidth
 		elseif x > 0 then x = 0 end
 
-		if y + map:GetHeight() < mask:GetHeight() then
-			y = mask:GetHeight() - map:GetHeight()
+		if y + mapHeight < maskHeight then
+			y = maskHeight - mapHeight
 		elseif y > 0 then y = 0 end
 
 		map:SetPoint("TOPLEFT", mask, "TOPLEFT", x, y)
@@ -285,6 +294,7 @@ local function _uiMap(name, parent)
 			ui:SetWidth(width)
 			ui:SetHeight(height)
 			ui:SetPoint("TOPLEFT", UIParent, "TOPLEFT", origX, origY)
+
 		else
 			maximized = true
 			iconMinMax:SetTextureAsync("EnKai", "gfx/icons/minimize.png")
@@ -297,8 +307,11 @@ local function _uiMap(name, parent)
 
 			ui:SetWidth(maximizedWidth)
 			ui:SetHeight(maximizedHeight)
-			ui:SetPoint("TOPLEFT", UIParent, "TOPLEFT", maximizedX, maximizedY)      
+			ui:SetPoint("TOPLEFT", UIParent, "TOPLEFT", maximizedX, maximizedY)      			
 		end
+
+		maskHeight = mask:GetHeight()
+		maskWidth = mask:GetWidth()
 
 		_fctRedraw()
 
@@ -315,9 +328,9 @@ local function _uiMap(name, parent)
 		mapInfo = EnKai.map.getMapData (mapName) 
 
 		if mapInfo.width <= mapInfo.height then
-			scaleStep = 1 / mapInfo.width * mask:GetWidth()
+			scaleStep = 1 / mapInfo.width * maskWidth
 		else
-			scaleStep = 1 / mapInfo.height * mask:GetHeight()
+			scaleStep = 1 / mapInfo.height * maskHeight
 		end 
 
 		if scale == nil then scale = scaleStep end
@@ -370,8 +383,8 @@ local function _uiMap(name, parent)
 		local pX = 1 / (mapInfo.x2 - mapInfo.x1) * (coordX - mapInfo.x1)
 		local pY = 1 / (mapInfo.y2 - mapInfo.y1) * (coordY - mapInfo.y1)
 
-		local newX = (mask:GetWidth() / 2) - (map:GetWidth() * pX)
-		local newY = (mask:GetHeight() / 2) - (map:GetHeight() * pY)
+		local newX = (maskWidth / 2) - (mapWidth * pX)
+		local newY = (maskHeight / 2) - (mapHeight * pY)
 
 		if smoothScroll == false then newX, newY = mathFloor(newX), mathFloor(newY) end
 
@@ -379,26 +392,15 @@ local function _uiMap(name, parent)
 
 		_fctPosition(newX, newY)
 
-		if x == mathFloor(newX) and y == mathFloor(newY) then return end -- only do computation of radius for significant x / y change
+		--if x == mathFloor(newX) and y == mathFloor(newY) then return end -- only do computation of radius for significant x / y change
 
-		local xPixel = (mapInfo.x2 - mapInfo.x1) / map:GetWidth()
-		local yPixel = (mapInfo.y2 - mapInfo.y1) / map:GetHeight()
+		local xPixel = (mapInfo.x2 - mapInfo.x1) / mapWidth
+		local yPixel = (mapInfo.y2 - mapInfo.y1) / mapHeight
 		
 		coordsArea = {	x1 = mapInfo.x1 + ((mask:GetLeft() - map:GetLeft()) * xPixel),
 						y1 = mapInfo.y1 + ((mask:GetTop() - map:GetTop()) * yPixel) }
-		coordsArea.x2 = coordsArea.x1 + (mask:GetWidth() * xPixel)
-		coordsArea.y2 = coordsArea.y1 + (mask:GetHeight() * xPixel)
-		
-		-- local xP1 = 1 / map:GetWidth() * (mask:GetLeft() - map:GetLeft())
-		-- local yP1 = 1 / map:GetHeight() * (mask:GetTop() - map:GetTop())
-
-		-- local xP2 = 1 / map:GetWidth() * (mask:GetLeft() - map:GetLeft() + mask:GetWidth())
-		-- local yP2 = 1 / map:GetHeight() * (mask:GetTop() - map:GetTop() + mask:GetHeight())
-
-		-- coordsArea = {	x1 = ((mapInfo.x2 - mapInfo.x1) * xP1) + mapInfo.x1,
-						-- x2 = ((mapInfo.x2 - mapInfo.x1) * xP2) + mapInfo.x1,
-						-- y1 = ((mapInfo.y2 - mapInfo.y1) * yP1) + mapInfo.y1, 
-						-- y2 = ((mapInfo.y2 - mapInfo.y1) * yP2) + mapInfo.y1}
+		coordsArea.x2 = coordsArea.x1 + (maskWidth * xPixel)
+		coordsArea.y2 = coordsArea.y1 + (maskHeight * xPixel)
 
 		for id, element in pairs(elements) do
 
@@ -409,16 +411,15 @@ local function _uiMap(name, parent)
 				local radius = 0
 				if element.GetRadius and element:GetRadius() ~= nil then radius = element:GetRadius() / 2 end
 
-				-- this check prevents that some items are shown, deactivated for the moment
-
-				--if (eleX + radius) < coordsArea.x1 or (eleX - radius) > coordsArea.x2 or ( eleZ + radius) < coordsArea.y1 or ( eleZ - radius) > coordsArea.y2 then
-					--print (element:GetElementType() .. " no visible")
-				--	element:SetVisible(false)
-				--elseif element:GetWidth() <= 10 and element:GetHeight() <= 10 then
-					--element:SetVisible(false)
-				--elseif not element:GetDuplicate() then
-				if not element:GetDuplicate() then
-					element:SetVisible(true)
+				-- Check if the element's coordinates, considering its radius, are within the coordsArea
+				if eleX + radius >= coordsArea.x1 and eleX - radius <= coordsArea.x2 and eleZ + radius >= coordsArea.y1 and eleZ - radius <= coordsArea.y2 then
+					if not element:GetDuplicate() then
+						element:SetVisible(true)
+					else
+						element:SetVisible(false)
+					end
+				else
+					element:SetVisible(false)
 				end
 			end
 
@@ -453,16 +454,8 @@ local function _uiMap(name, parent)
 		end
 
 		local log = true
-		
-		--[[if nkDebug and log then 
-			nkDebug.logEntry (addonInfo.identifier, "--------------------------------", "") 
-			nkDebug.logEntry (addonInfo.identifier, "AddElement: " .. newElement.type, newElement.title or "new element", newElement) 
-		end]]
 
 		if elements[newElement.id] ~= nil then 
-			--[[if nkDebug and log then 
-				nkDebug.logEntry (addonInfo.identifier, "AddElement", newElement.id .. " already exists", newElements) 
-			end]]
 			return 
 		end
 
@@ -481,14 +474,7 @@ local function _uiMap(name, parent)
 		end
 
 		if duplicate then 
-			--[[if nkDebug and log then 
-				nkDebug.logEntry (addonInfo.identifier, checkKey, "DUPLICATE") 
-			end]]
 			return
-		else
-			--[[if nkDebug and log then 
-				nkDebug.logEntry (addonInfo.identifier, checkKey, "NO DUPLICATE") 
-			end]]
 		end
 
 		table.insert(checkIdentical[checkKey], newElement.id)
@@ -496,32 +482,15 @@ local function _uiMap(name, parent)
 		local thisElement
 		local mapInfo = mapData.mapElements[newElement.type]
 		
-		--[[if nkDebug and log then 
-			nkDebug.logEntry (addonInfo.identifier, "map Info", (newElement.title or "new element"), mapInfo) 
-		end]]
-
 		if mapInfo.anim ~= nil then
 			thisElement = EnKai.uiCreateFrame("nkMapElementCanvas", newElement.type .. "." .. EnKaiUUID(), mask)
-
-			--[[if nkDebug and log then			 
-				nkDebug.logEntry (addonInfo.identifier, "nkMapElementCanvas")
-			end]]
-
 		elseif mapInfo.gfxType == nil or stringLower(mapInfo.gfxType) == 'texture' then
 			thisElement = EnKai.uiCreateFrame("nkMapElementTexture", newElement.type .. "." .. EnKaiUUID(), mask)
 
 			if mapInfo.layer ~= nil then thisElement:SetLayer(mapInfo.layer) end
 
-			--[[if nkDebug and log then			 
-				nkDebug.logEntry (addonInfo.identifier, "nkMapElementTexture")
-			end]]
-
 		elseif stringLower(mapInfo.gfxType) == "canvas" then
 			thisElement = EnKai.uiCreateFrame("nkMapElementCanvas", newElement.type .. "." .. EnKaiUUID(), mask)
-
-			--[[if nkDebug and log then			 
-				nkDebug.logEntry (addonInfo.identifier, "nkMapElementCanvas")
-			end]]
 		end
 
 		thisElement:SetId(newElement.id)
@@ -558,19 +527,9 @@ local function _uiMap(name, parent)
 				nkDebug.logEntry (inspectAddonCurrent(), "_uiMap", "ui:AddElement error", "map entry without coordinates" .. newElement.id .. "\n\n" .. EnKai.tools.table.serialize(newElement))
 			end
 		else
-
-			--[[if nkDebug and log then 
-				nkDebug.logEntry (addonInfo.identifier, "Coord", newElement.title or "new element", { coordX = newElement.coordX, coordY = thisY}) 
-				nkDebug.logEntry (addonInfo.identifier, "zoom", newElement.title or "new element", { scale = thisScale, maximized = maximized }) 
-			end]]
-
 			thisElement:SetZoom(thisScale, maximized)
 			thisElement:SetCoord(newElement.coordX, thisY)
 		end
-
-		--[[if nkDebug and log then 
-			nkDebug.logEntry (addonInfo.identifier, "duplicate flag ", tostring(duplicate), "") 
-		end]]
 
 		if not duplicate then thisElement:SetVisible(true)  end
 
@@ -763,8 +722,8 @@ local function _uiMap(name, parent)
 
 		local diffX, diffY = posX - mouseData.x, posY - mouseData.y
 
-		local xP = 1 / map:GetWidth() * mathAbs(diffX)
-		local yP = 1 / map:GetHeight() * mathAbs(diffY)
+		local xP = 1 / mapWidth * mathAbs(diffX)
+		local yP = 1 / mapHeight * mathAbs(diffY)
 
 		if diffX < 0 then
 			coordX = coordX + ((mapInfo.x2 - mapInfo.x1) * xP)

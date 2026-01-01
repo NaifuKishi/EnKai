@@ -291,6 +291,14 @@ local function _uiMapElementCanvas(name, parent)
 		if flag == visibleState then return end
 		visibleState = flag
 		oSetVisible(self, flag)
+
+		if effectName then
+			if flag then
+				EnKai.fx.updateTime(effectName)
+			else
+				EnKai.fx.pauseEffect(effectName)
+			end
+		end
 	end
 
 	----- Events
