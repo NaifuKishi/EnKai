@@ -446,6 +446,8 @@ local function _uiMap(name, parent)
 		
 		local debugId 
 		if nkDebug then debugId = nkDebug.traceStart (inspectAddonCurrent(), "EnKai _uiMap:AddElement") end
+
+		nkDebug.logEntry (addonInfo.identifier, "ui:AddElement", newElement.title, newElement)
 				
 		if mapData.mapElements[newElement.type] == nil then
 			if nkDebug then print ("unknown map element type: " .. newElement.type) end 
@@ -503,9 +505,9 @@ local function _uiMap(name, parent)
 		local thisScale = scale
 		if maximized == true then thisScale = maximizedScale end
 
-		if nkDebug and log then			 
-			nkDebug.logEntry (addonInfo.identifier, "Scale", thisScale)
-		end
+		--if nkDebug and log then			 
+		--	nkDebug.logEntry (addonInfo.identifier, "Scale", thisScale)
+		--end
 
 		thisElement:SetParentMap(ui)    
 
