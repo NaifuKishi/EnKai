@@ -185,7 +185,8 @@ local function _uiMapElementCanvas(name, parent)
 
 		if lastAngle == nil then lastAngle = 0 end
 
-		local newAngle = mathFloor(angle / 30) * 30  -- make angling less twitchy
+		--local newAngle = mathFloor(angle / 30) * 30  -- make angling less twitchy
+		local newAngle = angle
 
 		if newAngle == lastAngle then return end
 
