@@ -466,7 +466,7 @@ local function _uiWindowElement(name, parent)
   end
   
   function window:SetPoint(from, object, to, x, y)
-  
+
     if reverseAtBorder == false then
       if x ~= nil and y ~= nil then     
         oSetPoint(self, from, object, to, x, y)

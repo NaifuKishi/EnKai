@@ -154,7 +154,7 @@ mapData.mapElements = {
   ["UNIT.MARK.29"]           = {path = "vfx_ui_mob_tag_tank_mini.png.dds", width = 16, height = 16, layer = 98},  
   ["UNIT.MARK.30"]           = {path = "vfx_ui_mob_tag_clover_mini.png.dds", width = 16, height = 16, layer = 98},
   
-  ["POI.QUESTHUB"]    = {path = "Map_QuestGroup_Icon.png.dds", width = 32, height = 32, mlayer = 80},
+  ["POI.QUESTHUB"]    = {path = "Map_QuestGroup_Icon.png.dds", width = 32, height = 32, layer = 80},
   ["POI.DUNGEON"]     = {path = "Map_Instance_Icon.png.dds", width = 48, height = 48, minZoom = 1, layer = 80},
   ["POI.OTHER"]       = {path = "Map_POI_Icon.png.dds", width = 32, height = 32, layer = 80},
   ["POI.CAVE"]        = {path = "Map_Cave_Icon.png.dds", width = 32, height = 32, layer = 80},
@@ -203,6 +203,7 @@ mapData.mapElements = {
   ["QUEST.PVPDAILY"] = { path = "NPCDialogIcon_questrepeat_pvpD.png.dds", width = 32, height = 32, layer = 99, minZoom = 1, layer = 97},
   ["QUEST.DAILY"] = { path = "indicator_quest_repeatable.png.dds", width = 32, height = 32, layer = 99, minZoom = 1, layer = 97},
   ["QUEST.MISSING"] = { path = "indicator_quest_highlevel.png.dds", width = 32, height = 32, layer = 98, minZoom = 1, layer = 97},
+  --["QUEST.POINT"]    = {path = "indicator_track.png.dds", width = 32, height = 32, layer = 98},
   ["QUEST.POINT"] = { fill = {source = "Rift", type = "texture", texture = "indicator_track.png.dds"}, width = 32, height = 32, minZoom = 1, layer = 98, anim = "rotation"},
   --["QUEST.CARNAGE"] = { path = "indicator_track_carnage.png.dds", width = 32, height = 32, layer = 99},
   ["QUEST.ZONEEVENT"] = { fill = {source = "Rift", type = "texture", texture = "indicator_track_zonequest.png.dds"}, width = 32, height = 32, minZoom = 1, layer = 98, anim = "rotation"},

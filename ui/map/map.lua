@@ -413,11 +413,11 @@ local function _uiMap(name, parent)
 
 				-- Check if the element's coordinates, considering its radius, are within the coordsArea
 				if eleX + radius >= coordsArea.x1 and eleX - radius <= coordsArea.x2 and eleZ + radius >= coordsArea.y1 and eleZ - radius <= coordsArea.y2 then
-					if not element:GetDuplicate() then
+					--if not element:GetDuplicate() then
 						element:SetVisible(true)
-					else
-						element:SetVisible(false)
-					end
+					--else
+					--	element:SetVisible(false)
+					--end
 				else
 					element:SetVisible(false)
 				end
@@ -475,7 +475,8 @@ local function _uiMap(name, parent)
 			checkIdentical[checkKey] = {}
 		end
 
-		if duplicate then 
+		if duplicate then
+			nkDebug.logEntry (addonInfo.identifier, "ui:AddElement", "     duplicate")
 			return
 		end
 
@@ -485,18 +486,19 @@ local function _uiMap(name, parent)
 		local mapInfo = mapData.mapElements[newElement.type]
 		
 		if mapInfo.anim ~= nil then
+			nkDebug.logEntry (addonInfo.identifier, "ui:AddElement", "     mapInfo.anim")
 			thisElement = EnKai.uiCreateFrame("nkMapElementCanvas", newElement.type .. "." .. EnKaiUUID(), mask)
 		elseif mapInfo.gfxType == nil or stringLower(mapInfo.gfxType) == 'texture' then
+			nkDebug.logEntry (addonInfo.identifier, "ui:AddElement", "     texture")
 			thisElement = EnKai.uiCreateFrame("nkMapElementTexture", newElement.type .. "." .. EnKaiUUID(), mask)
-
 			if mapInfo.layer ~= nil then thisElement:SetLayer(mapInfo.layer) end
-
 		elseif stringLower(mapInfo.gfxType) == "canvas" then
+			nkDebug.logEntry (addonInfo.identifier, "ui:AddElement", "     canvas")
 			thisElement = EnKai.uiCreateFrame("nkMapElementCanvas", newElement.type .. "." .. EnKaiUUID(), mask)
 		end
 
 		thisElement:SetId(newElement.id)
-		thisElement:SetDuplicate(duplicate)
+		--thisElement:SetDuplicate(duplicate)
 
 		if thisElement.SetSmoothCoords ~= nil then
 			thisElement:SetSmoothCoords(newElement.smoothCoords or false)
@@ -513,12 +515,14 @@ local function _uiMap(name, parent)
 
 		if newElement.radius ~= nil then thisElement:SetRadius(newElement.radius) end
 		thisElement:SetType(newElement.type)
-
-		thisElement:SetToolTip(newElement.title, newElement.descList)
+		
+		if newElement.type ~= "UNIT.PLAYER" then
+			thisElement:SetToolTip(newElement.title, newElement.descList)
+		end
 
 		if newElement.angle ~= nil and thisElement.SetAngle ~= nil then thisElement:SetAngle(newElement.angle) end    
 
-		thisElement:SetZoom(thisScale, maximized)
+		--thisElement:SetZoom(thisScale, maximized)
 
 		local thisY = newElement.coordY
 		if newElement.coordZ ~= nil then thisY = newElement.coordZ end
@@ -533,13 +537,18 @@ local function _uiMap(name, parent)
 			thisElement:SetCoord(newElement.coordX, thisY)
 		end
 
-		if not duplicate then thisElement:SetVisible(true)  end
+		--if not duplicate then thisElement:SetVisible(true)  end
+		thisElement:SetVisible(true)
+
+		thisElement.title = newElement.title
 
 		if newElement.clickCallBack ~= nil and thisElement.SetClickCallBack ~= nil then		
 			thisElement:SetClickCallBack (newElement.clickCallBack)
 		end
 
 		elements[newElement.id] = thisElement
+
+		nkDebug.logEntry (addonInfo.identifier, "ui:AddElement", stringFormat("     added %s", newElement.id))
 
 		if nkDebug then nkDebug.traceEnd (inspectAddonCurrent(), "EnKai _uiMap:AddElement", debugId) end
 
@@ -715,10 +724,16 @@ local function _uiMap(name, parent)
 
 	end, ui:GetName() .. ".Mouse.Left.Down.Bubble")
 
+	ui:GetContent():EventAttach(Event.UI.Input.Mouse.Cursor.Out, function ()
+		EnKai.eventHandlers[name]["MouseMoved"]("")
+	end, ui:GetName() .. ".Cursor.Out")
+
 	ui:GetContent():EventAttach(Event.UI.Input.Mouse.Cursor.Move.Bubble, function (self, _, posX, posY)
 
 		if drag ~= true then
 			_fctUpdateCoord(posX, posY) 
+			--print ("hossa")
+			EnKai.eventHandlers[name]["MouseMoved"](coordLabel:GetText())
 			return 
 		end
 
@@ -740,7 +755,7 @@ local function _uiMap(name, parent)
 		end
 
 		ui:SetCoord ()
-		mouseData = inspectMouse()
+		mouseData = inspectMouse()		
 
 	end, ui:GetName() .. ".Cursor.Move.Bubble")
 
@@ -762,6 +777,7 @@ local function _uiMap(name, parent)
 	---------- EVENT HANDLERS ---------- 
 
 	EnKai.eventHandlers[name]["Moved"], EnKai.events[name]["Moved"] = Utility.Event.Create(addonInfo.identifier, name .. "Moved")
+	EnKai.eventHandlers[name]["MouseMoved"], EnKai.events[name]["MouseMoved"] = Utility.Event.Create(addonInfo.identifier, name .. "MouseMoved")
 	EnKai.eventHandlers[name]["Resized"], EnKai.events[name]["Resized"] = Utility.Event.Create(addonInfo.identifier, name .. "Resized")
 	EnKai.eventHandlers[name]["Zoomed"], EnKai.events[name]["Zoomed"] = Utility.Event.Create(addonInfo.identifier, name .. "Zoomed")
 	EnKai.eventHandlers[name]["Toggled"], EnKai.events[name]["Toggled"] = Utility.Event.Create(addonInfo.identifier, name .. "Toggled")
